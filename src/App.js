@@ -41,7 +41,12 @@ function App() {
           <section className="persona-section">
             <h4 className="unselectable">About:</h4>
             <p>I was born in Mumbai <span role="img" aria-label="Indian flag">🇮🇳</span>, raised in Hong Kong <span role="img" aria-label="Hong Kong flag">🇭🇰</span>, and grew up in Singapore <span role="img" aria-label="Singaporean flag">🇸🇬</span>. As a result, I can speak Hindi and Chinese too. I'm not a fan of countries, or nationalism, but am a fan of culture - both creating and preserving it. I've recently immigrated to California <span role="img" aria-label="American flag">🇺🇸</span>, where I'm setting up a new life.</p>
-            <p>I <i>love</i> building things (music, paintings, solar-arrays, etc.). Software was my go-to growing up since it was more accesible than buying hardware, and now I'm trying to utilize the resources at Harvey Mudd College to build more physical products. I’m majoring in CS at Mudd while concentrating on electrical engineering and economics, while also dabbling with philosophy, environmental analysis, and various artistic disciplines.</p>
+            <p>I <i>love</i> building things (music, paintings, solar-arrays, etc.). Software was my go-to growing up since it was more accesible than buying hardware, and now I'm trying to utilize the resources at Harvey Mudd College to build more physical products.</p>
+          </section>
+
+          <section className="persona-section">
+            <h4 className="unselectable">Major</h4>
+            <p>I'm majoring in CS at Mudd because it gives me the most flexibility to pursue my varied interests. My major electives are filled with electrical engineering classes, and I'm minoring in economics. With my free slots I've been learning about philosophy, environmental analysis, music, and modern art.</p>
           </section>
 
           {/* Energy */}
