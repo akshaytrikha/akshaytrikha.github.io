@@ -45,8 +45,10 @@ function App() {
           </section>
 
           <section className="persona-section">
-            <h4 className="unselectable">Major</h4>
-            <p>I'm majoring in CS at Mudd because it gives me the most flexibility to pursue my varied interests. My major electives are filled with electrical engineering classes, and I'm minoring in economics. With my free slots I've been learning about philosophy, environmental analysis, music, and modern art.</p>
+            <h4 className="unselectable">Education</h4>
+            <p>I firmly believe in a liberal eduaction, one that allows you to study ideas seemingly perpendicular to your own field. I'm majoring in CS at Mudd because it gives me the most flexibility to pursue my varied interests.</p>
+
+            <p>Alongside my major, I'm learning about electrical engineering, philosophy, environmental analysis, economics, music, and modern art.</p>
           </section>
 
           {/* Energy */}
