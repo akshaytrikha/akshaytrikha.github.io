@@ -40,8 +40,8 @@ function App() {
           {/* About */}
           <section className="persona-section">
             <h4 className="unselectable">About:</h4>
-            <p>I was born in Mumbai <span role="img" aria-label="Indian flag">🇮🇳</span>, raised in Hong Kong <span role="img" aria-label="Hong Kong flag">🇭🇰</span>, and grew up in Singapore <span role="img" aria-label="Singaporean flag">🇸🇬</span>. As a result, I can speak Hindi and Chinese too. I'm not a fan of countries, or nationalism, but am a fan of culture - both creating and preserving it. I've recently immigrated to California <span role="img" aria-label="American flag">🇺🇸</span>, where I'm setting up a new life.</p>
-            <p>I <i>love</i> building things (music, paintings, solar-arrays, etc.). Software was my go-to growing up since it was more accesible than buying hardware, and now I'm trying to utilize the resources at Harvey Mudd College to build more physical products.</p>
+            <p>I was born in Bombay <span role="img" aria-label="Indian flag">🇮🇳</span>, raised in Hong Kong <span role="img" aria-label="Hong Kong flag">🇭🇰</span>, and grew up in Singapore <span role="img" aria-label="Singaporean flag">🇸🇬</span>. As a result, I can speak Hindi and Chinese too. I'm not a fan of countries, or nationalism, but am a fan of culture - both creating and preserving it. I've recently immigrated to California <span role="img" aria-label="American flag">🇺🇸</span>, where I'm setting up a new life.</p>
+            <p>I <i>love</i> building things (communities, music, solar-arrays, etc.). Software was my go-to growing up since it was more accesible than buying hardware, and now I'm trying to utilize the resources at <a class="hyperlink" href="hmc.edu">Harvey Mudd College</a> to build more physical things.</p>
           </section>
 
           <section className="persona-section">
@@ -77,6 +77,7 @@ function App() {
               <li>Scar Tissue<a style={{color: "gray"}}> - Anthony Kiedis</a></li>
               <li>The Myth of Sisyphus<a style={{color: "gray"}}> - Albert Camus </a></li>
               <li>When Breath Becomes Air<a style={{color: "gray"}}> - Paul Kalinithi</a></li>
+              <li>Being Mortal<a style={{color: "gray"}}> - Atul Gawande</a></li>
               <li>Cats Cradle<a style={{color: "gray"}}> - Kurt Vonnegut</a></li>
               <li>The Subtle Art of Not Giving a F*ck<a style={{color: "gray"}}> - Mark Manson</a></li>
             </ul>
