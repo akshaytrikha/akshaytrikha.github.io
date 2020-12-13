@@ -44,6 +44,7 @@ function App() {
             <p>I <i>love</i> building things (communities, music, solar-arrays, etc.). Software was my go-to growing up since it was more accesible than buying hardware, and now I'm trying to utilize the resources at <a class="hyperlink" href="hmc.edu">Harvey Mudd College</a> to build more physical things.</p>
           </section>
 
+          {/* Education */}
           <section className="persona-section">
             <h4 className="unselectable">Education</h4>
             <p>I firmly believe in a liberal eduaction, one that allows you to study ideas seemingly perpendicular to your own field. I'm majoring in CS at Mudd because it gives me the most flexibility to pursue my varied interests.</p>
@@ -51,19 +52,23 @@ function App() {
             <p>Alongside my major, I'm learning about electrical engineering, philosophy, environmental analysis, economics, music, and modern art.</p>
           </section>
 
-          {/* Energy */}
+          {/* Education */}
           <section className="persona-section">
-            <h4 className="unselectable"><span role="img" aria-label="lightning">⚡️:</span></h4>
-            <p>In high school I realized the importance of energy in our lives, particularly generating it from sustainable sources. I tried my hand at making my community more sustainable by setting up solar panels that eventually lit up 60 classrooms a day. Now I'm interested in learning more about energy storage and conversion processees.</p>
+            <h4 className="unselectable">Things I've written or helped write that I'm proud of </h4>
+            <ul>
+              <li><a className="hyperlink" href="https://arxiv.org/pdf/1907.06010.pdf">The Futility of Bias-Free Learning and Search</a></li>
+              <li><a className="hyperlink" href="https://drive.google.com/file/d/11RVnSwVW3CGetKaEceJ6C9VOZQL4IZKp/view?usp=sharing">Transition Metal Oxide and Carbide Pseudocapacitors</a></li>
+              <li><a className="hyperlink" href="https://arxiv.org/pdf/1911.04964.pdf">The Bias-Expressivity Tradeoff</a></li>
+              <li><a className="hyperlink" href="https://drive.google.com/file/d/17myiNEPMZTJs7JgdjB_Q8wqWSuLuAv7m/view?usp=sharing">Trump or Computer Dump?</a></li>
+            </ul>
           </section>
 
           {/* Currently */}
           <section className="persona-section">
             <h4 className="unselectable">Currently:</h4>
             <ul>
-              <li><span role="img" aria-label="sun">☀️</span> Making a portable solar energy cart</li>
               <li><span role="img" aria-label="music">🥁</span> Writing music as <a className="hyperlink" href="https://open.spotify.com/artist/7z8S1uCUgYBYX2lTWx9udV">Full Volume Only</a></li>
-              <li><span role="img" aria-label="research">🔬</span> Doing research at <a className="hyperlink" href="https://arxiv.org/pdf/1907.06010.pdf">AMISTAD lab</a></li>
+              {/* <li><span role="img" aria-label="research">🔬</span> Doing research at <a className="hyperlink" href="https://arxiv.org/pdf/1907.06010.pdf">AMISTAD lab</a></li> */}
               <li><span role="img" aria-label="education">📚</span> Getting educated at <a className="hyperlink" href="https://www.hmc.edu/about-hmc/">Harvey Mudd College</a></li>
             </ul>
           </section>
