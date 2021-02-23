@@ -42,7 +42,7 @@ function App() {
           <section className="persona-section">
             <h4 className="unselectable">Currently:</h4>
             <ul>
-              <li><span role="img" aria-label="research">🔬</span> Doing research on the permittivity of BaTiO<sub>3</sub> nanoparticles (used in capacitors)</li>
+              <li><span role="img" aria-label="research">🔬</span> Doing <a className="hyperlink" href="https://github.com/akshaytrikha/BTO-TEM-Processing" target="_blank">research</a> on diameter vs. permittivity of BaTiO<sub>3</sub> nanoparticles (used in capacitors) at <a className="hyperlink" href="https://www.sandia.gov/" target="_blank">Sandia National Labs</a></li>
               <li><span role="img" aria-label="music">🥁</span> Writing music as <a className="hyperlink" href="https://open.spotify.com/artist/7z8S1uCUgYBYX2lTWx9udV" target="_blank">Full Volume Only</a></li>
               {/* <li><span role="img" aria-label="research">🔬</span> Doing research at <a className="hyperlink" href="https://arxiv.org/pdf/1907.06010.pdf">AMISTAD lab</a></li> */}
               <li><span role="img" aria-label="education">📚</span> Getting educated at <a className="hyperlink" href="https://www.hmc.edu/about-hmc/" target="_blank">Harvey Mudd College</a></li>
@@ -58,15 +58,17 @@ function App() {
               <li><a className="hyperlink" href="https://arxiv.org/pdf/1907.06010.pdf" target="_blank">The Futility of Bias-Free Learning and Search</a></li>
               <li><a className="hyperlink" href="https://akshaytrikha.github.io/Transition_Metal_Oxide_and_Carbide_Pseudocapacitors.pdf" target="_blank">Transition Metal Oxide and Carbide Pseudocapacitors</a></li>
               <li><a className="hyperlink" href="https://arxiv.org/pdf/1911.04964.pdf" target="_blank">The Bias-Expressivity Tradeoff</a></li>
+              <li><a className="hyperlink" href="https://colab.research.google.com/drive/1ZN0kWpMPmYgSAYf9CxWNL4jq9YRjSNaN?usp=sharing" target="_blank">Characterizing a Vanadium Redox Flow Battery's Discharging</a></li>
               <li><a className="hyperlink" href="https://akshaytrikha.github.io/Trump_or_Computer_Dump.pdf" target="_blank">Trump or Computer Dump?</a></li>
+              
             </ul>
           </section>
 
           {/* About */}
           <section className="persona-section">
             <h4 className="unselectable">About:</h4>
-            <p>I was born in Bombay <span role="img" aria-label="Indian flag">🇮🇳</span>, raised in Hong Kong <span role="img" aria-label="Hong Kong flag">🇭🇰</span>, and grew up in Singapore <span role="img" aria-label="Singaporean flag">🇸🇬</span>. As a result, I can speak Hindi and Chinese too. I'm not a fan of countries, or nationalism, but am a fan of culture - both creating and preserving it. I've recently immigrated to California <span role="img" aria-label="American flag">🇺🇸</span>, where I'm setting up a new life.</p>
-            <p>I <i>love</i> building things (communities, music, solar-arrays, etc.). Software was my go-to growing up since it was more accesible than buying hardware, and now I'm trying to utilize the resources at <a className="hyperlink" href="https://www.hmc.edu/about-hmc/" target="_blank">Harvey Mudd College</a> to build more physical things.</p>
+            <p>I was born in Bombay <span role="img" aria-label="Indian flag">🇮🇳</span>, raised in Hong Kong <span role="img" aria-label="Hong Kong flag">🇭🇰</span>, and grew up in Singapore <span role="img" aria-label="Singaporean flag">🇸🇬</span>. As a result, I can speak Hindi and Chinese too. I'm a fan of people and culture - both creating and preserving it. I've recently immigrated to California <span role="img" aria-label="American flag">🇺🇸</span>, where I'm setting up a new life.</p>
+            <p>I enjoy building things (communities, music, solar-arrays, etc.). Software was my go-to growing up since it was more accesible than buying hardware, and before the pandemic I was trying to utilize the resources at <a className="hyperlink" href="https://www.hmc.edu/about-hmc/" target="_blank">Harvey Mudd College</a> to build more physical things.</p>
           </section>
 
           {/* Education */}
