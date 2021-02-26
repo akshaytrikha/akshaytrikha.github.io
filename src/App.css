@@ -49,10 +49,13 @@
 .persona {
   margin: auto; /* to center paper on page */
   margin-top: 5%;
+  margin-bottom: 5%;
   width: 75%;
   background-color: white;
   border-radius: 1%;
-  border-right: 6.5px solid gray; /* TODO: find a better darkgray */
+  border-right: 10px solid gray; /* TODO: find a better darkgray */
+  border-bottom: 10px solid gray; /* TODO: find a better darkgray */
+  box-shadow: 10px 10px 2px 1px rgba(169, 169, 169, 0.3);
 }
 
 .persona-section {
