@@ -1,13 +1,13 @@
 import React from 'react';
 import './App.css'
-import Painting from './images/painting.jpeg'
 import ContactIcon from './components/ContactIcon.js'
+import Painting from './images/painting.jpeg'
 import SpotifyIcon from './images/icons/Spotify.png'
 import GitHubIcon from './images/icons/GitHub.png'
 import LinkedInIcon from './images/icons/LinkedIn.png'
 import EmailIcon from './images/icons/Email.png'
+import ResumeIcon from './images/icons/Resume.png'  // https://www.freepik.com
 
-// TODO: figure out how to make bullet vertical spacing larger
 // TODO: Favorite Reads --> Most Influential Media
 
 function App() {
@@ -21,16 +21,19 @@ function App() {
       {/* Contact */}
       <section className="contact-icon-group unselectable">
         <a href="https://open.spotify.com/artist/7z8S1uCUgYBYX2lTWx9udV" target="_blank" rel="noopener noreferrer">
-          <ContactIcon type={SpotifyIcon} />
+          <ContactIcon type={SpotifyIcon}/>
         </a>
         <a href="http://github.com/akshaytrikha/" target="_blank" rel="noopener noreferrer">
-          <ContactIcon type={GitHubIcon} />
+          <ContactIcon type={GitHubIcon}/>
         </a>
         <a href="https://www.linkedin.com/in/akshay-trikha/" target="_blank" rel="noopener noreferrer">
-          <ContactIcon type={LinkedInIcon} />
+          <ContactIcon type={LinkedInIcon}/>
         </a>
         <a href="mailto:atrikha@hmc.edu?">
-          <ContactIcon type={EmailIcon} />
+          <ContactIcon type={EmailIcon}/>
+        </a>
+        <a href={process.env.PUBLIC_URL + "pdfs/Resume.pdf"} target="_blank" rel="noopener noreferrer">
+          <ContactIcon type={ResumeIcon}/>
         </a>
       </section>
 
@@ -40,8 +43,7 @@ function App() {
           <section className="persona-section">
             <h4 className="unselectable">Currently:</h4>
             <ul>
-            <li><span role="img" aria-label="job">💼</span> Looking for a full-time job - <a className="hyperlink" href={process.env.PUBLIC_URL + "pdfs/Akshay_Trikha_Resume.pdf"} target="_blank" rel="noopener noreferrer">Resume</a></li>
-              <li><span role="img" aria-label="intern">👨🏾‍💻</span> Working as an intern at <a className="hyperlink" href="https://www.rohankapur.com" target="_blank" rel="noopener noreferrer">Punk House Inc.</a></li>
+              <li><span role="img" aria-label="engineer">👨🏾‍💻</span> Working as a Software Engineer at <a className="hyperlink" href="https://www.quantumscape.com/" target="_blank" rel="noopener noreferrer">QuantumScape</a></li>
               <li><span role="img" aria-label="music">🥁</span> Writing music as <a className="hyperlink" href="https://open.spotify.com/artist/7z8S1uCUgYBYX2lTWx9udV" target="_blank" rel="noopener noreferrer">Full Volume Only</a></li>
             </ul>
           </section>
@@ -50,7 +52,7 @@ function App() {
           <section className="persona-section">
             <h4 className="unselectable">Recently:</h4>
             <ul>
-              <li><span role="img" aria-label="research">🔬</span> Did <a className="hyperlink" href={process.env.PUBLIC_URL + "pdfs/Sandia_Clinic_'21_Preprint.pdf"} target="_blank" rel="noopener noreferrer">research</a> on the permittivity of BaTiO<sub>3</sub> nanoparticles (used in capacitors) with <a className="hyperlink" href="https://www.sandia.gov" target="_blank" rel="noopener noreferrer">Sandia National Labs</a></li> 
+              <li><span role="img" aria-label="research">🔬</span> Did <a className="hyperlink" href={process.env.PUBLIC_URL + "pdfs/Sandia_'21_Paper_Combined.pdf"} target="_blank" rel="noopener noreferrer">research</a> on the permittivity of BaTiO<sub>3</sub> nanoparticles (used in capacitors) with <a className="hyperlink" href="https://www.sandia.gov" target="_blank" rel="noopener noreferrer">Sandia National Labs</a></li> 
               <li><span role="img" aria-label="education">📚</span> Got educated at <a className="hyperlink" href="https://www.hmc.edu/about-hmc/" target="_blank" rel="noopener noreferrer">Harvey Mudd College</a></li>
             </ul>
           </section>
@@ -59,9 +61,9 @@ function App() {
           <section className="persona-section">
             <h4 className="unselectable">Websites that I've made that I'm proud of</h4>
             <ul>
-              <li><a className="hyperlink" href="https://styletransfer.art" target="_blank" rel="noopener noreferrer">styletransfer.art</a> - a near real time neural style transfer filter</li>
-              <li><a className="hyperlink" href="https://www.cs.hmc.edu/~montanez/projects/futility-of-bias-free-search.html" target="_blank" rel="noopener noreferrer">tinyurl.com/amistad-futility</a> - website to communicate main results from <i>The Futility of Bias-Free Learning and Search</i> in more accessible manner</li>
-              <li><a className="hyperlink" href="">this one!</a></li>
+              <li className="bullet"><a className="hyperlink" href="https://styletransfer.art" target="_blank" rel="noopener noreferrer">styletransfer.art</a> - a near real time neural style transfer filter</li>
+              <li className="bullet"><a className="hyperlink" href="https://www.cs.hmc.edu/~montanez/projects/futility-of-bias-free-search.html" target="_blank" rel="noopener noreferrer">tinyurl.com/amistad-futility</a> - website to communicate main results from <i>The Futility of Bias-Free Learning and Search</i> in more accessible manner</li>
+              <li className="bullet"><a className="hyperlink" href="">this one!</a></li>
             </ul>
           </section>
 
@@ -69,11 +71,12 @@ function App() {
           <section className="persona-section">
             <h4 className="unselectable">Things I've written or helped write that I'm proud of</h4>
             <ul>
-              <li><a className="hyperlink" href="https://arxiv.org/pdf/1907.06010.pdf" target="_blank" rel="noopener noreferrer">The Futility of Bias-Free Learning and Search</a></li>
-              <li><a className="hyperlink" href={process.env.PUBLIC_URL + "pdfs/Transition_Metal_Oxide_and_Carbide_Pseudocapacitors.pdf"} target="_blank" rel="noopener noreferrer">Transition Metal Oxide and Carbide Pseudocapacitors</a></li>
-              <li><a className="hyperlink" href="https://arxiv.org/pdf/1911.04964.pdf" target="_blank" rel="noopener noreferrer">The Bias-Expressivity Tradeoff</a></li>
-              <li><a className="hyperlink" href={process.env.PUBLIC_URL + "pdfs/Trump_or_Computer_Dump.pdf"} target="_blank" rel="noopener noreferrer">Trump or Computer Dump?</a></li>
-              <li><a className="hyperlink" href="https://open.spotify.com/artist/7z8S1uCUgYBYX2lTWx9udV" target="_blank" rel="noopener noreferrer">Songs for Losers</a></li>
+              <li className="bullet"><a className="hyperlink" href="https://doi.org/10.1557/s43580-021-00095-0" target="_blank" rel="noopener noreferrer"><em>Investigating the dielectric properties of barium titanate nanocomposites using transmission electron microscopy image processing</em></a></li>
+              <li className="bullet"><a className="hyperlink" href="https://arxiv.org/pdf/1907.06010.pdf" target="_blank" rel="noopener noreferrer"><em>The Futility of Bias-Free Learning and Search</em></a></li>
+              <li className="bullet"><a className="hyperlink" href={process.env.PUBLIC_URL + "pdfs/Transition_Metal_Oxide_and_Carbide_Pseudocapacitors.pdf"} target="_blank" rel="noopener noreferrer"><em>Transition Metal Oxide and Carbide Pseudocapacitors</em></a></li>
+              <li className="bullet"><a className="hyperlink" href="https://arxiv.org/pdf/1911.04964.pdf" target="_blank" rel="noopener noreferrer"><em>The Bias-Expressivity Tradeoff</em></a></li>
+              <li className="bullet"><a className="hyperlink" href={process.env.PUBLIC_URL + "pdfs/Trump_or_Computer_Dump.pdf"} target="_blank" rel="noopener noreferrer"><em>Trump or Computer Dump?</em></a></li>
+              <li className="bullet"><a className="hyperlink" href="https://open.spotify.com/artist/7z8S1uCUgYBYX2lTWx9udV" target="_blank" rel="noopener noreferrer"><em>Songs for Losers</em></a></li>
             </ul>
           </section>
 
