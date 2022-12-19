@@ -20,9 +20,6 @@ function App() {
 
       {/* Contact */}
       <section className="contact-icon-group unselectable">
-        <a href="https://open.spotify.com/artist/7z8S1uCUgYBYX2lTWx9udV" target="_blank" rel="noopener noreferrer">
-          <ContactIcon type={SpotifyIcon}/>
-        </a>
         <a href="http://github.com/akshaytrikha/" target="_blank" rel="noopener noreferrer">
           <ContactIcon type={GitHubIcon}/>
         </a>
@@ -44,7 +41,7 @@ function App() {
             <h4 className="unselectable">Currently:</h4>
             <ul>
               <li><span role="img" aria-label="engineer">👨🏾‍💻</span> Working as a Software Engineer at <a className="hyperlink" href="https://www.quantumscape.com/" target="_blank" rel="noopener noreferrer">QuantumScape</a></li>
-              <li><span role="img" aria-label="music">🥁</span> Writing music as <a className="hyperlink" href="https://open.spotify.com/artist/7z8S1uCUgYBYX2lTWx9udV" target="_blank" rel="noopener noreferrer">Full Volume Only</a></li>
+              <li><span role="img" aria-label="battery">🔋</span> Exploring how to apply deep learning to energy storage</li>
             </ul>
           </section>
 
@@ -76,7 +73,6 @@ function App() {
               <li className="bullet"><a className="hyperlink" href={process.env.PUBLIC_URL + "pdfs/Transition_Metal_Oxide_and_Carbide_Pseudocapacitors.pdf"} target="_blank" rel="noopener noreferrer"><em>Transition Metal Oxide and Carbide Pseudocapacitors</em></a></li>
               <li className="bullet"><a className="hyperlink" href="https://arxiv.org/pdf/1911.04964.pdf" target="_blank" rel="noopener noreferrer"><em>The Bias-Expressivity Tradeoff</em></a></li>
               <li className="bullet"><a className="hyperlink" href={process.env.PUBLIC_URL + "pdfs/Trump_or_Computer_Dump.pdf"} target="_blank" rel="noopener noreferrer"><em>Trump or Computer Dump?</em></a></li>
-              <li className="bullet"><a className="hyperlink" href="https://open.spotify.com/artist/7z8S1uCUgYBYX2lTWx9udV" target="_blank" rel="noopener noreferrer"><em>Songs for Losers</em></a></li>
             </ul>
           </section>
 
