@@ -6,24 +6,24 @@ layout: default
 ---
 
 **Currently**:
-- 👨🏾‍💻 Working as a Software Engineer at [QuantumScape](https://www.quantumscape.com/)
+- 👨🏾‍💻 Working as a Software Engineer at [QuantumScape](https://www.quantumscape.com/){:target="_blank"}
 - 🔋 Exploring how to apply deep learning to energy storage
 
 <!-- TODO: add hyperlinks to pdfs -->
 **Recently**:
-- 🔬 Did [research]() on the permittivity of BaTiO3 nanoparticles (used in capacitors) with [Sandia National Labs](https://www.sandia.gov")
+- 🔬 Did [research](https://doi.org/10.1557/s43580-021-00095-0){:target="_blank"} on the permittivity of BaTiO3 nanoparticles (used in capacitors) with [Sandia National Labs](https://www.sandia.gov){:target="_blank"}
 - 📚 Got educated at Harvey Mudd College
 
 **Things that I've written that I'm proud of**:
-- [Investigating the dielectric properties of barium titanate nanocomposites using transmission electron microscopy image processing](https://doi.org/10.1557/s43580-021-00095-0)
-- [The Futility of Bias-Free Learning and Search](https://arxiv.org/pdf/1907.06010.pdf)
-- [Transition Metal Oxide and Carbide Pseudocapacitors]()
-- [The Bias-Expressivity Tradeoff](https://arxiv.org/pdf/1911.04964.pdf)
+- [Investigating the dielectric properties of barium titanate nanocomposites using transmission electron microscopy image processing](https://doi.org/10.1557/s43580-021-00095-0){:target="_blank"}
+- [The Futility of Bias-Free Learning and Search](https://arxiv.org/pdf/1907.06010.pdf){:target="_blank"}
+- [Transition Metal Oxide and Carbide Pseudocapacitors](){:target="_blank"}
+- [The Bias-Expressivity Tradeoff](https://arxiv.org/pdf/1911.04964.pdf){:target="_blank"}
 - [Trump or Computer Dump?]()
 
 **Websites that I've made that I'm proud of**:
-- [styletransfer.art](https://styletransfer.art) - a near real time neural style transfer filter
-- [tinyurl.com/amistad-futility](https://www.cs.hmc.edu/~montanez/projects/futility-of-bias-free-search.html) - website to communicate main results from The Futility of Bias-Free Learning and Search in more accessible manner
+- [styletransfer.art](https://styletransfer.art){:target="_blank"} - a near real time neural style transfer filter
+- [tinyurl.com/amistad-futility](https://www.cs.hmc.edu/~montanez/projects/futility-of-bias-free-search.html){:target="_blank"} - website to communicate main results from The Futility of Bias-Free Learning and Search in more accessible manner
 
 **Favorite Reads**:
 - The Last Question - Isaac Asimov
