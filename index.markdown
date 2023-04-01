@@ -3,10 +3,37 @@
 # To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
 
 layout: default
+icons:
+  - name: github.png
+    text: GitHub icon
+    link: http://github.com/akshaytrikha/
+  - name: linkedin.png
+    text: LinkedIn icon
+    link: https://www.linkedin.com/in/akshay-trikha/
+  - name: resume.png
+    text: Resume icon
+    link: 
 ---
 
+<!-- Headshot & Contact -->
+<div style="display: flex; flex-direction: column;">
+    <div style="text-align: center;">
+    <img src="/assets/painting.png" alt="Akshay Painting" width="200"/>
+        <ul style="margin-right: 1px">
+            {% for icon in page.icons %}
+                <li style="list-style: none; display: inline; margin-right: 20px;">
+                    <a href="{{icon.link}}" target="_blank" rel="noopener noreferrer">
+                        <img src="/assets/icons/{{ icon.name }}" alt={{icon.text}} width="30"/>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+
 **Currently**:
-- 👨🏾‍💻 Working as a Software Engineer at [QuantumScape](https://www.quantumscape.com/){:target="_blank"}
+- 👨🏾‍💻 Working as a Machine Learning Engineer at [QuantumScape](https://www.quantumscape.com/){:target="_blank"}
 - 🔋 Exploring how to apply deep learning to energy storage
 
 <!-- TODO: add hyperlinks to pdfs -->
