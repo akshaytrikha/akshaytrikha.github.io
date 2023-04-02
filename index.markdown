@@ -15,12 +15,12 @@ icons:
 <!-- Headshot & Contact -->
 <div style="display: flex; flex-direction: column;">
     <div style="text-align: center;">
-    <img src="/assets/painting.png" alt="Akshay Painting" width="200"/>
+    <img src="{{ site.baseurl }} assets/painting.png" alt="Akshay Painting" width="200"/>
         <ul style="margin-right: 3px">
             {% for icon in page.icons %}
                 <li style="list-style: none; display: inline; margin-right: 20px;">
                     <a href="{{icon.link}}" target="_blank" rel="noopener noreferrer">
-                        <img src="/assets/icons/{{ icon.name }}" alt={{icon.text}} width="30"/>
+                        <img src="{{ site.baseurl }} assets/icons/{{ icon.name }}" alt={{icon.text}} width="30"/>
                     </a>
                 </li>
             {% endfor %}
