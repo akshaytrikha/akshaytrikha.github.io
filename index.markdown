@@ -37,6 +37,7 @@ icons:
 - 🔬 Did [research](https://doi.org/10.1557/s43580-021-00095-0){:target="_blank"} on the permittivity of BaTiO3 nanoparticles (used in capacitors) with [Sandia National Labs](https://www.sandia.gov){:target="_blank"}
 - 📚 Got educated at Harvey Mudd College
 
+<!-- TODO: add nbviewer.org for redox flow battery -->
 **Things that I've written that I'm proud of**:
 - [Investigating the dielectric properties of barium titanate nanocomposites using transmission electron microscopy image processing](https://doi.org/10.1557/s43580-021-00095-0){:target="_blank"}
 - [The Futility of Bias-Free Learning and Search](https://arxiv.org/pdf/1907.06010.pdf){:target="_blank"}
