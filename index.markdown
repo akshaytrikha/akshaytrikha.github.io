@@ -30,8 +30,8 @@ icons:
 
 
 **Currently**:
-- 👨🏾‍💻 Working as a Machine Learning Engineer at [QuantumScape](https://www.quantumscape.com/){:target="_blank"}
-- 🔋 Exploring how to apply deep learning to energy storage
+- 👨🏾‍💻 Using computer vision models to accelerate battery development at [QuantumScape](https://www.quantumscape.com/){:target="_blank"}
+- 🔋 Exploring how to apply deep learning to materials discovery at [UC Berkeley](https://mse.berkeley.edu/)
 
 **Recently**:
 - 🔬 Did [research](https://doi.org/10.1557/s43580-021-00095-0){:target="_blank"} on the permittivity of BaTiO3 nanoparticles (used in capacitors) with [Sandia National Labs](https://www.sandia.gov){:target="_blank"}
