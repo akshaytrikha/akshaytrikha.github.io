@@ -11,19 +11,30 @@ I wanted to learn how to build and deploy an ML system in the real world and tho
 
 <figure>
     <br>
-    <img src="{{site.url}}/assets/style-transfer/style-transfer.gif" alt="style transfer demo gif"/>
-    <figcaption style="text-align: center">
-        Try the demo yourself <a href="https://akshaytrikha.github.io/style-transfer/" target="_blank" rel="noopener noreferrer">here</a>
-    </figcaption>
+    <div style="text-align: center;">
+        <img src="{{site.url}}/assets/style-transfer/style-transfer.gif" alt="style transfer demo gif" style="width: 100%"/>
+        <figcaption style="text-align: center">
+            Try the demo yourself <a href="https://akshaytrikha.github.io/style-transfer/" target="_blank" rel="noopener noreferrer">here</a>
+        </figcaption>
+    </div>
     <br>
 </figure>
+
+<!-- <figure>
+    <br>
+
+        <img src="{{site.url}}/assets/mask-finding/fast_mask_finding.png" alt="ML defect detection"/>
+        <figcaption>Fig 1. Mask Finding</figcaption>
+
+    <br>
+</figure> -->
 
 Using your webcam as input, this project generates stylized images in 400ms intervals. It uses two pretrained Tensorflow.js neural networks, sourced from Reiichiro Nakano's [arbitrary-image-stylization-tfjs](https://github.com/reiinakano/arbitrary-image-stylization-tfjs) repo.
 
 1. The first network is used to learn the style of a given image and generate a style representation.
 2. The second network is then used for style transfer, or using the style representation to generate a stylized output image.
 
-The original models were actually full tf models, but Reiichiro distilled them into smaller networks so they would run faster. For a more detailed breakdown of how the networks work, check out his blog [post](https://magenta.tensorflow.org/blog/2018/12/20/style-transfer-js/).
+The original models were actually regular tf models, but Reiichiro distilled them into smaller networks so they would run faster. For a more detailed breakdown of how the networks work, check out his blog [post](https://magenta.tensorflow.org/blog/2018/12/20/style-transfer-js/).
 
 ### Building the React App
 
@@ -33,7 +44,7 @@ I used Nicholas Renotte's [ReactComputerVisonTemplate](https://github.com/nickno
 import Webcam from "react-webcam";
 
 const predict = async () => {
-    // First wait for models and style image to load
+    // First wait for models to load
     await loadModels();
     // init style image and generate style representation
     await initStyleImage();
@@ -50,7 +61,7 @@ const predict = async () => {
 
 1. A very fun fact about using TensorFlow.js is that your browser is locally running inference, and all your data is kept on your device.
 
-2. You have to do a lot of things asynchonously e.g. fetching the models, loading the models, running inference. Timing all of this was how I decided to introduce the delay of 400ms.
+2. You have to do a lot of things asynchronously e.g. fetching the models, loading the models, running inference. Timing all of this was how I decided to introduce the delay of 400ms.
 
 3. tfjs is slightly different to using tf in python in small ways. You have to use methods like `tf.ready().then(() => {})` that returns a promise when tfjs is ready (if the WebGL backend is ready).
 
