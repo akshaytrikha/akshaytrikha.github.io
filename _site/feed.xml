@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-08-01T20:44:38-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">Transfer Learning in Computer Vision</title><link href="http://localhost:4000/deep-learning/2023/07/04/transfer-learning.html" rel="alternate" type="text/html" title="Transfer Learning in Computer Vision" /><published>2023-07-04T09:06:17-07:00</published><updated>2023-07-04T09:06:17-07:00</updated><id>http://localhost:4000/deep-learning/2023/07/04/transfer-learning</id><content type="html" xml:base="http://localhost:4000/deep-learning/2023/07/04/transfer-learning.html"><![CDATA[<p>Recall when beginning to train a neural network its weights might be initialized randomly. What if you could start training with a leg up because the network already has some useful information inside of it? Transfer learning <em>is</em> that leg up where you can repurpose models trained on similar tasks and use them for your specific task instead of training from scratch.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-09-27T18:37:58-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">Transfer Learning in Computer Vision</title><link href="http://localhost:4000/deep-learning/2023/07/04/transfer-learning.html" rel="alternate" type="text/html" title="Transfer Learning in Computer Vision" /><published>2023-07-04T09:06:17-07:00</published><updated>2023-07-04T09:06:17-07:00</updated><id>http://localhost:4000/deep-learning/2023/07/04/transfer-learning</id><content type="html" xml:base="http://localhost:4000/deep-learning/2023/07/04/transfer-learning.html"><![CDATA[<p>Recall when beginning to train a neural network its weights might be initialized randomly. What if you could start training with a leg up because the network already has some useful information inside of it? Transfer learning <em>is</em> that leg up where you can repurpose models trained on similar tasks and use them for your specific task instead of training from scratch.</p>
 
 <p>Benefits include:</p>
 <ul>
@@ -191,4 +191,83 @@ accuracy = accuracy_fn(outputs, y_train)
 <p><br />
 In early 2019 OpenAI published some <a href="https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf">research</a> showing that large language models, when trained on colossal amounts of text, begin to behave in unpredictably intelligently on tasks they weren’t originally trained on. Humorously, part the original dataset for the model was scraped from Reddit - which isn’t always known to be the home of constructive conversation and accurate information so it’s even more surprising how good their model was!</p>
 
-<p>A year after that, while taking a natural language processing course I thought it would be fun to finetune GPT-2 on a corpus of then President Trump’s tweets seeing as he has such a distinct style and voice. I obtained his tweets from the super convenient <a href="https://www.thetrumparchive.com/">Trump Twitter Archive</a> which contained ~56,500 of his tweets from 2009 until he was kicked off the platform on January 8th, 2021. The project took me around 3 weeks if I remember correctly and this weekend as I was dog sitting I remembered that project and got excited about trying to recreate it with the latest tools available, namely HuggingFace. It was awesome to have a benchmark to compare against to measure and truly appreciate the efficiency and ergonomics of HuggingFace’s transformers library. I was able to replicate the finetuning through a short <a href="https://github.com/akshaytrikha/GPT-2-Trump/blob/master/huggingface_trump.ipynb">notebook</a> + host it using gradio on a HuggingFace space for you to play with in just a couple of days.</p>]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">The Bias-Expressivity Trade-off</title><link href="http://localhost:4000/deep-learning/2019/11/09/bias-expressivity-tradeoff.html" rel="alternate" type="text/html" title="The Bias-Expressivity Trade-off" /><published>2019-11-09T13:53:17-08:00</published><updated>2019-11-09T13:53:17-08:00</updated><id>http://localhost:4000/deep-learning/2019/11/09/bias-expressivity-tradeoff</id><content type="html" xml:base="http://localhost:4000/deep-learning/2019/11/09/bias-expressivity-tradeoff.html"><![CDATA[]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">The Futility of Bias-Free Learning and Search</title><link href="http://localhost:4000/deep-learning/2019/07/25/futility-of-bias-free-learning-and-search.html" rel="alternate" type="text/html" title="The Futility of Bias-Free Learning and Search" /><published>2019-07-25T14:53:17-07:00</published><updated>2019-07-25T14:53:17-07:00</updated><id>http://localhost:4000/deep-learning/2019/07/25/futility-of-bias-free-learning-and-search</id><content type="html" xml:base="http://localhost:4000/deep-learning/2019/07/25/futility-of-bias-free-learning-and-search.html"><![CDATA[]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[]]></summary></entry></feed>
+<p>A year after that, while taking a natural language processing course I thought it would be fun to finetune GPT-2 on a corpus of then President Trump’s tweets seeing as he has such a distinct style and voice. I obtained his tweets from the super convenient <a href="https://www.thetrumparchive.com/">Trump Twitter Archive</a> which contained ~56,500 of his tweets from 2009 until he was kicked off the platform on January 8th, 2021. The project took me around 3 weeks if I remember correctly and this weekend as I was dog sitting I remembered that project and got excited about trying to recreate it with the latest tools available, namely HuggingFace. It was awesome to have a benchmark to compare against to measure and truly appreciate the efficiency and ergonomics of HuggingFace’s transformers library. I was able to replicate the finetuning through a short <a href="https://github.com/akshaytrikha/GPT-2-Trump/blob/master/huggingface_trump.ipynb">notebook</a> + host it using gradio on a HuggingFace space for you to play with in just a couple of days.</p>]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Neural Style Transfer Webcam</title><link href="http://localhost:4000/deep-learning/2021/07/16/neural-style-transfer-webcam.html" rel="alternate" type="text/html" title="Neural Style Transfer Webcam" /><published>2021-07-16T05:50:00-07:00</published><updated>2021-07-16T05:50:00-07:00</updated><id>http://localhost:4000/deep-learning/2021/07/16/neural-style-transfer-webcam</id><content type="html" xml:base="http://localhost:4000/deep-learning/2021/07/16/neural-style-transfer-webcam.html"><![CDATA[<h3 id="overview">Overview</h3>
+
+<p>I wanted to learn how to build and deploy an ML system in the real world and thought this would be a fun place to start. You can find my project’s code <a href="https://github.com/akshaytrikha/style-transfer">here</a>.</p>
+
+<figure>
+    <br />
+    <div style="text-align: center;">
+        <img src="http://localhost:4000/assets/style-transfer/style-transfer.gif" alt="style transfer demo gif" style="width: 100%" />
+        <figcaption style="text-align: center">
+            Try the demo yourself <a href="https://akshaytrikha.github.io/style-transfer/" target="_blank" rel="noopener noreferrer">here</a>
+        </figcaption>
+    </div>
+    <br />
+</figure>
+
+<!-- <figure>
+    <br>
+
+        <img src="http://localhost:4000/assets/mask-finding/fast_mask_finding.png" alt="ML defect detection"/>
+        <figcaption>Fig 1. Mask Finding</figcaption>
+
+    <br>
+</figure> -->
+
+<p>Using your webcam as input, this project generates stylized images in 400ms intervals. It uses two pretrained Tensorflow.js neural networks, sourced from Reiichiro Nakano’s <a href="https://github.com/reiinakano/arbitrary-image-stylization-tfjs">arbitrary-image-stylization-tfjs</a> repo.</p>
+
+<ol>
+  <li>The first network is used to learn the style of a given image and generate a style representation.</li>
+  <li>The second network is then used for style transfer, or using the style representation to generate a stylized output image.</li>
+</ol>
+
+<p>The original models were actually regular tf models, but Reiichiro distilled them into smaller networks so they would run faster. For a more detailed breakdown of how the networks work, check out his blog <a href="https://magenta.tensorflow.org/blog/2018/12/20/style-transfer-js/">post</a>.</p>
+
+<h3 id="building-the-react-app">Building the React App</h3>
+
+<p>I used Nicholas Renotte’s <a href="https://github.com/nicknochnack/ReactComputerVisionTemplate">ReactComputerVisonTemplate</a> repo as a template for interfacing with a webcam and rendering output back on screen. The big idea is to use the <code class="language-plaintext highlighter-rouge">react-webcam</code> component to take screenshots, generate their style representations, and then display their stylized images. In pseudo-ish code the entire app is basically:</p>
+
+<pre><code class="language-JavaScript">import Webcam from "react-webcam";
+
+const predict = async () =&gt; {
+    // First wait for models to load
+    await loadModels();
+    // init style image and generate style representation
+    await initStyleImage();
+
+    // every 400ms
+    setInterval(() =&gt; {
+        captureScreenshot();
+        generateStylizedImage();
+    }, 400);
+}
+</code></pre>
+
+<h3 id="lessons-learned">Lessons learned</h3>
+
+<ol>
+  <li>
+    <p>A very fun fact about using TensorFlow.js is that your browser is locally running inference, and all your data is kept on your device.</p>
+  </li>
+  <li>
+    <p>You have to do a lot of things asynchronously e.g. fetching the models, loading the models, running inference. Timing all of this was how I decided to introduce the delay of 400ms.</p>
+  </li>
+  <li>
+    <p>tfjs is slightly different to using tf in python in small ways. You have to use methods like <code class="language-plaintext highlighter-rouge">tf.ready().then(() =&gt; {})</code> that returns a promise when tfjs is ready (if the WebGL backend is ready).</p>
+  </li>
+  <li>
+    <p>I used the html <code class="language-plaintext highlighter-rouge">canvas</code> element to display images and would use <code class="language-plaintext highlighter-rouge">document.getElementById("element-name").src = ...</code> directly to update an element. I standardized the display sizes in px to make it easier to deal with.</p>
+  </li>
+  <li>
+    <p>To make them persistent I stored the model weights in the repo itself so that they’re accessible with e.g. <code class="language-plaintext highlighter-rouge">transferModel = await tf.loadGraphModel(process.env.PUBLIC_URL + '/models/style-prediction/model.json')</code></p>
+  </li>
+</ol>
+
+<h4 id="resources">Resources:</h4>
+
+<ul>
+  <li><a href="https://github.com/reiinakano/arbitrary-image-stylization-tfjs">https://github.com/reiinakano/arbitrary-image-stylization-tfjs</a></li>
+  <li><a href="https://magenta.tensorflow.org/blog/2018/12/20/style-transfer-js/">https://magenta.tensorflow.org/blog/2018/12/20/style-transfer-js/</a></li>
+  <li><a href="https://styletransfer.art">https://styletransfer.art</a></li>
+</ul>]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[Overview]]></summary></entry><entry><title type="html">The Bias-Expressivity Trade-off</title><link href="http://localhost:4000/deep-learning/2019/11/09/bias-expressivity-tradeoff.html" rel="alternate" type="text/html" title="The Bias-Expressivity Trade-off" /><published>2019-11-09T13:53:17-08:00</published><updated>2019-11-09T13:53:17-08:00</updated><id>http://localhost:4000/deep-learning/2019/11/09/bias-expressivity-tradeoff</id><content type="html" xml:base="http://localhost:4000/deep-learning/2019/11/09/bias-expressivity-tradeoff.html"><![CDATA[]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">The Futility of Bias-Free Learning and Search</title><link href="http://localhost:4000/deep-learning/2019/07/25/futility-of-bias-free-learning-and-search.html" rel="alternate" type="text/html" title="The Futility of Bias-Free Learning and Search" /><published>2019-07-25T14:53:17-07:00</published><updated>2019-07-25T14:53:17-07:00</updated><id>http://localhost:4000/deep-learning/2019/07/25/futility-of-bias-free-learning-and-search</id><content type="html" xml:base="http://localhost:4000/deep-learning/2019/07/25/futility-of-bias-free-learning-and-search.html"><![CDATA[]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[]]></summary></entry></feed>
