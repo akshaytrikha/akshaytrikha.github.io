@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-09-27T18:53:41-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">Transfer Learning in Computer Vision</title><link href="http://localhost:4000/deep-learning/2023/07/04/transfer-learning.html" rel="alternate" type="text/html" title="Transfer Learning in Computer Vision" /><published>2023-07-04T09:06:17-07:00</published><updated>2023-07-04T09:06:17-07:00</updated><id>http://localhost:4000/deep-learning/2023/07/04/transfer-learning</id><content type="html" xml:base="http://localhost:4000/deep-learning/2023/07/04/transfer-learning.html"><![CDATA[<p>Recall when beginning to train a neural network its weights might be initialized randomly. What if you could start training with a leg up because the network already has some useful information inside of it? Transfer learning <em>is</em> that leg up where you can repurpose models trained on similar tasks and use them for your specific task instead of training from scratch.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-10-01T21:18:43-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">Transfer Learning in Computer Vision</title><link href="http://localhost:4000/deep-learning/2023/07/04/transfer-learning.html" rel="alternate" type="text/html" title="Transfer Learning in Computer Vision" /><published>2023-07-04T09:06:17-07:00</published><updated>2023-07-04T09:06:17-07:00</updated><id>http://localhost:4000/deep-learning/2023/07/04/transfer-learning</id><content type="html" xml:base="http://localhost:4000/deep-learning/2023/07/04/transfer-learning.html"><![CDATA[<p>Recall when beginning to train a neural network its weights might be initialized randomly. What if you could start training with a leg up because the network already has some useful information inside of it? Transfer learning <em>is</em> that leg up where you can repurpose models trained on similar tasks and use them for your specific task instead of training from scratch.</p>
 
 <p>Benefits include:</p>
 <ul>
@@ -188,10 +188,164 @@ accuracy = accuracy_fn(outputs, y_train)
 
 <gradio-app src="https://akshaytrikha-gpt2-trump.hf.space"></gradio-app>
 
-<p><br />
-In early 2019 OpenAI published some <a href="https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf">research</a> showing that large language models, when trained on colossal amounts of text, begin to behave in unpredictably intelligently on tasks they weren’t originally trained on. Humorously, part the original dataset for the model was scraped from Reddit - which isn’t always known to be the home of constructive conversation and accurate information so it’s even more surprising how good their model was!</p>
+<p>In early 2019 OpenAI published some <a href="https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf">research</a> showing that large language models, when trained on colossal amounts of text, begin to behave in unpredictably intelligently on tasks they weren’t originally trained on. Humorously, part of the original dataset for the model was scraped from Reddit - which isn’t always known to be the home of constructive conversation and accurate information so it’s even more surprising how good their model was!</p>
 
-<p>A year after that, while taking a natural language processing course I thought it would be fun to finetune GPT-2 on a corpus of then President Trump’s tweets seeing as he has such a distinct style and voice. I obtained his tweets from the super convenient <a href="https://www.thetrumparchive.com/">Trump Twitter Archive</a> which contained ~56,500 of his tweets from 2009 until he was kicked off the platform on January 8th, 2021. The project took me around 3 weeks if I remember correctly and this weekend as I was dog sitting I remembered that project and got excited about trying to recreate it with the latest tools available, namely HuggingFace. It was awesome to have a benchmark to compare against to measure and truly appreciate the efficiency and ergonomics of HuggingFace’s transformers library. I was able to replicate the finetuning through a short <a href="https://github.com/akshaytrikha/GPT-2-Trump/blob/master/huggingface_trump.ipynb">notebook</a> + host it using gradio on a HuggingFace space for you to play with in just a couple of days.</p>]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Neural Style Transfer Webcam</title><link href="http://localhost:4000/deep-learning/2021/07/16/neural-style-transfer-webcam.html" rel="alternate" type="text/html" title="Neural Style Transfer Webcam" /><published>2021-07-16T05:50:00-07:00</published><updated>2021-07-16T05:50:00-07:00</updated><id>http://localhost:4000/deep-learning/2021/07/16/neural-style-transfer-webcam</id><content type="html" xml:base="http://localhost:4000/deep-learning/2021/07/16/neural-style-transfer-webcam.html"><![CDATA[<h3 id="overview">Overview</h3>
+<p>A year after that, while taking a natural language processing course I thought it would be fun to finetune GPT-2 on a corpus of then President Trump’s tweets seeing as he has such a distinct style and voice. I obtained his tweets from the super convenient <a href="https://www.thetrumparchive.com/">Trump Twitter Archive</a> which contained ~56,500 of his tweets from 2009 until he was banned from the platform on January 8th, 2021.</p>
+
+<p>The original project took me around 3 weeks if I remember correctly and this weekend as I was dog sitting I remembered that project and got excited about trying to recreate it with the latest tools available, namely HuggingFace. It was awesome to have a benchmark to compare against to measure and truly appreciate the efficiency and ergonomics of HuggingFace’s transformers library. I was able to replicate the finetuning through a short <a href="https://github.com/akshaytrikha/GPT-2-Trump/blob/master/huggingface_trump.ipynb">notebook</a> + host it using gradio on a HuggingFace space in just a couple of days.</p>
+
+<h3 id="finetuning-with-huggingface-transformers">Finetuning with HuggingFace Transformers</h3>
+
+<p>First I defined some hyperparams for training:</p>
+
+<pre><code class="language-Python"># define some params for model
+batch_size = 8
+epochs = 15
+learning_rate = 5e-4
+epsilon = 1e-8
+warmup_steps = 1e2
+sample_every = 100  # produce sample output every 100 steps
+max_length = 140  # max length used in generate() method of model
+</code></pre>
+
+<p>Assuming the twitter data is downloaded and preprocessed, we need to tokenize the tweets (which means assign a unique <code class="language-plaintext highlighter-rouge">int</code> to every word or character) and load them into a dataloader. The <code class="language-plaintext highlighter-rouge">AutoTokenizer</code> is really nice because it uses the right tokenizer for any specific model available on HuggingFace if you give it a model name e.g.<code class="language-plaintext highlighter-rouge">"gpt2-medium"</code>.</p>
+
+<pre><code class="language-Python">from transformers import (
+	AutoTokenizer
+    TextDataset,
+    DataCollatorForLanguageModeling
+)
+
+# create tokenized datasets
+tokenizer = AutoTokenizer.from_pretrained(
+    "gpt2-medium",
+    pad_token='&lt;|endoftext|&gt;'
+)
+
+# custom load_dataset function because there are no labels
+def load_dataset(train_path, dev_path, tokenizer):
+    block_size = 128
+    # block_size = tokenizer.model_max_length
+
+    train_dataset = TextDataset(
+          tokenizer=tokenizer,
+          file_path=train_path,
+          block_size=block_size)
+
+    dev_dataset = TextDataset(
+          tokenizer=tokenizer,
+          file_path=dev_path,
+          block_size=block_size)
+
+    data_collator = DataCollatorForLanguageModeling(
+        tokenizer=tokenizer, mlm=False,
+    )
+    return train_dataset, dev_dataset, data_collator
+
+train_dataset, dev_dataset, data_collator = load_dataset(
+	train_path, dev_path, tokenizer
+)
+</code></pre>
+
+<p>Now we can instantiate the model, optimizer, and learning rate scheduler. I’d never experimented with dynamically changing the learning rate during training so using <code class="language-plaintext highlighter-rouge">get_linear_schedule_with_warmup()</code> was exciting. The resulting learning rate vs. epochs graph looked like this:</p>
+
+<figure>
+    <br />
+	<div style="text-align: center">
+		<img src="http://localhost:4000/assets/trumpdump/learning-rate.png" alt="linear learning rate schedule" style="width: 90%" />
+	</div>
+    <br />
+</figure>
+
+<p>which shows a delay in reaching the <code class="language-plaintext highlighter-rouge">learning_rate</code> by <code class="language-plaintext highlighter-rouge">num_epoch_steps</code> and then a slow decrease until the nth epoch.</p>
+
+<pre><code class="language-Python">from transformers import (
+    AutoModelWithLMHead,
+    get_linear_schedule_with_warmup,
+)
+
+# AutoModelWithLMHead will pick GPT-2 weights from name
+model = AutoModelWithLMHead.from_pretrained(
+	model_name,
+	cache_dir=Path('cache').resolve()
+)
+
+# necessary because of additional bos, eos, pad tokens to embeddings
+model.resize_token_embeddings(len(tokenizer))
+
+# create optimizer and learning rate schedule
+optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate, eps=epsilon)
+
+training_steps = len(train_dataset) * epochs
+
+# adjust learning rate during training
+scheduler = get_linear_schedule_with_warmup(
+	optimizer,
+	num_warmup_steps = warmup_steps,
+	num_training_steps = training_steps
+)
+</code></pre>
+
+<p>Finally we can instantiate a <code class="language-plaintext highlighter-rouge">TrainingArguments</code> object which holds hyperparams and then run training from the <code class="language-plaintext highlighter-rouge">Trainer</code> object. This also prints out a pretty printed loss vs. step table.</p>
+
+<pre><code class="language-Python">from transformers import (
+    Trainer,
+    TrainingArguments,
+)
+
+training_args = TrainingArguments(
+    output_dir="./gpt-2-medium-trump",
+    num_train_epochs=epochs,
+    per_device_train_batch_size=batch_size,
+    per_device_eval_batch_size=batch_size,
+    eval_steps = 400, # n update steps between two evaluations
+    save_steps=800, # n steps per model save
+    warmup_steps=500, # n warmup steps for learning rate scheduler
+)
+
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    data_collator=data_collator,
+    train_dataset=train_dataset,
+    eval_dataset=dev_dataset,
+)
+
+# train &amp; save model run after done
+trainer.train()
+trainer.save_model()
+</code></pre>
+
+<h3 id="inference-with-huggingface-transformers">Inference with HuggingFace Transformers</h3>
+
+<p>Inference was even easier than training as all you need to do is set up a <code class="language-plaintext highlighter-rouge">pipeline</code> for the model:</p>
+
+<pre><code class="language-Python">from transformers import pipeline
+
+trump = pipeline(
+	"text-generation",
+	model="./gpt-2-medium-trump",
+	tokenizer=tokenizer,
+	config={"max_length":max_length}  # n tokens
+)
+</code></pre>
+
+<p>Trump at your fingertips</p>
+
+<pre><code class="language-Python">In:  trump("Today I'll be")[0]["generated_text"]
+
+Out: "Today I'll be rallying w/ @FEMA, First Responders, Law Enforcement,
+and First Responders of Puerto Rico to help those most affected by the
+#IrmaFlood.https://t.co/gsFSghkmdM"
+</code></pre>
+
+<h4 id="resources">Resources:</h4>
+
+<ul>
+  <li><a href="https://huggingface.co/learn/nlp-course/chapter3/3?fw=pt">HuggingFace Trainer</a></li>
+  <li><a href="https://huggingface.co/gpt2">GPT-2 Model Card</a></li>
+  <li><a href="https://github.com/akshaytrikha/GPT-2-Trump/blob/master/huggingface_trump.ipynb">GPT-2 Trump notebook</a></li>
+</ul>]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Neural Style Transfer Webcam</title><link href="http://localhost:4000/deep-learning/2021/07/16/neural-style-transfer-webcam.html" rel="alternate" type="text/html" title="Neural Style Transfer Webcam" /><published>2021-07-16T05:50:00-07:00</published><updated>2021-07-16T05:50:00-07:00</updated><id>http://localhost:4000/deep-learning/2021/07/16/neural-style-transfer-webcam</id><content type="html" xml:base="http://localhost:4000/deep-learning/2021/07/16/neural-style-transfer-webcam.html"><![CDATA[<h3 id="overview">Overview</h3>
 
 <p>I wanted to learn how to build and deploy an ML system in the real world and thought this would be a fun place to start. You can find my project’s code <a href="https://github.com/akshaytrikha/style-transfer">here</a>.</p>
 
