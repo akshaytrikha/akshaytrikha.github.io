@@ -1,6 +1,141 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-10-01T21:18:43-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">Transfer Learning in Computer Vision</title><link href="http://localhost:4000/deep-learning/2023/07/04/transfer-learning.html" rel="alternate" type="text/html" title="Transfer Learning in Computer Vision" /><published>2023-07-04T09:06:17-07:00</published><updated>2023-07-04T09:06:17-07:00</updated><id>http://localhost:4000/deep-learning/2023/07/04/transfer-learning</id><content type="html" xml:base="http://localhost:4000/deep-learning/2023/07/04/transfer-learning.html"><![CDATA[<p>Recall when beginning to train a neural network its weights might be initialized randomly. What if you could start training with a leg up because the network already has some useful information inside of it? Transfer learning <em>is</em> that leg up where you can repurpose models trained on similar tasks and use them for your specific task instead of training from scratch.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2023-10-04T23:02:14-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">Universal Mask Finding</title><link href="http://localhost:4000/2023/09/24/universal-mask-finding.html" rel="alternate" type="text/html" title="Universal Mask Finding" /><published>2023-09-24T13:29:00-07:00</published><updated>2023-09-24T13:29:00-07:00</updated><id>http://localhost:4000/2023/09/24/universal-mask-finding</id><content type="html" xml:base="http://localhost:4000/2023/09/24/universal-mask-finding.html"><![CDATA[<figure>
+    <br />
+    <div style="text-align: center;">
+        <img src="http://localhost:4000/assets/mask-finding/fast_mask_finding.png" alt="ML defect detection" />
+        <figcaption>Fig 1. Mask finding of a chocolate bar in the making</figcaption>
+    </div>
+    <br />
+</figure>
+
+<p><br />
+<strong>Preface</strong></p>
+
+<p>I write using analogy of working for Willy Wonka’s chocolate factory to demonstrate that this method could be used in any manufacturing context that uses computer vision for defect detection. It’s also just fun to think about mass producing chocolate.</p>
+
+<p><br />
+<strong>Background</strong></p>
+
+<p>You recently got hired as an Oompa Loompa software engineer working at Willy Wonka’s chocolate factory on a team that images chocolate accross the various stages of the manufacturing line in order to find defects. They use all sorts of fancy cameras: 2D, 3D, radiographs - they know their stuff. This approach lets them both find defects quicker than waiting till the end of the factory line to find out something’s bad, and also allows scrapping defective material much earlier in the manufacturing process to cut losses.</p>
+
+<figure>
+    <br />
+    <div style="text-align: center;">
+        <img src="http://localhost:4000/assets/mask-finding/defect_detection.gif" alt="ML defect detection" />
+        <figcaption>Fig 2. Defect Detection</figcaption>
+    </div>
+    <br />
+</figure>
+
+<p>However, before we try and find defects in an image of a bar we’ve got to first find an area to search through for defects – otherwise a defect model might get confused and flag the background as defective. We’d also want constrain the defect search space as much as possible to make the defect model more efficient at flagging defects. I refer to this specific semantic segmentation task as “mask finding”.</p>
+
+<p>For example, if your human neural network saw images in Fig 2. of bars-in-the-making, what features would you think distinguish it from the background? Maybe that a bar has four corners, is a different color than the background, and has a different surface consistency. If we as huamns can distinguish chocolate from it’s background we could probably write a rules based program for finding a segmentation mask, but the types of input images often rapidly changes:</p>
+
+<ul>
+  <li>Oompa Loompa scientists may iterate on the product and future chocolates might have different dimensions</li>
+  <li>imaging conditions of inspection stations may change (different light color, angle)</li>
+  <li>we may want to use a different type of camera (laser profiler, darkfield black boxes)</li>
+</ul>
+
+<p>All of which leads to a dizzying combination of image possibilities and you’d be playing a game of cat-and-mouse to keep up by writing separate image processing pipelines for each variation.</p>
+
+<!-- It would be maybe 10x more difficult to build and maintain 40 different traditional image processing pipelines with human coded logic to find masks compared to using one ML model. -->
+
+<p><br />
+<strong>ML</strong></p>
+
+<p>So then how do we scale this process up for hundreds of thousands of images a month across multiple image and camera types? Universal Mask Finding is an ML model I trained while I was at the chocolate factory to solve this problem. The magic of deep learning is that we don’t explicitly program the model to find the features we just mentioned, we ask the model to hopefully learn them automatically across our dataset.</p>
+
+<p>The model is based on an off-the-shelf <a href="https://paperswithcode.com/method/u-net#:~:text=U%2DNet%20is%20an%20architecture,architecture%20of%20a%20convolutional%20network">U-Net</a> segmentation architecture with pretrained resnet34 weights and infers a pixel-level segmentation mask. That means, for every pixel in an image the model predicts the probability that it belongs to the foreground, or background. I fine-tuned a pretrained model originally trained on the ImageNet task with the relevant images of chocolates. More about transfer learning <a href="/deep-learning/2023/07/04/transfer-learning.html">here</a>.</p>
+
+<p>We measure the performance of a segmentation model based on the Intersection over Union score, or IOU, which is a fancy way of saying what % of the prediction overlapped with a ground truth label.</p>
+
+<figure>
+    <br />
+    <div style="text-align: center;">
+        <img src="http://localhost:4000/assets/mask-finding/IOU.gif" alt="mIOU" />
+        <figcaption>Fig 2. Measuring performance with IOU</figcaption>
+    </div>
+    <br />
+</figure>
+
+<p>We can also do interesting things here with the inference probabilities like setting a lower <a href="https://scikit-learn.org/stable/auto_examples/model_selection/plot_precision_recall.html" target="\_blank">threshold</a> for the mask class like 0.3 to increase the recall (but at the cost of decreased precision).</p>
+
+<p><br />
+<strong>Generalization</strong></p>
+
+<p>Often in machine learning we want a model to be able to generalize on a given task as much as possbile, and that’s probably a good marker that it’s learning something about the underlying nature of the problem. Somewhat counterintuitively, I found that I get the best performance by allowing a single model to learn features across all the varying “image types”. Examples of things I would separate into different “image type” categories include different cameras, backgrounds, and components.</p>
+
+<p>To prove the model generalizes well I ran a simple study where I gradually increased the number of image types in the training set, and measured performance against unseen image types.</p>
+
+<figure>
+    <br />
+    <div style="text-align: center;">
+        <img src="http://localhost:4000/assets/mask-finding/generalization.png" alt="generalization" />
+        <figcaption>Fig 3. Generalization</figcaption>
+    </div>
+    <br />
+</figure>
+
+<p>And if we include all image types (dotted lines) during training we can close the gap to virtually perfect. This is particularly nice for two reasons:</p>
+
+<ol>
+  <li>because there is a lot of uncertainty in incoming images in production</li>
+  <li>because this approach saves Willy Wonka $$$ per month in server costs compared to deploying 40 different models for each image type</li>
+</ol>
+
+<figure>
+    <br />
+    <div style="text-align: center;">
+        <img src="http://localhost:4000/assets/mask-finding/image_types.gif" alt="image-types" />
+        <figcaption>Fig 4. Different image types encountered in production</figcaption>
+    </div>
+    <br />
+</figure>
+
+<p><br />
+<strong>Building Trust: Classification Reviewer Model</strong></p>
+
+<p>Some fellow Oompa Loompa cocoa scientists asked me how they could trust my mask finding model’s inferences - a very fair question. I tried developing rule based metrics to see if a mask had 4 corners, straight lines etc. but it turned out to be a difficult task as no one criteria would capture the complexities of judging mask finding quality. I realized that a deep learning model classifier would outperform any handwritten metrics I could come up with. This new classifier would run after each segmentation prediction and would have 3 classes:</p>
+
+<figure style="display: flex; gap: 4.9%; text-align: center;">
+    <div style="width: 30%;">
+        <img src="http://localhost:4000/assets/mask-finding/grade_1.png" alt="ML defect detection" />
+        <figcaption>Grade 1: inferred mask is perfect</figcaption>
+    </div>
+    <div style="width: 30%;">
+        <img src="http://localhost:4000/assets/mask-finding/grade_2.png" alt="ML defect detection" />
+        <figcaption>Grade 2: inferred mask is imperfect but can still be used for downstream defect detection</figcaption>
+    </div>
+    <div style="width: 30%;">
+        <img src="http://localhost:4000/assets/mask-finding/grade_3.png" alt="ML defect detection" />
+        <figcaption>Grade 3: inferred mask has poor quality and can't be trusted for defect defection</figcaption>
+    </div>
+</figure>
+
+<p>Because I already had ground truth human labels for the segmentation task I already had a great set of examples for Grade 1. All I needed to do was find a handful Grade 2 and 3 failures and to my surprise the classifier had an <a href="https://developers.google.com/machine-learning/crash-course/classification/roc-and-auc">AUC</a> of 0.995! We could now use the classifier’s predictions to understand whether or not to trust the segmentation model.</p>
+
+<p><br />
+<strong>Building Trust: Historical Performance</strong></p>
+
+<p>To further build trust in the model I monitor how each image type, which is demarked by a metadata tag in the dataset, performs over time, making sure that all their respective mIOUs are close to 1. I also periodically check my historical data log to inspect how the model is doing in production and shuffle the dataset with the latest examples of failures. It’s very difficult for me to perfectly monitor this model in production and so I also rely on my fellow Oompa Loompa scientists and production managers to notify me if they notice a drop in inference quality.</p>
+
+<figure>
+    <br />
+    <div style="text-align: center;">
+        <img src="http://localhost:4000/assets/mask-finding/historical_performance.png" alt="historical-performance" />
+        <figcaption>Fig 5. Tracking historical performance </figcaption>
+    </div>
+    <br />
+</figure>
+
+<p>In general the number of image types for the model to run on have only been growing so I typicially also evaluate a new model based on a previous iteration’s dataset just to double check that I’m not noticing a drop in quality for older image types. It’s also fun to evaluate an older iteration on the latest model’s test dataset to quantify the improvement.</p>
+
+<p>I’m proud this ML system has been robust while integrating new cameras and chocolate types and was able to scale to help the chocolate factory grow while delivering the best chocolate possible.</p>
+
+<!-- ![Fast Mask Finding](../../../assets/fast_mask_finding.gif) -->]]></content><author><name></name></author><summary type="html"><![CDATA[Fig 1. Mask finding of a chocolate bar in the making]]></summary></entry><entry><title type="html">Transfer Learning in Computer Vision</title><link href="http://localhost:4000/deep-learning/2023/07/04/transfer-learning.html" rel="alternate" type="text/html" title="Transfer Learning in Computer Vision" /><published>2023-07-04T09:06:17-07:00</published><updated>2023-07-04T09:06:17-07:00</updated><id>http://localhost:4000/deep-learning/2023/07/04/transfer-learning</id><content type="html" xml:base="http://localhost:4000/deep-learning/2023/07/04/transfer-learning.html"><![CDATA[<p>Recall when beginning to train a neural network its weights might be initialized randomly. What if you could start training with a leg up because the network already has some useful information inside of it? Transfer learning <em>is</em> that leg up where you can repurpose models trained on similar tasks and use them for your specific task instead of training from scratch.</p>
 
 <p>Benefits include:</p>
+
 <ul>
   <li>training faster</li>
   <li>less training data</li>
@@ -10,7 +145,7 @@
 
 <figure>
     <br />
-    <img src="http://localhost:4000/assets/transfer-learning.png" alt="transfer learning diagram" />
+    <img src="http://localhost:4000/assets/transfer-learning/transfer-learning.png" alt="transfer learning diagram" />
     <figcaption style="text-align: center">diagram inspired by Stanford CS 329P 2021 slides</figcaption>
     <br />
 </figure>
@@ -18,6 +153,7 @@
 <p>Above we see an example of using ImageNet pre-trained weights to classify objects from the Fashion MNIST dataset. A bit of an overkill example, but you get the point.</p>
 
 <p>There are three main ways you might go about transfer learning:</p>
+
 <ol>
   <li>
     <p>Use the pre-trained model as a pre-trained feature extractor by freezing its hidden layers (and replacing its head with your own). This works well when your task isn’t too different from the pre-trained model’s task.</p>
@@ -50,10 +186,10 @@ model = torchvision.models.segmentation.deeplabv3_resnet50(weights=weights).to(d
 <pre><code class="language-Python">from torchinfo import summary
 
 summary(
-    model=model, 
-    input_size=(2, 3, 1024, 1024), 
-    col_names=["input_size", "output_size", "num_params", "trainable"], 
-    col_width=20, 
+    model=model,
+    input_size=(2, 3, 1024, 1024),
+    col_names=["input_size", "output_size", "num_params", "trainable"],
+    col_width=20,
     row_settings=["var_names"]
 )
 </code></pre>
@@ -124,7 +260,7 @@ target = rearrange(target, "bat cla height width -&gt; (bat cla) height width")
 loss = loss_fn(output, target)
 </code></pre>
 
-<p>Now we notice that for each batch there is a dimension in the first index of the tensor for  <code class="language-plaintext highlighter-rouge">logit(false)</code> and <code class="language-plaintext highlighter-rouge">logit(true)</code> which is redundant. We can just keep <code class="language-plaintext highlighter-rouge">logit(true)</code> for each batch, take that softmax, binarize the predictions, and finally calculate accuracy.</p>
+<p>Now we notice that for each batch there is a dimension in the first index of the tensor for <code class="language-plaintext highlighter-rouge">logit(false)</code> and <code class="language-plaintext highlighter-rouge">logit(true)</code> which is redundant. We can just keep <code class="language-plaintext highlighter-rouge">logit(true)</code> for each batch, take that softmax, binarize the predictions, and finally calculate accuracy.</p>
 
 <pre><code class="language-Python"># modify output to be in format [logit(true)] for each sample
 output = output[:, 1, :, :]
@@ -145,6 +281,7 @@ accuracy = accuracy_fn(y_pred)
 <p>For experiment tracking I used <a href="https://wandb.ai/site">wandb</a> which was super simple to set up and let me easily visualize how tweaking some hyperparameters like batch size affected this model’s training. You can find how I created the dataset class, training loops, and experiment tracking for segmentation transfer learning in my <a href="https://github.com/akshaytrikha/transfer-learning/blob/main/segmentation/scripts/">GitHub</a> repository.</p>
 
 <h3 id="classification-example">Classification Example</h3>
+
 <p>Transfer learning for a classification task is virtually the same as segmentation and slightly easier. We start again by loading the pre-trained weights into the model and replacing the classifier layer so that it has the right input and output dimensions for our target problem.</p>
 
 <pre><code class="language-Python">import torchvision
@@ -180,6 +317,7 @@ accuracy = accuracy_fn(outputs, y_train)
 <p>There you have it, now you can use transfer learning for both segmentation and classification tasks.</p>
 
 <h4 id="resources">Resources:</h4>
+
 <ul>
   <li><a href="https://cs231n.github.io/transfer-learning">https://cs231n.github.io/transfer-learning</a></li>
   <li><a href="https://arxiv.org/pdf/1411.1792.pdf">How transferable are features in deep neural networks?</a></li>
@@ -190,7 +328,7 @@ accuracy = accuracy_fn(outputs, y_train)
 
 <p>In early 2019 OpenAI published some <a href="https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf">research</a> showing that large language models, when trained on colossal amounts of text, begin to behave in unpredictably intelligently on tasks they weren’t originally trained on. Humorously, part of the original dataset for the model was scraped from Reddit - which isn’t always known to be the home of constructive conversation and accurate information so it’s even more surprising how good their model was!</p>
 
-<p>A year after that, while taking a natural language processing course I thought it would be fun to finetune GPT-2 on a corpus of then President Trump’s tweets seeing as he has such a distinct style and voice. I obtained his tweets from the super convenient <a href="https://www.thetrumparchive.com/">Trump Twitter Archive</a> which contained ~56,500 of his tweets from 2009 until he was banned from the platform on January 8th, 2021.</p>
+<p>In 2020, while taking an NLP, course I thought it would be fun to finetune GPT-2 on a corpus of then President Trump’s tweets seeing as he has such a distinct style and voice. I obtained his tweets from the super convenient <a href="https://www.thetrumparchive.com/">Trump Twitter Archive</a> which contained ~56,500 of his tweets from 2009 until he was banned from the platform on January 8th, 2021.</p>
 
 <p>The original project took me around 3 weeks if I remember correctly and this weekend as I was dog sitting I remembered that project and got excited about trying to recreate it with the latest tools available, namely HuggingFace. It was awesome to have a benchmark to compare against to measure and truly appreciate the efficiency and ergonomics of HuggingFace’s transformers library. I was able to replicate the finetuning through a short <a href="https://github.com/akshaytrikha/GPT-2-Trump/blob/master/huggingface_trump.ipynb">notebook</a> + host it using gradio on a HuggingFace space in just a couple of days.</p>
 

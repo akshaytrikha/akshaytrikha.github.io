@@ -50,6 +50,7 @@
     <p>Recall when beginning to train a neural network its weights might be initialized randomly. What if you could start training with a leg up because the network already has some useful information inside of it? Transfer learning <em>is</em> that leg up where you can repurpose models trained on similar tasks and use them for your specific task instead of training from scratch.</p>
 
 <p>Benefits include:</p>
+
 <ul>
   <li>training faster</li>
   <li>less training data</li>
@@ -59,7 +60,7 @@
 
 <figure>
     <br />
-    <img src="http://localhost:4000/assets/transfer-learning.png" alt="transfer learning diagram" />
+    <img src="http://localhost:4000/assets/transfer-learning/transfer-learning.png" alt="transfer learning diagram" />
     <figcaption style="text-align: center">diagram inspired by Stanford CS 329P 2021 slides</figcaption>
     <br />
 </figure>
@@ -67,6 +68,7 @@
 <p>Above we see an example of using ImageNet pre-trained weights to classify objects from the Fashion MNIST dataset. A bit of an overkill example, but you get the point.</p>
 
 <p>There are three main ways you might go about transfer learning:</p>
+
 <ol>
   <li>
     <p>Use the pre-trained model as a pre-trained feature extractor by freezing its hidden layers (and replacing its head with your own). This works well when your task isn’t too different from the pre-trained model’s task.</p>
@@ -99,10 +101,10 @@ model = torchvision.models.segmentation.deeplabv3_resnet50(weights=weights).to(d
 <pre><code class="language-Python">from torchinfo import summary
 
 summary(
-    model=model, 
-    input_size=(2, 3, 1024, 1024), 
-    col_names=["input_size", "output_size", "num_params", "trainable"], 
-    col_width=20, 
+    model=model,
+    input_size=(2, 3, 1024, 1024),
+    col_names=["input_size", "output_size", "num_params", "trainable"],
+    col_width=20,
     row_settings=["var_names"]
 )
 </code></pre>
@@ -173,7 +175,7 @@ target = rearrange(target, "bat cla height width -&gt; (bat cla) height width")
 loss = loss_fn(output, target)
 </code></pre>
 
-<p>Now we notice that for each batch there is a dimension in the first index of the tensor for  <code class="language-plaintext highlighter-rouge">logit(false)</code> and <code class="language-plaintext highlighter-rouge">logit(true)</code> which is redundant. We can just keep <code class="language-plaintext highlighter-rouge">logit(true)</code> for each batch, take that softmax, binarize the predictions, and finally calculate accuracy.</p>
+<p>Now we notice that for each batch there is a dimension in the first index of the tensor for <code class="language-plaintext highlighter-rouge">logit(false)</code> and <code class="language-plaintext highlighter-rouge">logit(true)</code> which is redundant. We can just keep <code class="language-plaintext highlighter-rouge">logit(true)</code> for each batch, take that softmax, binarize the predictions, and finally calculate accuracy.</p>
 
 <pre><code class="language-Python"># modify output to be in format [logit(true)] for each sample
 output = output[:, 1, :, :]
@@ -194,6 +196,7 @@ accuracy = accuracy_fn(y_pred)
 <p>For experiment tracking I used <a href="https://wandb.ai/site">wandb</a> which was super simple to set up and let me easily visualize how tweaking some hyperparameters like batch size affected this model’s training. You can find how I created the dataset class, training loops, and experiment tracking for segmentation transfer learning in my <a href="https://github.com/akshaytrikha/transfer-learning/blob/main/segmentation/scripts/">GitHub</a> repository.</p>
 
 <h3 id="classification-example">Classification Example</h3>
+
 <p>Transfer learning for a classification task is virtually the same as segmentation and slightly easier. We start again by loading the pre-trained weights into the model and replacing the classifier layer so that it has the right input and output dimensions for our target problem.</p>
 
 <pre><code class="language-Python">import torchvision
@@ -229,6 +232,7 @@ accuracy = accuracy_fn(outputs, y_train)
 <p>There you have it, now you can use transfer learning for both segmentation and classification tasks.</p>
 
 <h4 id="resources">Resources:</h4>
+
 <ul>
   <li><a href="https://cs231n.github.io/transfer-learning">https://cs231n.github.io/transfer-learning</a></li>
   <li><a href="https://arxiv.org/pdf/1411.1792.pdf">How transferable are features in deep neural networks?</a></li>
