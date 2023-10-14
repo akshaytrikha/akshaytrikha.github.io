@@ -9,7 +9,7 @@ icons:
     link: https://www.linkedin.com/in/akshay-trikha/
   - name: resume.png
     text: Resume icon
-    link: /assets/pdfs/Resume.pdf
+    link: /assets/pdfs/Akshay_Trikha_Resume.pdf
 ---
 
 <!-- Headshot & Contact -->
