@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Material Property Prediction Part 1: A Naive Approach | Akshay Trikha</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Material Property Prediction Part 1: A Naive Approach" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Given its 3D coordinates &amp; atomic numbers of its constituent atoms, can you predict the atomization energy of a molecule? In this first attempt I’m going to try a naive approach by training a fully connected neueral network on a supervised task." />
+<meta property="og:description" content="Given its 3D coordinates &amp; atomic numbers of its constituent atoms, can you predict the atomization energy of a molecule? In this first attempt I’m going to try a naive approach by training a fully connected neueral network on a supervised task." />
+<link rel="canonical" href="http://localhost:4000/deep-learning/2024/02/08/material-property-prediction-1.html" />
+<meta property="og:url" content="http://localhost:4000/deep-learning/2024/02/08/material-property-prediction-1.html" />
+<meta property="og:site_name" content="Akshay Trikha" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-02-08T07:24:17-08:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Material Property Prediction Part 1: A Naive Approach" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-02-08T07:24:17-08:00","datePublished":"2024-02-08T07:24:17-08:00","description":"Given its 3D coordinates &amp; atomic numbers of its constituent atoms, can you predict the atomization energy of a molecule? In this first attempt I’m going to try a naive approach by training a fully connected neueral network on a supervised task.","headline":"Material Property Prediction Part 1: A Naive Approach","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/deep-learning/2024/02/08/material-property-prediction-1.html"},"url":"http://localhost:4000/deep-learning/2024/02/08/material-property-prediction-1.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Akshay Trikha" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Akshay Trikha</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/blog/">Blog</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Material Property Prediction Part 1: A Naive Approach</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-02-08T07:24:17-08:00" itemprop="datePublished">Feb 8, 2024
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Given its 3D coordinates &amp; atomic numbers of its constituent atoms, can you predict the atomization energy of a molecule? In this first attempt I’m going to try a naive approach by training a fully connected neueral network on a supervised task.</p>
+
+<h3 id="the-qm7-dataset">The QM7 dataset</h3>
+
+<p>The QM7 dataset <a href="http://quantum-machine.org/datasets/">[1]</a> consists of 7165 molecules stable organic molecules that have up to 23 constituent atoms. It’s a subset of the larger GDB-13 dataset <a href="https://gdb.unibe.ch/downloads/">[2]</a> which consists of ~1 billion molecules - it’s nice to start with a computationally easier problem.</p>
+
+<p>Each molecule has two fixed lengths matrixes describing it even if it consists of fewer than 23 atoms:</p>
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">23 x 3</code> matrix containing information about its atom positions</li>
+  <li><code class="language-plaintext highlighter-rouge">23 x 1</code> vector containing the atomic numbers of the atoms in their respective positions.</li>
+</ol>
+
+<p>For e.g. a sample entry in the dataset looks like this:</p>
+
+<pre><code class="language-Python">R = [[ 1.8897262 ,  0.        ,  0.        ],
+    [ 4.6184907 ,  0.        ,  0.        ],
+    [ 6.867567  ,  0.        ,  0.        ],
+    [ 9.596332  ,  0.        ,  0.        ],
+    [10.316582  ,  2.7353597 ,  0.15233083],
+    [10.638704  ,  4.0255136 ,  2.673301  ],
+    [12.828274  ,  3.4122975 ,  1.1119337 ],
+    [ 1.1453441 ,  1.9292403 ,  0.02254443],
+    [ 1.1450795 , -0.9839615 ,  1.6594819 ],
+    [ 1.1450039 , -0.94497645, -1.6819507 ],
+    [10.345476  , -0.8279646 , -1.7417984 ],
+    [10.345608  , -1.0861768 ,  1.5949667 ],
+    [ 9.660261  ,  3.832837  , -1.4499112 ],
+    [10.418041  ,  2.9208362 ,  4.3819723 ],
+    [10.137946  ,  6.002734  ,  2.8299594 ],
+    [13.497936  ,  4.9887447 ,  0.21958618],
+    [ 0.        ,  0.        ,  0.        ],
+    [ 0.        ,  0.        ,  0.        ],
+    [ 0.        ,  0.        ,  0.        ],
+    [ 0.        ,  0.        ,  0.        ],
+    [ 0.        ,  0.        ,  0.        ],
+    [ 0.        ,  0.        ,  0.        ],
+    [ 0.        ,  0.        ,  0.        ]]
+
+Z = [6., 6., 6., 6., 6., 6., 7., 1., 1., 1., 1., 1., 1., 1., 1., 1., 0.,
+    0., 0., 0., 0., 0., 0.]
+</code></pre>
+
+<p>Similar to handling images as input to computer vision models, we flatten the <code class="language-plaintext highlighter-rouge">R</code> and <code class="language-plaintext highlighter-rouge">Z</code> to be vectors with dim <code class="language-plaintext highlighter-rouge">92 x 1</code> for each molecule (92 = 23 rows x 4 columns). The flattening works because each entry in the input vector will always correspond to the same entry in either <code class="language-plaintext highlighter-rouge">R</code> or <code class="language-plaintext highlighter-rouge">Z</code>.</p>
+
+<p>Our model’s output will be a scalar quantity representing the atomization energy of the molecule. <strong>TODO</strong>: write about mean + std stuff</p>
+
+<h3 id="model-implementation">Model Implementation</h3>
+
+<p>To make things <em>even</em> more interesting I’ll be coding the neueral network from scratch using just numpy. My hope was that this will give me a deeper and more satisfying understanding of how gradients flow.</p>
+
+<p>Let’s start with how we want the network to look like:</p>
+
+<pre><code class="language-Python">layers = [
+        input_layer,
+        LinearLayer(dim_in=input_layer.num_out, dim_out=400),
+        Tanh(),
+        LinearLayer(400, 100),
+        Tanh(),
+        LinearLayer(100, 1),
+        output_layer,
+    ]
+</code></pre>
+
+<p>This seems reasonable. We’re projecting the input of length 92 into 400 dimensions, then 100, then to a final 1 dimension. Hopefully in between the connections the neural network will be able to learn an ok representation. Since the network is so small I don’t think choosing tanh will be much of a penalty over relu.</p>
+
+<p>So what do the individual layers’ classes look like? Let’s start with an abstract class that contains the potential methods we would need for a layer.</p>
+
+<pre><code class="language-Python">class Module:
+    @abstractmethod
+    def forward(self, X):
+        """Forward pass to compute the output of the module."""
+        pass
+
+    @abstractmethod
+    def backward(self, DY):
+        """Backward pass to compute gradients with respect to module parameters."""
+        pass
+
+    @abstractmethod
+    def update(self, lr):
+        """Update the parameters of the module."""
+        pass
+
+    # @abstractmethod
+    # def average(self, nn, a):
+    #     """Average the parameters of the module with another module."""
+    #     pass  
+</code></pre>
+
+<p>Every layer needs way to propagate inferences with <code class="language-plaintext highlighter-rouge">forward()</code> and a way to backpropagate gradients <code class="language-plaintext highlighter-rouge">backward()</code>. We also need to a way to <code class="language-plaintext highlighter-rouge">update()</code> the weights and biases of a given layer. TODO: Finally, we also need to <code class="language-plaintext highlighter-rouge">average()</code>. With this template we’ll be able to implement the <code class="language-plaintext highlighter-rouge">Input</code>, <code class="language-plaintext highlighter-rouge">Linear</code>, <code class="language-plaintext highlighter-rouge">Output</code> layers and their <code class="language-plaintext highlighter-rouge">Sequential</code> container.</p>
+
+<p><strong>1. Input</strong></p>
+
+<p>The easiest layer is perhaps the input. It’s given a tuple of matrixes <code class="language-plaintext highlighter-rouge">(R, Z)</code> and all we need to do is flatten them and also calculate the layer’s output dimension. It may look like we’re doing duplicate computation while initializing and when forward() is called but in <code class="language-plaintext highlighter-rouge">__init__()</code> we need to calcualte the output dimension so that the next layer can initialize properly - and in <code class="language-plaintext highlighter-rouge">forward()</code> we also need to flatten. However <code class="language-plaintext highlighter-rouge">inp</code> and <code class="language-plaintext highlighter-rouge">x</code> can be of different shape as <code class="language-plaintext highlighter-rouge">inp</code> is whatever we initialize the nn with and <code class="language-plaintext highlighter-rouge">X</code> is probably a minibatch during training / inference.</p>
+
+<p>We start by inherting the <code class="language-plaintext highlighter-rouge">Module</code> we just created:</p>
+
+<pre><code class="language-Python">class InputLayer(Module):
+    def __init__(self, inp):
+        """Initialize the input layer of the MLP
+        Args:
+            inp (tuple): tuple of numpy arrays (R, Z) of shape (nbatch, natoms, 3) and (nbatch, natoms)
+        """
+        R, Z = inp
+        sample_in = np.concatenate([R, np.expand_dims(Z, -1)], axis=-1)
+        self.num_out = sample_in.shape[-2] * sample_in.shape[-1]
+
+    def forward(self, X):
+        """Given input inp, perform a forward pass through layer"""
+        R, Z = X
+        rz = np.concatenate([R, np.expand_dims(Z, -1)], axis=-1)
+</code></pre>
+
+<p><strong>2. Linear</strong></p>
+
+<p>The linear layer is where it gets a bit more interesting. Now we need a way to pass information both forward and backward as well as update the weights.</p>
+
+<p>class LinearLayer(Module):
+    “"”Linear layer with weights W and bias B”””</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def __init__(self, m, n):
+    """Initialize the weights as randomly sampled from normal distribution and then scaled
+        by 1/sqrt(m). Initialize the biases as zeros.
+
+    Args:
+        m (int): number of input features
+        n (int): number of output features
+    """
+    # Adjust the learning rate by 1/sqrt(m) to account for the scaling of the weights
+    self.lr = 1 / m**0.5
+    self.W = np.random.normal(0, 1 / m**0.5, [m, n]).astype("float32")
+    self.B = np.zeros([n]).astype("float32")
+
+def forward(self, X):
+    """Perform forward pass through linear layer"""
+    self.X = X
+    self.output = np.matmul(X, self.W) + self.B
+    return self.output
+
+def backward(self, dY):
+    """Perform backward pass through linear layer"""
+    # for weights chain rule is dL / dW = (dL / dY) * (dY / dW)
+    # Y = XW + B so dY / dW = X
+    # dL / dY = dY
+    self.dW = self.X.T @ dY
+
+    # for biases chain rule is dL / dB = (dL / dY) * (dY / dB)
+    # Y = XW + B so dY / dB = 1
+    # dL / dY = dY
+    # sum over all samples in batch
+    self.dB = np.sum(dY, axis=0)
+
+    # dL / dY = dY by definition
+    if dY.ndim == 1:
+        dY = dY.reshape(-1, 1)
+
+    self.grad = dY @ self.W.T
+
+    return self.grad
+
+def update(self, lr):
+    """Update the weights and biases of linear layer"""
+    W_update = lr * self.lr * self.dW
+    if W_update.ndim == 1:
+        W_update = W_update.reshape(-1, 1)
+
+    self.W -= W_update
+    self.B -= lr * self.lr * self.dB
+
+def average(self, nn, a):
+    """Average the weights and biases of linear layer with another linear layer"""
+    self.W = a * nn.W + (1 - a) * self.W
+    self.B = a * nn.B + (1 - a) * self.B
+</code></pre></div></div>
+
+<h4 id="resources">Resources:</h4>
+
+<ul>
+  <li><a href="http://quantum-machine.org/datasets/">[1] QM7 Dataset</a></li>
+  <li><a href="https://gdb.unibe.ch/downloads/">2 GDB-13</a></li>
+</ul>
+
+  </div><a class="u-url" href="/deep-learning/2024/02/08/material-property-prediction-1.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+    <data class="u-url" href="/"></data>
+  
+    <div class="wrapper">
+  
+      <div class="footer-col-wrapper" style="margin-top: -20px;">
+        <div class="footer-col">
+        </div>
+        <div class="footer-col">
+          <p></p>
+        </div>
+      </div>
+  
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/akshaytrikha"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">akshaytrikha</span></a></li><li><a href="https://www.linkedin.com/in/akshay-trikha"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">akshay-trikha</span></a></li></ul>
+</div>
+  
+    </div>
+</footer>
+  </body>
+
+</html>
