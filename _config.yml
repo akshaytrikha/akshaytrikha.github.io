@@ -28,9 +28,11 @@ linkedin_username: akshay-trikha
 
 # Build settings
 theme: minima
+markdown: kramdown
 plugins:
   - jekyll-feed
   - jekyll-redirect-from
+  - kramdown
 
 # Exclude from processing.
 # The following items will not be processed, by default.

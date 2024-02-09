@@ -4,6 +4,18 @@ title: "Material Property Prediction Part 1: A Naive Approach"
 date: 2024-02-08 15:24:17 -0000
 categories: deep-learning
 ---
+ <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      processEscapes: true
+    }
+  });
+</script>
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
 
 Given its 3D coordinates & atomic numbers of its constituent atoms, can you predict the atomization energy of a molecule? In this first attempt I'm going to try a naive approach by training a fully connected neueral network on a supervised task.
 
@@ -70,7 +82,7 @@ layers = [
 
 This seems reasonable. We're projecting the input of length 92 into 400 dimensions, then 100, then to a final 1 dimension. Hopefully in between the connections the neural network will be able to learn an ok representation. Since the network is so small I don't think choosing tanh will be much of a penalty over relu.
 
-So what do the individual layers' classes look like? Let's start with an abstract class that contains the potential methods we would need for a layer.
+So what do the individual layers' classes look like? Here's an abstract class that contains the potential methods we would need for a layer.
 
 ```Python
 class Module:
@@ -104,7 +116,7 @@ The easiest layer is perhaps the input. It's given a tuple of matrixes `(R, Z)` 
 We start by inherting the `Module` we just created:
 
 ```Python
-class InputLayer(Module):
+class Input(Module):
     def __init__(self, inp):
         """Initialize the input layer of the MLP
         Args:
@@ -122,9 +134,10 @@ class InputLayer(Module):
 
 **2. Linear**
 
-The linear layer is where it gets a bit more interesting. Now we need a way to pass information both forward and backward as well as update the weights.
+The linear layer is where it gets a bit more interesting. Now we need a way to pass information both forward and backward as well as update the weights. We start by randomly initializing the weights and biases. TODO: Adjusting the learning rate by $\frac{1}{\sqrt{m}}$
 
-class LinearLayer(Module):
+```Python
+class Linear(Module):
     """Linear layer with weights W and bias B"""
 
     def __init__(self, m, n):
@@ -180,6 +193,7 @@ class LinearLayer(Module):
         """Average the weights and biases of linear layer with another linear layer"""
         self.W = a * nn.W + (1 - a) * self.W
         self.B = a * nn.B + (1 - a) * self.B
+```
 
 
 

@@ -1,4 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2024-02-08T20:13:30-08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">Material Property Prediction Part 1: A Naive Approach</title><link href="http://localhost:4000/deep-learning/2024/02/08/material-property-prediction-1.html" rel="alternate" type="text/html" title="Material Property Prediction Part 1: A Naive Approach" /><published>2024-02-08T07:24:17-08:00</published><updated>2024-02-08T07:24:17-08:00</updated><id>http://localhost:4000/deep-learning/2024/02/08/material-property-prediction-1</id><content type="html" xml:base="http://localhost:4000/deep-learning/2024/02/08/material-property-prediction-1.html"><![CDATA[<p>Given its 3D coordinates &amp; atomic numbers of its constituent atoms, can you predict the atomization energy of a molecule? In this first attempt I’m going to try a naive approach by training a fully connected neueral network on a supervised task.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2024-02-08T21:49:46-08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">Material Property Prediction Part 1: A Naive Approach</title><link href="http://localhost:4000/deep-learning/2024/02/08/material-property-prediction-1.html" rel="alternate" type="text/html" title="Material Property Prediction Part 1: A Naive Approach" /><published>2024-02-08T07:24:17-08:00</published><updated>2024-02-08T07:24:17-08:00</updated><id>http://localhost:4000/deep-learning/2024/02/08/material-property-prediction-1</id><content type="html" xml:base="http://localhost:4000/deep-learning/2024/02/08/material-property-prediction-1.html"><![CDATA[<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/javascript" async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<p>Given its 3D coordinates &amp; atomic numbers of its constituent atoms, can you predict the atomization energy of a molecule? In this first attempt I’m going to try a naive approach by training a fully connected neueral network on a supervised task.</p>
 
 <h3 id="the-qm7-dataset">The QM7 dataset</h3>
 
@@ -63,7 +75,7 @@ Z = [6., 6., 6., 6., 6., 6., 7., 1., 1., 1., 1., 1., 1., 1., 1., 1., 0.,
 
 <p>This seems reasonable. We’re projecting the input of length 92 into 400 dimensions, then 100, then to a final 1 dimension. Hopefully in between the connections the neural network will be able to learn an ok representation. Since the network is so small I don’t think choosing tanh will be much of a penalty over relu.</p>
 
-<p>So what do the individual layers’ classes look like? Let’s start with an abstract class that contains the potential methods we would need for a layer.</p>
+<p>So what do the individual layers’ classes look like? Here’s an abstract class that contains the potential methods we would need for a layer.</p>
 
 <pre><code class="language-Python">class Module:
     @abstractmethod
@@ -95,7 +107,7 @@ Z = [6., 6., 6., 6., 6., 6., 7., 1., 1., 1., 1., 1., 1., 1., 1., 1., 0.,
 
 <p>We start by inherting the <code class="language-plaintext highlighter-rouge">Module</code> we just created:</p>
 
-<pre><code class="language-Python">class InputLayer(Module):
+<pre><code class="language-Python">class Input(Module):
     def __init__(self, inp):
         """Initialize the input layer of the MLP
         Args:
@@ -113,72 +125,72 @@ Z = [6., 6., 6., 6., 6., 6., 7., 1., 1., 1., 1., 1., 1., 1., 1., 1., 0.,
 
 <p><strong>2. Linear</strong></p>
 
-<p>The linear layer is where it gets a bit more interesting. Now we need a way to pass information both forward and backward as well as update the weights.</p>
+<p>The linear layer is where it gets a bit more interesting. Now we need a way to pass information both forward and backward as well as update the weights. We start by randomly initializing the weights and biases. TODO: Adjusting the learning rate by $\frac{1}{\sqrt{m}}$</p>
 
-<p>class LinearLayer(Module):
-    “"”Linear layer with weights W and bias B”””</p>
+<pre><code class="language-Python">class Linear(Module):
+    """Linear layer with weights W and bias B"""
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def __init__(self, m, n):
-    """Initialize the weights as randomly sampled from normal distribution and then scaled
-        by 1/sqrt(m). Initialize the biases as zeros.
+    def __init__(self, m, n):
+        """Initialize the weights as randomly sampled from normal distribution and then scaled
+            by 1/sqrt(m). Initialize the biases as zeros.
 
-    Args:
-        m (int): number of input features
-        n (int): number of output features
-    """
-    # Adjust the learning rate by 1/sqrt(m) to account for the scaling of the weights
-    self.lr = 1 / m**0.5
-    self.W = np.random.normal(0, 1 / m**0.5, [m, n]).astype("float32")
-    self.B = np.zeros([n]).astype("float32")
+        Args:
+            m (int): number of input features
+            n (int): number of output features
+        """
+        # Adjust the learning rate by 1/sqrt(m) to account for the scaling of the weights
+        self.lr = 1 / m**0.5
+        self.W = np.random.normal(0, 1 / m**0.5, [m, n]).astype("float32")
+        self.B = np.zeros([n]).astype("float32")
 
-def forward(self, X):
-    """Perform forward pass through linear layer"""
-    self.X = X
-    self.output = np.matmul(X, self.W) + self.B
-    return self.output
+    def forward(self, X):
+        """Perform forward pass through linear layer"""
+        self.X = X
+        self.output = np.matmul(X, self.W) + self.B
+        return self.output
 
-def backward(self, dY):
-    """Perform backward pass through linear layer"""
-    # for weights chain rule is dL / dW = (dL / dY) * (dY / dW)
-    # Y = XW + B so dY / dW = X
-    # dL / dY = dY
-    self.dW = self.X.T @ dY
+    def backward(self, dY):
+        """Perform backward pass through linear layer"""
+        # for weights chain rule is dL / dW = (dL / dY) * (dY / dW)
+        # Y = XW + B so dY / dW = X
+        # dL / dY = dY
+        self.dW = self.X.T @ dY
 
-    # for biases chain rule is dL / dB = (dL / dY) * (dY / dB)
-    # Y = XW + B so dY / dB = 1
-    # dL / dY = dY
-    # sum over all samples in batch
-    self.dB = np.sum(dY, axis=0)
+        # for biases chain rule is dL / dB = (dL / dY) * (dY / dB)
+        # Y = XW + B so dY / dB = 1
+        # dL / dY = dY
+        # sum over all samples in batch
+        self.dB = np.sum(dY, axis=0)
 
-    # dL / dY = dY by definition
-    if dY.ndim == 1:
-        dY = dY.reshape(-1, 1)
+        # dL / dY = dY by definition
+        if dY.ndim == 1:
+            dY = dY.reshape(-1, 1)
 
-    self.grad = dY @ self.W.T
+        self.grad = dY @ self.W.T
 
-    return self.grad
+        return self.grad
 
-def update(self, lr):
-    """Update the weights and biases of linear layer"""
-    W_update = lr * self.lr * self.dW
-    if W_update.ndim == 1:
-        W_update = W_update.reshape(-1, 1)
+    def update(self, lr):
+        """Update the weights and biases of linear layer"""
+        W_update = lr * self.lr * self.dW
+        if W_update.ndim == 1:
+            W_update = W_update.reshape(-1, 1)
 
-    self.W -= W_update
-    self.B -= lr * self.lr * self.dB
+        self.W -= W_update
+        self.B -= lr * self.lr * self.dB
 
-def average(self, nn, a):
-    """Average the weights and biases of linear layer with another linear layer"""
-    self.W = a * nn.W + (1 - a) * self.W
-    self.B = a * nn.B + (1 - a) * self.B
-</code></pre></div></div>
+    def average(self, nn, a):
+        """Average the weights and biases of linear layer with another linear layer"""
+        self.W = a * nn.W + (1 - a) * self.W
+        self.B = a * nn.B + (1 - a) * self.B
+</code></pre>
 
 <h4 id="resources">Resources:</h4>
 
 <ul>
   <li><a href="http://quantum-machine.org/datasets/">[1] QM7 Dataset</a></li>
   <li><a href="https://gdb.unibe.ch/downloads/">2 GDB-13</a></li>
-</ul>]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[Given its 3D coordinates &amp; atomic numbers of its constituent atoms, can you predict the atomization energy of a molecule? In this first attempt I’m going to try a naive approach by training a fully connected neueral network on a supervised task.]]></summary></entry><entry><title type="html">Universal Mask Finding</title><link href="http://localhost:4000/2023/09/24/universal-mask-finding.html" rel="alternate" type="text/html" title="Universal Mask Finding" /><published>2023-09-24T13:29:00-07:00</published><updated>2023-09-24T13:29:00-07:00</updated><id>http://localhost:4000/2023/09/24/universal-mask-finding</id><content type="html" xml:base="http://localhost:4000/2023/09/24/universal-mask-finding.html"><![CDATA[<figure>
+</ul>]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Universal Mask Finding</title><link href="http://localhost:4000/2023/09/24/universal-mask-finding.html" rel="alternate" type="text/html" title="Universal Mask Finding" /><published>2023-09-24T13:29:00-07:00</published><updated>2023-09-24T13:29:00-07:00</updated><id>http://localhost:4000/2023/09/24/universal-mask-finding</id><content type="html" xml:base="http://localhost:4000/2023/09/24/universal-mask-finding.html"><![CDATA[<figure>
     <br />
     <div style="text-align: center;">
         <img src="http://localhost:4000/assets/mask-finding/fast_mask_finding.png" alt="ML defect detection" />

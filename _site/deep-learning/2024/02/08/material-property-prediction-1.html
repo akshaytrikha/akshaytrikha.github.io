@@ -7,8 +7,6 @@
 <meta name="generator" content="Jekyll v4.3.2" />
 <meta property="og:title" content="Material Property Prediction Part 1: A Naive Approach" />
 <meta property="og:locale" content="en_US" />
-<meta name="description" content="Given its 3D coordinates &amp; atomic numbers of its constituent atoms, can you predict the atomization energy of a molecule? In this first attempt I’m going to try a naive approach by training a fully connected neueral network on a supervised task." />
-<meta property="og:description" content="Given its 3D coordinates &amp; atomic numbers of its constituent atoms, can you predict the atomization energy of a molecule? In this first attempt I’m going to try a naive approach by training a fully connected neueral network on a supervised task." />
 <link rel="canonical" href="http://localhost:4000/deep-learning/2024/02/08/material-property-prediction-1.html" />
 <meta property="og:url" content="http://localhost:4000/deep-learning/2024/02/08/material-property-prediction-1.html" />
 <meta property="og:site_name" content="Akshay Trikha" />
@@ -17,7 +15,7 @@
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Material Property Prediction Part 1: A Naive Approach" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-02-08T07:24:17-08:00","datePublished":"2024-02-08T07:24:17-08:00","description":"Given its 3D coordinates &amp; atomic numbers of its constituent atoms, can you predict the atomization energy of a molecule? In this first attempt I’m going to try a naive approach by training a fully connected neueral network on a supervised task.","headline":"Material Property Prediction Part 1: A Naive Approach","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/deep-learning/2024/02/08/material-property-prediction-1.html"},"url":"http://localhost:4000/deep-learning/2024/02/08/material-property-prediction-1.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-02-08T07:24:17-08:00","datePublished":"2024-02-08T07:24:17-08:00","headline":"Material Property Prediction Part 1: A Naive Approach","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/deep-learning/2024/02/08/material-property-prediction-1.html"},"url":"http://localhost:4000/deep-learning/2024/02/08/material-property-prediction-1.html"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Akshay Trikha" /></head>
 <body><header class="site-header" role="banner">
@@ -47,7 +45,19 @@
   </header>
 
   <div class="post-content e-content" itemprop="articleBody">
-    <p>Given its 3D coordinates &amp; atomic numbers of its constituent atoms, can you predict the atomization energy of a molecule? In this first attempt I’m going to try a naive approach by training a fully connected neueral network on a supervised task.</p>
+    <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      processEscapes: true
+    }
+  });
+</script>
+
+<script type="text/javascript" async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+<p>Given its 3D coordinates &amp; atomic numbers of its constituent atoms, can you predict the atomization energy of a molecule? In this first attempt I’m going to try a naive approach by training a fully connected neueral network on a supervised task.</p>
 
 <h3 id="the-qm7-dataset">The QM7 dataset</h3>
 
@@ -112,7 +122,7 @@ Z = [6., 6., 6., 6., 6., 6., 7., 1., 1., 1., 1., 1., 1., 1., 1., 1., 0.,
 
 <p>This seems reasonable. We’re projecting the input of length 92 into 400 dimensions, then 100, then to a final 1 dimension. Hopefully in between the connections the neural network will be able to learn an ok representation. Since the network is so small I don’t think choosing tanh will be much of a penalty over relu.</p>
 
-<p>So what do the individual layers’ classes look like? Let’s start with an abstract class that contains the potential methods we would need for a layer.</p>
+<p>So what do the individual layers’ classes look like? Here’s an abstract class that contains the potential methods we would need for a layer.</p>
 
 <pre><code class="language-Python">class Module:
     @abstractmethod
@@ -144,7 +154,7 @@ Z = [6., 6., 6., 6., 6., 6., 7., 1., 1., 1., 1., 1., 1., 1., 1., 1., 0.,
 
 <p>We start by inherting the <code class="language-plaintext highlighter-rouge">Module</code> we just created:</p>
 
-<pre><code class="language-Python">class InputLayer(Module):
+<pre><code class="language-Python">class Input(Module):
     def __init__(self, inp):
         """Initialize the input layer of the MLP
         Args:
@@ -162,65 +172,65 @@ Z = [6., 6., 6., 6., 6., 6., 7., 1., 1., 1., 1., 1., 1., 1., 1., 1., 0.,
 
 <p><strong>2. Linear</strong></p>
 
-<p>The linear layer is where it gets a bit more interesting. Now we need a way to pass information both forward and backward as well as update the weights.</p>
+<p>The linear layer is where it gets a bit more interesting. Now we need a way to pass information both forward and backward as well as update the weights. We start by randomly initializing the weights and biases. TODO: Adjusting the learning rate by $\frac{1}{\sqrt{m}}$</p>
 
-<p>class LinearLayer(Module):
-    “"”Linear layer with weights W and bias B”””</p>
+<pre><code class="language-Python">class Linear(Module):
+    """Linear layer with weights W and bias B"""
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>def __init__(self, m, n):
-    """Initialize the weights as randomly sampled from normal distribution and then scaled
-        by 1/sqrt(m). Initialize the biases as zeros.
+    def __init__(self, m, n):
+        """Initialize the weights as randomly sampled from normal distribution and then scaled
+            by 1/sqrt(m). Initialize the biases as zeros.
 
-    Args:
-        m (int): number of input features
-        n (int): number of output features
-    """
-    # Adjust the learning rate by 1/sqrt(m) to account for the scaling of the weights
-    self.lr = 1 / m**0.5
-    self.W = np.random.normal(0, 1 / m**0.5, [m, n]).astype("float32")
-    self.B = np.zeros([n]).astype("float32")
+        Args:
+            m (int): number of input features
+            n (int): number of output features
+        """
+        # Adjust the learning rate by 1/sqrt(m) to account for the scaling of the weights
+        self.lr = 1 / m**0.5
+        self.W = np.random.normal(0, 1 / m**0.5, [m, n]).astype("float32")
+        self.B = np.zeros([n]).astype("float32")
 
-def forward(self, X):
-    """Perform forward pass through linear layer"""
-    self.X = X
-    self.output = np.matmul(X, self.W) + self.B
-    return self.output
+    def forward(self, X):
+        """Perform forward pass through linear layer"""
+        self.X = X
+        self.output = np.matmul(X, self.W) + self.B
+        return self.output
 
-def backward(self, dY):
-    """Perform backward pass through linear layer"""
-    # for weights chain rule is dL / dW = (dL / dY) * (dY / dW)
-    # Y = XW + B so dY / dW = X
-    # dL / dY = dY
-    self.dW = self.X.T @ dY
+    def backward(self, dY):
+        """Perform backward pass through linear layer"""
+        # for weights chain rule is dL / dW = (dL / dY) * (dY / dW)
+        # Y = XW + B so dY / dW = X
+        # dL / dY = dY
+        self.dW = self.X.T @ dY
 
-    # for biases chain rule is dL / dB = (dL / dY) * (dY / dB)
-    # Y = XW + B so dY / dB = 1
-    # dL / dY = dY
-    # sum over all samples in batch
-    self.dB = np.sum(dY, axis=0)
+        # for biases chain rule is dL / dB = (dL / dY) * (dY / dB)
+        # Y = XW + B so dY / dB = 1
+        # dL / dY = dY
+        # sum over all samples in batch
+        self.dB = np.sum(dY, axis=0)
 
-    # dL / dY = dY by definition
-    if dY.ndim == 1:
-        dY = dY.reshape(-1, 1)
+        # dL / dY = dY by definition
+        if dY.ndim == 1:
+            dY = dY.reshape(-1, 1)
 
-    self.grad = dY @ self.W.T
+        self.grad = dY @ self.W.T
 
-    return self.grad
+        return self.grad
 
-def update(self, lr):
-    """Update the weights and biases of linear layer"""
-    W_update = lr * self.lr * self.dW
-    if W_update.ndim == 1:
-        W_update = W_update.reshape(-1, 1)
+    def update(self, lr):
+        """Update the weights and biases of linear layer"""
+        W_update = lr * self.lr * self.dW
+        if W_update.ndim == 1:
+            W_update = W_update.reshape(-1, 1)
 
-    self.W -= W_update
-    self.B -= lr * self.lr * self.dB
+        self.W -= W_update
+        self.B -= lr * self.lr * self.dB
 
-def average(self, nn, a):
-    """Average the weights and biases of linear layer with another linear layer"""
-    self.W = a * nn.W + (1 - a) * self.W
-    self.B = a * nn.B + (1 - a) * self.B
-</code></pre></div></div>
+    def average(self, nn, a):
+        """Average the weights and biases of linear layer with another linear layer"""
+        self.W = a * nn.W + (1 - a) * self.W
+        self.B = a * nn.B + (1 - a) * self.B
+</code></pre>
 
 <h4 id="resources">Resources:</h4>
 
