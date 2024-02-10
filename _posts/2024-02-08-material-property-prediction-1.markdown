@@ -91,7 +91,8 @@ class Module:
 
     @abstractmethod
     def backward(self, DY):
-        """Backward pass to compute gradients with respect to module parameters."""
+        """Backward pass to compute gradients with respect to module 
+        parameters."""
         pass
 
     @abstractmethod
@@ -116,7 +117,8 @@ class Input(Module):
     def __init__(self, inp):
         """Initialize the input layer of the MLP
         Args:
-            inp (tuple): tuple of numpy arrays (R, Z) of shape (nbatch, natoms, 3) and (nbatch, natoms)
+            inp (tuple): tuple of numpy arrays (R, Z) of shape 
+                         (nbatch, natoms, 3) and (nbatch, natoms)
         """
         R, Z = inp
         sample_in = np.concatenate([R, np.expand_dims(Z, -1)], axis=-1)
@@ -187,7 +189,7 @@ Finally for calculating the gradient, we want to find an expression for how much
 
 We know `dY` is given to us and $\frac{dY}{dX} = W$ so the expression is `self.grad = dY @ self.W.T`. 
  
-<!-- and $\frac{dL}{db}$ -->
+An important note about `update()` here is that we want to adjust the amount we update the weights and biases by the learning rate (sometimes referred to as $\alpha$). The usual analogy people use is that the gradient dictates which direction we want to go in and the learning rate tells us how big of a step to take. 
 
 ```Python
     def backward(self, dY):
@@ -204,20 +206,68 @@ We know `dY` is given to us and $\frac{dY}{dX} = W$ so the expression is `self.g
 
     def update(self, lr):
         """Update the weights and biases of linear layer"""
-        W_update = lr * self.lr * self.dW
-        if W_update.ndim == 1:
-            W_update = W_update.reshape(-1, 1)
-
-        self.W -= W_update
+        self.W -= lr * self.lr * self.dW
         self.B -= lr * self.lr * self.dB
 
     # def average(self, nn, a):
-    #     """Average the weights and biases of linear layer with another linear layer"""
+    #     """Average the weights and biases of linear layer with another 
+    #         linear layer"""
     #     self.W = a * nn.W + (1 - a) * self.W
-        # self.B = a * nn.B + (1 - a) * self.B
+    # self.B = a * nn.B + (1 - a) * self.B
 ```
 
+**3. Tanh**
 
+This layer is really straightforward. We need a nonlinear activiation function to learn nonlinear functions. So the `forward()` method is just using calling the tanh function like so `self.Y = np.tanh(X)`. Then for `backward()` we want to differentiate the function and lucky for us someone's already done that for us and it's $(1 - Y)^2 \times dY$.
+
+```Python
+class Tanh(Module):
+    def forward(self, X):
+        self.Y = np.tanh(X)
+        return self.Y
+
+    def backward(self, dY):
+        self.grad = (1 - self.Y**2) * dY
+        return self.grad
+```
+
+**4. Output**
+
+**5. Sequential**
+
+The `Sequential` class is our container for neatly packaging all of the network's sublayers. Its `forward()` and `backward()` methods exists as orchestrators for how the information flows in the network. All it's doing is passing on the info to the subsequent or previous layers using for loops for the number of layers we have.
+
+```Python
+class Sequential(Module):
+    def __init__(self, modules):
+        self.modules = modules
+
+    def forward(self, X):
+        """Given input X, perform a full forward pass through the MLP"""
+        # iterate through layers and call forward() on output of each previous layer
+        for module in self.modules:
+            X = module.forward(X)
+
+        return X
+
+    def backward(self, dY):
+        """Perform a full backward pass through the MLP.
+        dY is gradient of the loss w.r.t the final output"""
+        for module in reversed(self.modules):
+            dY = module.backward(dY)
+
+        return dY
+
+    def update(self, lr):
+        for m in self.modules:
+            m.update(lr)
+
+    # def average(self, nn, a):
+    #     for m, n in zip(self.modules, nn.modules):
+    #         m.average(n, a)
+```
+
+And there you have it! That's all the layers you'll need to train a dense network. Pretty amazing how little code there is right. 
 
 
 #### Resources:
