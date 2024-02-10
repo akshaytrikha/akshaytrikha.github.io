@@ -57,7 +57,7 @@
 <script type="text/javascript" async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 
-<p>Given its 3D coordinates &amp; atomic numbers of its constituent atoms, can you predict the atomization energy of a molecule? In this first attempt I’m going to try a naive approach by training a fully connected neueral network on a supervised task.</p>
+<p>Given its 3D coordinates &amp; atomic numbers of its constituent atoms, can you predict the atomization energy of a molecule? In this first attempt I’m going to try a naive approach by training a fully connected neueral network on a supervised task. To make things <em>even</em> more interesting I’ll be writing the neueral network from scratch using just numpy. My hope was this will give me a deeper and more satisfying understanding of how information flows.</p>
 
 <h3 id="the-qm7-dataset">The QM7 dataset</h3>
 
@@ -65,8 +65,8 @@
 
 <p>Each molecule has two fixed lengths matrixes describing it even if it consists of fewer than 23 atoms:</p>
 <ol>
-  <li><code class="language-plaintext highlighter-rouge">23 x 3</code> matrix containing information about its atom positions</li>
-  <li><code class="language-plaintext highlighter-rouge">23 x 1</code> vector containing the atomic numbers of the atoms in their respective positions.</li>
+  <li><code class="language-plaintext highlighter-rouge">23 x 3</code> matrix <code class="language-plaintext highlighter-rouge">R</code> containing information about its atom positions</li>
+  <li><code class="language-plaintext highlighter-rouge">23 x 1</code> vector <code class="language-plaintext highlighter-rouge">Z</code> containing the atomic numbers of the atoms in their respective positions.</li>
 </ol>
 
 <p>For e.g. a sample entry in the dataset looks like this:</p>
@@ -104,8 +104,6 @@ Z = [6., 6., 6., 6., 6., 6., 7., 1., 1., 1., 1., 1., 1., 1., 1., 1., 0.,
 <p>Our model’s output will be a scalar quantity representing the atomization energy of the molecule. <strong>TODO</strong>: write about mean + std stuff</p>
 
 <h3 id="model-implementation">Model Implementation</h3>
-
-<p>To make things <em>even</em> more interesting I’ll be coding the neueral network from scratch using just numpy. My hope was that this will give me a deeper and more satisfying understanding of how gradients flow.</p>
 
 <p>Let’s start with how we want the network to look like:</p>
 
@@ -150,9 +148,7 @@ Z = [6., 6., 6., 6., 6., 6., 7., 1., 1., 1., 1., 1., 1., 1., 1., 1., 0.,
 
 <p><strong>1. Input</strong></p>
 
-<p>The easiest layer is perhaps the input. It’s given a tuple of matrixes <code class="language-plaintext highlighter-rouge">(R, Z)</code> and all we need to do is flatten them and also calculate the layer’s output dimension. It may look like we’re doing duplicate computation while initializing and when forward() is called but in <code class="language-plaintext highlighter-rouge">__init__()</code> we need to calcualte the output dimension so that the next layer can initialize properly - and in <code class="language-plaintext highlighter-rouge">forward()</code> we also need to flatten. However <code class="language-plaintext highlighter-rouge">inp</code> and <code class="language-plaintext highlighter-rouge">x</code> can be of different shape as <code class="language-plaintext highlighter-rouge">inp</code> is whatever we initialize the nn with and <code class="language-plaintext highlighter-rouge">X</code> is probably a minibatch during training / inference.</p>
-
-<p>We start by inherting the <code class="language-plaintext highlighter-rouge">Module</code> we just created:</p>
+<p>The easiest layer is perhaps the input. It’s given a tuple of matrixes <code class="language-plaintext highlighter-rouge">(R, Z)</code> and all we need to do is flatten it and also calculate the layer’s output dimension. It may look like we’re doing duplicate computation while initializing and when forward() is called but in <code class="language-plaintext highlighter-rouge">__init__()</code> we need to calcualte the output dimension so that the next layer can initialize properly - and in <code class="language-plaintext highlighter-rouge">forward()</code> we also need to flatten. However <code class="language-plaintext highlighter-rouge">inp</code> and <code class="language-plaintext highlighter-rouge">x</code> can be of different shape as <code class="language-plaintext highlighter-rouge">inp</code> is whatever we initialize the nn with and <code class="language-plaintext highlighter-rouge">X</code> is probably a minibatch during training / inference.</p>
 
 <pre><code class="language-Python">class Input(Module):
     def __init__(self, inp):
@@ -172,47 +168,71 @@ Z = [6., 6., 6., 6., 6., 6., 7., 1., 1., 1., 1., 1., 1., 1., 1., 1., 0.,
 
 <p><strong>2. Linear</strong></p>
 
-<p>The linear layer is where it gets a bit more interesting. Now we need a way to pass information both forward and backward as well as update the weights. We start by randomly initializing the weights and biases. TODO: Adjusting the learning rate by $\frac{1}{\sqrt{m}}$</p>
+<p>The linear layer is where it gets a bit more interesting. Now we need a way to pass information both forward and backward as well as update the parameters. This class is long so lets break it up. We start by randomly initializing the weights and biases. TODO: Adjusting the learning rate by $\frac{1}{\sqrt{m}}$</p>
 
 <pre><code class="language-Python">class Linear(Module):
     """Linear layer with weights W and bias B"""
 
     def __init__(self, m, n):
-        """Initialize the weights as randomly sampled from normal distribution and then scaled
-            by 1/sqrt(m). Initialize the biases as zeros.
+        """Initialize the weights as randomly sampled from normal distribution 
+        and scale lr by 1/sqrt(m). Initialize the biases as zeros.
 
         Args:
             m (int): number of input features
             n (int): number of output features
         """
-        # Adjust the learning rate by 1/sqrt(m) to account for the scaling of the weights
+        # adjust lr by 1/sqrt(m) to account for scaling of weights
         self.lr = 1 / m**0.5
         self.W = np.random.normal(0, 1 / m**0.5, [m, n]).astype("float32")
         self.B = np.zeros([n]).astype("float32")
 
-    def forward(self, X):
+</code></pre>
+
+<p>What does the output to the linear layer mean? It means that we’re trying to find the output $Y$ in $Y = WX + B$ where $W$ are the weights of the layer and $B$ its biases. Note that since $W$ and $B$ are matrixes we have to matrix multiply them. We store <code class="language-plaintext highlighter-rouge">self.X</code> because we use it again in the backward pass. Seems easy enough.</p>
+<pre><code class="language-Python">    def forward(self, X):
         """Perform forward pass through linear layer"""
         self.X = X
         self.output = np.matmul(X, self.W) + self.B
         return self.output
+</code></pre>
 
-    def backward(self, dY):
+<p>Ok <code class="language-plaintext highlighter-rouge">backward()</code> is slightly tricky. The big idea is that somehow we want to measure how much each of the weights and biases in the layer affect the final loss. This will eventually help us in adjusting the parameters and pointing the model in a better direction at the end of the epoch.</p>
+
+<p>For the weights: in mathematical terms we can say that we want to find $\frac{dL}{dW}$ where $L$ represents the loss - or how bad the model was compared to the ground truth. With a bit of chain rule we can decompose this into other derivatives we might know:</p>
+
+<p>\[\frac{dL}{dW} = \frac{dL}{dY} \times \frac{dY}{dW}\]</p>
+
+<p>a-ha! We know that since we’re in a linear layer and $Y = MX + B$  then</p>
+
+<p>\[\frac{dY}{dW} = X\]</p>
+
+<p>Well that’s convenient - since we stored <code class="language-plaintext highlighter-rouge">self.X</code> in the forward pass we can reuse it here. Finally, we’re given $\frac{dL}{dY}$ as a input to the function <code class="language-plaintext highlighter-rouge">dL</code> so we can write <code class="language-plaintext highlighter-rouge">self.dW = self.X.T @ dY</code>.</p>
+
+<p>Now for the biases: now we want to find $\frac{dL}{dB}$. Similarly with chain rule:
+\[\frac{dL}{dB} = \frac{dL}{dY} \times \frac{dY}{dB}\]</p>
+
+<p>and</p>
+
+<p>\[\frac{dY}{dW} = 1\]</p>
+
+<p>huh. So <code class="language-plaintext highlighter-rouge">self.dB = dY</code>? Generally, yeah, but not so quick: beacuse we’ll likely be using a minibatch during training we’ll actually want to use <code class="language-plaintext highlighter-rouge">self.dB = np.sum(dY, axis=0)</code>.</p>
+
+<p>Finally for calculating the gradient, we want to find an expression for how much the loss changes with respect to the input to this layer. At first this might seem a little weird but we must remember that the inputs we’re talking about to <em>this</em> layer are the outputs of the <em>previous</em> layer. In other words, we need a way to propagate the gradient backwards so that the previous layers can also use it.</p>
+
+<p>\[\frac{dL}{dX} = \frac{dL}{dY} \times \frac{dY}{dX}\]</p>
+
+<p>We know <code class="language-plaintext highlighter-rouge">dY</code> is given to us and $\frac{dY}{dX} = W$ so the expression is <code class="language-plaintext highlighter-rouge">self.grad = dY @ self.W.T</code>.</p>
+
+<!-- and $\frac{dL}{db}$ -->
+
+<pre><code class="language-Python">    def backward(self, dY):
         """Perform backward pass through linear layer"""
-        # for weights chain rule is dL / dW = (dL / dY) * (dY / dW)
-        # Y = XW + B so dY / dW = X
-        # dL / dY = dY
         self.dW = self.X.T @ dY
 
-        # for biases chain rule is dL / dB = (dL / dY) * (dY / dB)
-        # Y = XW + B so dY / dB = 1
-        # dL / dY = dY
         # sum over all samples in batch
         self.dB = np.sum(dY, axis=0)
 
-        # dL / dY = dY by definition
-        if dY.ndim == 1:
-            dY = dY.reshape(-1, 1)
-
+        # dL / dX = dL / dY @ dY / dX
         self.grad = dY @ self.W.T
 
         return self.grad
@@ -226,17 +246,17 @@ Z = [6., 6., 6., 6., 6., 6., 7., 1., 1., 1., 1., 1., 1., 1., 1., 1., 0.,
         self.W -= W_update
         self.B -= lr * self.lr * self.dB
 
-    def average(self, nn, a):
-        """Average the weights and biases of linear layer with another linear layer"""
-        self.W = a * nn.W + (1 - a) * self.W
-        self.B = a * nn.B + (1 - a) * self.B
+    # def average(self, nn, a):
+    #     """Average the weights and biases of linear layer with another linear layer"""
+    #     self.W = a * nn.W + (1 - a) * self.W
+        # self.B = a * nn.B + (1 - a) * self.B
 </code></pre>
 
 <h4 id="resources">Resources:</h4>
 
 <ul>
   <li><a href="http://quantum-machine.org/datasets/">[1] QM7 Dataset</a></li>
-  <li><a href="https://gdb.unibe.ch/downloads/">2 GDB-13</a></li>
+  <li><a href="https://gdb.unibe.ch/downloads/">[2] GDB-13</a></li>
 </ul>
 
   </div><a class="u-url" href="/deep-learning/2024/02/08/material-property-prediction-1.html" hidden></a>
