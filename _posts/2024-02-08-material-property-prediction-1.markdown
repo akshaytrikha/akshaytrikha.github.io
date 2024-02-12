@@ -189,7 +189,7 @@ Finally for calculating the gradient, we want to find an expression for how much
 
 We know `dY` is given to us and $\frac{dY}{dX} = W$ so the expression is `self.grad = dY @ self.W.T`. 
  
-An important note about `update()` here is that we want to adjust the amount we update the weights and biases by the learning rate (sometimes referred to as $\alpha$). The usual analogy people use is that the gradient dictates which direction we want to go in and the learning rate tells us how big of a step to take. 
+An important note about `update()` here is that we want to adjust the amount we update the weights and biases by the learning rate (sometimes referred to as $\alpha$). The usual analogy people use is that the gradient dictates which direction we want to go in and the learning rate tells us how big of a step to take. For more intuition about backpropagation I'd recommend checking out Andrej Karpathy's excellent video [[3]](https://www.youtube.com/watch?v=VMj-3S1tku0).
 
 ```Python
     def backward(self, dY):
@@ -218,7 +218,7 @@ An important note about `update()` here is that we want to adjust the amount we 
 
 **3. Tanh**
 
-This layer is really straightforward. We need a nonlinear activiation function to learn nonlinear functions. So the `forward()` method is just using calling the tanh function like so `self.Y = np.tanh(X)`. Then for `backward()` we want to differentiate the function and lucky for us someone's already done that for us and it's $(1 - Y)^2 \times dY$.
+This layer is really straightforward. We need a nonlinear activiation function to learn nonlinear functions. So the `forward()` method is just using calling the tanh function like so `self.Y = np.tanh(X)`. Then for `backward()` we want to differentiate the function and lucky for us someone has already found it to be $1 - tanh^2$. We stored the output of `forward()` as `self.Y` which we can reuse in our backward to express the derivative as $1 - Y^2$. Then to propagate the gradient that was given to us from the previous layer we have $(1 - Y^2) \times dY$.
 
 ```Python
 class Tanh(Module):
@@ -235,7 +235,7 @@ class Tanh(Module):
 
 **5. Sequential**
 
-The `Sequential` class is our container for neatly packaging all of the network's sublayers. Its `forward()` and `backward()` methods exists as orchestrators for how the information flows in the network. All it's doing is passing on the info to the subsequent or previous layers using for loops for the number of layers we have.
+The `Sequential` class is our container for neatly packaging all of the network's sublayers. Its `forward()` and `backward()` methods exists as orchestrators for how the information flows in the network. The only real difference between their implementations is that in `backward()` we have to remember to iterate backwards through the layers. The way we've implemented `update()` is analgous to `torch.optim.Optimizer.step()` in PyTorch and we would call it once we've found the gradients and want to then update all our paramters.
 
 ```Python
 class Sequential(Module):
@@ -274,3 +274,4 @@ And there you have it! That's all the layers you'll need to train a dense networ
 
 - [[1] QM7 Dataset](http://quantum-machine.org/datasets/)
 - [[2] GDB-13](https://gdb.unibe.ch/downloads/)
+- [[3] Andrej Karpathy's Intro to NNs and Backpropagation](https://www.youtube.com/watch?v=VMj-3S1tku0)
