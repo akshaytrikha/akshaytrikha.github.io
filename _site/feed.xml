@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2024-02-11T22:22:40-08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">Material Property Prediction Part 1: A Naive Approach</title><link href="http://localhost:4000/deep-learning/2024/02/08/material-property-prediction-1.html" rel="alternate" type="text/html" title="Material Property Prediction Part 1: A Naive Approach" /><published>2024-02-08T07:24:17-08:00</published><updated>2024-02-08T07:24:17-08:00</updated><id>http://localhost:4000/deep-learning/2024/02/08/material-property-prediction-1</id><content type="html" xml:base="http://localhost:4000/deep-learning/2024/02/08/material-property-prediction-1.html"><![CDATA[<script type="text/x-mathjax-config">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2024-02-12T09:34:23-08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">Material Property Prediction Part 1: A Naive Approach</title><link href="http://localhost:4000/deep-learning/2024/02/08/material-property-prediction-1.html" rel="alternate" type="text/html" title="Material Property Prediction Part 1: A Naive Approach" /><published>2024-02-08T07:24:17-08:00</published><updated>2024-02-08T07:24:17-08:00</updated><id>http://localhost:4000/deep-learning/2024/02/08/material-property-prediction-1</id><content type="html" xml:base="http://localhost:4000/deep-learning/2024/02/08/material-property-prediction-1.html"><![CDATA[<script type="text/x-mathjax-config">
   MathJax.Hub.Config({
     tex2jax: {
       inlineMath: [['$', '$'], ['\\(', '\\)']],
@@ -254,6 +254,93 @@ Z = [6., 6., 6., 6., 6., 6., 7., 1., 1., 1., 1., 1., 1., 1., 1., 1., 0.,
 </code></pre>
 
 <p>And there you have it! That’s all the layers you’ll need to train a dense network. Pretty amazing how little code there is right.</p>
+
+<h3 id="training">Training</h3>
+
+<p>In the training loop we want to loop for a certain number of steps. The core of each step is:</p>
+<ol>
+  <li>forward pass,</li>
+  <li>calculate loss,</li>
+  <li>backward pass,</li>
+  <li>update parameters</li>
+</ol>
+
+<p>The loss function in use is the root mean squared error (RMSE) = $\sqrt{\frac{1}{n} \sum_{i=1}^{n}(\hat{y}_i - y_i)^2}$. I used a simple learning rate schedule that</p>
+
+<p>Every 100 steps or so we also want to calculate validation metrics so that we can visualize if the model is overfitting or not.</p>
+
+<pre><code class="language-Python">def train(nn_sgd, nn_avg, R, Z, E_true, batch_size, hist, augment):
+    """Train the neural network using SGD with momentum and Exponential Moving Average.
+    Args:
+        nn_sgd (nn.Sequential): neural network to train
+        nn_avg (nn.Sequential): neural network to average with
+        R (np.array): array of shape (nbatch, natoms, 3) containing atomic coordinates
+        Z (np.array): array of shape (nbatch, natoms) containing atomic numbers
+        E_true (np.array): array of shape (nbatch) containing true energies
+        batch_size (int): batch size
+        hist (float): fraction of the history to be remembered for Exponential Moving Average
+        augment (bool): whether to perform data augmentations
+    """
+    rmses = []
+    # results = {"train_loss": [], "train_rmse": []}
+    for i in tqdm(range(1, NUM_STEPS)):
+        # learning rate schedule
+        if i &gt; 0:
+            lr = 0.0000001
+        if i &gt; 500:
+            lr = 0.00000025
+        if i &gt; 2500:
+            lr = 0.0000005
+
+        # sample indices to create minibatches
+        j = np.random.randint(0, len(R), [batch_size])
+        minibatch_R = R[j]
+        minibatch_Z = Z[j]
+        minibatch_E_true = E_true[j]
+
+        if augment:
+            # data augmentation by random rotation
+            x_deg, y_deg, z_deg = np.random.uniform(-180, 180, 3)
+            minibatch_R = rotate_3d_coordinates(
+                minibatch_R,
+                x_deg,
+                y_deg,
+                z_deg,
+            )
+
+        # forward pass
+        E_pred = nn_sgd.forward((minibatch_R, minibatch_Z))  # TODO: fill in
+        loss = 0.5 * np.square(E_pred - minibatch_E_true)  # TODO: fill in
+
+        # calculate RMSE
+        rmse = np.square(E_pred - minibatch_E_true).mean(axis=0) ** 0.5
+        rmses.append(rmse)
+
+        # backward pass
+        dY = E_pred - minibatch_E_true
+        nn_sgd.backward(dY)  # TODO: add argument to backward
+        nn_sgd.update(lr)
+        nn_avg.average(nn_sgd, (1 / hist) / ((1 / hist) + i))
+        nn_avg.nbiter = i
+
+        # save results
+        if WANDB_LOG:
+            wandb.log(
+                {
+                    "train_rmse": rmse,
+                }
+            )
+
+        if i % 100 == 0:
+            print(f"RMSE: {sum(rmses[-100:])/100} kcal/mol")
+            pickle.dump(
+                nn_avg,
+                open(f"./problem1_qm7/models/nn-augment={augment}.pkl", "wb"),
+                pickle.HIGHEST_PROTOCOL,
+            )
+</code></pre>
+
+<h3 id="results">Results</h3>
 
 <h4 id="resources">Resources:</h4>
 

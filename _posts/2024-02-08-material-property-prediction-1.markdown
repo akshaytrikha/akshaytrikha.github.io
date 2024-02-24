@@ -270,6 +270,96 @@ class Sequential(Module):
 And there you have it! That's all the layers you'll need to train a dense network. Pretty amazing how little code there is right. 
 
 
+### Training
+
+In the training loop we want to loop for a certain number of steps. The core of each step is:
+1. forward pass,
+2. calculate loss,
+3. backward pass, 
+4. update parameters
+
+The loss function in use is the root mean squared error (RMSE) = $\sqrt{\frac{1}{n} \sum_{i=1}^{n}(\hat{y}_i - y_i)^2}$. I used a simple learning rate schedule that 
+
+Every 100 steps or so we also want to calculate validation metrics so that we can visualize if the model is overfitting or not.
+
+```Python
+def train(nn_sgd, nn_avg, R, Z, E_true, batch_size, hist, augment):
+    """Train the neural network using SGD with momentum and Exponential Moving Average.
+    Args:
+        nn_sgd (nn.Sequential): neural network to train
+        nn_avg (nn.Sequential): neural network to average with
+        R (np.array): array of shape (nbatch, natoms, 3) containing atomic coordinates
+        Z (np.array): array of shape (nbatch, natoms) containing atomic numbers
+        E_true (np.array): array of shape (nbatch) containing true energies
+        batch_size (int): batch size
+        hist (float): fraction of the history to be remembered for Exponential Moving Average
+        augment (bool): whether to perform data augmentations
+    """
+    rmses = []
+    # results = {"train_loss": [], "train_rmse": []}
+    for i in tqdm(range(1, NUM_STEPS)):
+        # learning rate schedule
+        if i > 0:
+            lr = 0.0000001
+        if i > 500:
+            lr = 0.00000025
+        if i > 2500:
+            lr = 0.0000005
+
+        # sample indices to create minibatches
+        j = np.random.randint(0, len(R), [batch_size])
+        minibatch_R = R[j]
+        minibatch_Z = Z[j]
+        minibatch_E_true = E_true[j]
+
+        if augment:
+            # data augmentation by random rotation
+            x_deg, y_deg, z_deg = np.random.uniform(-180, 180, 3)
+            minibatch_R = rotate_3d_coordinates(
+                minibatch_R,
+                x_deg,
+                y_deg,
+                z_deg,
+            )
+
+        # forward pass
+        E_pred = nn_sgd.forward((minibatch_R, minibatch_Z))  # TODO: fill in
+        loss = 0.5 * np.square(E_pred - minibatch_E_true)  # TODO: fill in
+
+        # calculate RMSE
+        rmse = np.square(E_pred - minibatch_E_true).mean(axis=0) ** 0.5
+        rmses.append(rmse)
+
+        # backward pass
+        dY = E_pred - minibatch_E_true
+        nn_sgd.backward(dY)  # TODO: add argument to backward
+        nn_sgd.update(lr)
+        nn_avg.average(nn_sgd, (1 / hist) / ((1 / hist) + i))
+        nn_avg.nbiter = i
+
+        # save results
+        if WANDB_LOG:
+            wandb.log(
+                {
+                    "train_rmse": rmse,
+                }
+            )
+
+        if i % 100 == 0:
+            print(f"RMSE: {sum(rmses[-100:])/100} kcal/mol")
+            pickle.dump(
+                nn_avg,
+                open(f"./problem1_qm7/models/nn-augment={augment}.pkl", "wb"),
+                pickle.HIGHEST_PROTOCOL,
+            )
+```
+
+### Results
+
+
+
+
+
 #### Resources:
 
 - [[1] QM7 Dataset](http://quantum-machine.org/datasets/)
