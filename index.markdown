@@ -30,8 +30,8 @@ icons:
 
 **Currently**:
 
-- 👨🏾‍💻 Using computer vision models to accelerate battery development at [QuantumScape](https://www.quantumscape.com/){:target="\_blank" :rel="noopener noreferrer"}
-- 🔋 Exploring how to apply deep learning to materials discovery at [UC Berkeley](https://mse.berkeley.edu/){:target="\_blank" :rel="noopener noreferrer"}
+- 👨🏾‍💻 Using computer vision models to accelerate battery research at [QuantumScape](https://www.quantumscape.com/){:target="\_blank" :rel="noopener noreferrer"}
+- 🔋 Exploring how to apply deep learning to predict material properties at [UC Berkeley](https://mse.berkeley.edu/){:target="\_blank" :rel="noopener noreferrer"}
 
 <!-- TODO: add nbviewer.org for redox flow battery -->
 
