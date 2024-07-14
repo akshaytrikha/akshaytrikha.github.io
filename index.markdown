@@ -32,6 +32,13 @@ icons:
 
 - 👨🏾‍💻 Using computer vision models to accelerate battery research at [QuantumScape](https://www.quantumscape.com/){:target="\_blank" :rel="noopener noreferrer"}
 - 🔋 Exploring how to apply deep learning to predict material properties at [UC Berkeley](https://mse.berkeley.edu/){:target="\_blank" :rel="noopener noreferrer"}
+- 🛫 Learning how to fly!
+<figure>
+    <div style="text-align: center;">
+        <img src="{{site.url}}/assets/ppl.jpeg" alt="Flying a Cessna 172" width="50%"/>
+    </div>
+</figure>
+
 
 <!-- TODO: add nbviewer.org for redox flow battery -->
 
