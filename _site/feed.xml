@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2024-07-17T23:03:59-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">Solving Darcy Flow with Neural PDEs</title><link href="http://localhost:4000/deep-learning/2024/03/11/darcy-flow.html" rel="alternate" type="text/html" title="Solving Darcy Flow with Neural PDEs" /><published>2024-03-11T06:11:17-07:00</published><updated>2024-03-11T06:11:17-07:00</updated><id>http://localhost:4000/deep-learning/2024/03/11/darcy-flow</id><content type="html" xml:base="http://localhost:4000/deep-learning/2024/03/11/darcy-flow.html"><![CDATA[<script type="text/javascript" async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2024-07-30T22:31:32-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">Solving Darcy Flow with Neural PDEs</title><link href="http://localhost:4000/deep-learning/2024/03/11/darcy-flow.html" rel="alternate" type="text/html" title="Solving Darcy Flow with Neural PDEs" /><published>2024-03-11T06:11:17-07:00</published><updated>2024-03-11T06:11:17-07:00</updated><id>http://localhost:4000/deep-learning/2024/03/11/darcy-flow</id><content type="html" xml:base="http://localhost:4000/deep-learning/2024/03/11/darcy-flow.html"><![CDATA[<script type="text/javascript" async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
 </script>
 
 <p><strong>Background</strong></p>
@@ -25,10 +25,20 @@
 
 <p>\begin{align}
     \nabla &amp;= \text{divergence operator} \newline
-    \nu &amp;= \text{diffusion coefficient} \newline
-    u &amp;= \text{potential} \newline
+    \nu(x,y) &amp;= \text{diffusion coefficient} \newline
+    u(x,y) &amp;= \text{flow pressure} \newline
     f(x,y) &amp;= \text{forcing function} = 1 \quad \forall x,y
 \end{align}</p>
+
+<p><strong>Data</strong></p>
+
+<p>Data is available courtesy of the <a href="http://tensorlab.cms.caltech.edu/users/anima/">Anima AI + Science Lab</a> Lab at CalTech as part of their work <a href="https://arxiv.org/pdf/2010.08895">[3]</a>.</p>
+
+<p>We’ll be given as input to our model a tensor with shape (4000 samples, x, y, \(\nu\)) and asked to predict \(K\), the set of basis functions</p>
+
+<p>For training data we will use the url <a href="https://drive.google.com/file/d/16kmLCmuPe_q_wpphEXtgJswFtxHE6Plf/view?usp=sharing">[4]</a>  and for validation the url <a href="https://drive.google.com/file/d/1sQBpormuajXlf2h3YiMnL9qVzzFoSwBB/view?usp=sharing">[5]</a>.</p>
+
+<hr />
 
 <p>Ok great, we have a differential equation and our goal is to train a neural network that guesses solutions to this. In our heads, we imagine our solutions could be expressed as a linear combination of basis functions and their corresponding weights</p>
 
@@ -59,7 +69,17 @@
 
 <!-- \mathcal{F}(u)  -->
 
-<!-- We're going to implmenet a differentiable optimization layer (I know, crazy) that will allow us to  -->]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Universal Mask Finding</title><link href="http://localhost:4000/2023/09/24/universal-mask-finding.html" rel="alternate" type="text/html" title="Universal Mask Finding" /><published>2023-09-24T13:29:00-07:00</published><updated>2023-09-24T13:29:00-07:00</updated><id>http://localhost:4000/2023/09/24/universal-mask-finding</id><content type="html" xml:base="http://localhost:4000/2023/09/24/universal-mask-finding.html"><![CDATA[<figure>
+<!-- We're going to implmenet a differentiable optimization layer (I know, crazy) that will allow us to  -->
+
+<h4 id="references">References:</h4>
+
+<ul>
+  <li><a href="https://arxiv.org/pdf/2105.15183">[1] Efficient and Modular Implicit Differentiation</a></li>
+  <li><a href="https://arxiv.org/pdf/2207.08675">[2] Learning Differentiable Solvers For Systems With Hard Constraints</a></li>
+  <li><a href="https://arxiv.org/pdf/2010.08895">[3] Fourier Neural Operator for Parametric Partial Differential Equations</a></li>
+  <li><a href="https://drive.google.com/file/d/16kmLCmuPe_q_wpphEXtgJswFtxHE6Plf/view?usp=sharing">[4] Darcy Flow Training Data</a></li>
+  <li><a href="https://drive.google.com/file/d/1sQBpormuajXlf2h3YiMnL9qVzzFoSwBB/view?usp=sharing">[5] Darcy Flow Validation Data</a></li>
+</ul>]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Universal Mask Finding</title><link href="http://localhost:4000/2023/09/24/universal-mask-finding.html" rel="alternate" type="text/html" title="Universal Mask Finding" /><published>2023-09-24T13:29:00-07:00</published><updated>2023-09-24T13:29:00-07:00</updated><id>http://localhost:4000/2023/09/24/universal-mask-finding</id><content type="html" xml:base="http://localhost:4000/2023/09/24/universal-mask-finding.html"><![CDATA[<figure>
     <br />
     <div style="text-align: center;">
         <img src="http://localhost:4000/assets/mask-finding/fast_mask_finding.png" alt="ML defect detection" />
@@ -377,7 +397,7 @@ accuracy = accuracy_fn(outputs, y_train)
 
 <p>There you have it, now you can use transfer learning for both segmentation and classification tasks.</p>
 
-<h4 id="resources">Resources:</h4>
+<h4 id="references">References:</h4>
 
 <ul>
   <li><a href="https://cs231n.github.io/transfer-learning">https://cs231n.github.io/transfer-learning</a></li>

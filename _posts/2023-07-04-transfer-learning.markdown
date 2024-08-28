@@ -190,7 +190,7 @@ accuracy = accuracy_fn(outputs, y_train)
 
 There you have it, now you can use transfer learning for both segmentation and classification tasks.
 
-#### Resources:
+#### References:
 
 - <https://cs231n.github.io/transfer-learning>
 - [How transferable are features in deep neural networks?](https://arxiv.org/pdf/1411.1792.pdf)

@@ -29,16 +29,25 @@ With boundary condition
     u(x,y) &= 0 & (x,y) &\in \partial(0,1)^2 \tag{2}
 \end{align}
 
-
-
 Where 
 
 \begin{align}
     \nabla &= \text{divergence operator} \newline
-    \nu &= \text{diffusion coefficient} \newline
-    u &= \text{potential} \newline
+    \nu(x,y) &= \text{diffusion coefficient} \newline
+    u(x,y) &= \text{flow pressure} \newline
     f(x,y) &= \text{forcing function} = 1 \quad \forall x,y
 \end{align}
+
+**Data**
+
+Data is available courtesy of the [Anima AI + Science Lab](http://tensorlab.cms.caltech.edu/users/anima/) Lab at CalTech as part of their work [[3]](https://arxiv.org/pdf/2010.08895). 
+
+We'll be given as input to our model a tensor with shape (4000 samples, x, y, $$\nu$$) and asked to predict $$K$$, the set of basis functions 
+
+For training data we will use the url [[4]](https://drive.google.com/file/d/16kmLCmuPe_q_wpphEXtgJswFtxHE6Plf/view?usp=sharing)  and for validation the url [[5]](https://drive.google.com/file/d/1sQBpormuajXlf2h3YiMnL9qVzzFoSwBB/view?usp=sharing).
+
+
+----------------------
 
 Ok great, we have a differential equation and our goal is to train a neural network that guesses solutions to this. In our heads, we imagine our solutions could be expressed as a linear combination of basis functions and their corresponding weights 
 
@@ -75,3 +84,11 @@ But this is weird ... we have no way of knowing how many steps the
 
 
 <!-- We're going to implmenet a differentiable optimization layer (I know, crazy) that will allow us to  -->
+
+#### References:
+
+- [[1] Efficient and Modular Implicit Differentiation](https://arxiv.org/pdf/2105.15183)
+- [[2] Learning Differentiable Solvers For Systems With Hard Constraints](https://arxiv.org/pdf/2207.08675)
+- [[3] Fourier Neural Operator for Parametric Partial Differential Equations](https://arxiv.org/pdf/2010.08895)
+- [[4] Darcy Flow Training Data](https://drive.google.com/file/d/16kmLCmuPe_q_wpphEXtgJswFtxHE6Plf/view?usp=sharing) 
+- [[5] Darcy Flow Validation Data](https://drive.google.com/file/d/1sQBpormuajXlf2h3YiMnL9qVzzFoSwBB/view?usp=sharing) 
