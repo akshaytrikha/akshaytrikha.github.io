@@ -44,6 +44,7 @@ icons:
 
 **Favorite Reads**:
 
+- [The Bitter Lesson](https://www.cs.utexas.edu/~eunsol/courses/data/bitter_lesson.pdf) - Richard Sutton
 - The Last Question - Isaac Asimov
 - What I Talk About When I Talk About Running - Haruki Murakami
 - Scar Tissue - Anthony Kiedis
