@@ -35,7 +35,7 @@ icons:
 - 🛫 Learning how to fly!
 <figure>
     <div style="text-align: center;">
-        <img src="{{site.url}}/assets/ppl.jpeg" alt="Flying a Cessna 172" width="50%"/>
+        <img src="{{site.url}}/assets/ppl.jpeg" alt="Flying a Cessna 172" width="60%"/>
     </div>
 </figure>
 
@@ -44,6 +44,7 @@ icons:
 
 **Favorite Reads**:
 
+- [The Bitter Lesson](https://www.cs.utexas.edu/~eunsol/courses/data/bitter_lesson.pdf) - Richard Sutton
 - The Last Question - Isaac Asimov
 - What I Talk About When I Talk About Running - Haruki Murakami
 - Scar Tissue - Anthony Kiedis
