@@ -12,7 +12,7 @@ categories: deep-learning
 
 <gradio-app src="https://akshaytrikha-gpt2-trump.hf.space"></gradio-app>
 
-In early 2019 OpenAI published some [research](https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf) showing that large language models, when trained on colossal amounts of text, begin to behave in unpredictably intelligently on tasks they weren't originally trained on. Humorously, part of the original dataset for the model was scraped from Reddit - which isn't always known to be the home of constructive conversation and accurate information so it's even more surprising how good their model was!
+In early 2019 OpenAI published some [research](https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf) showing that large language models, when trained on colossal amounts of text, begin to behave unpredictably intelligently on tasks they weren't originally trained on. Humorously, part of the original dataset for the model was scraped from Reddit - which isn't always known to be the home of constructive conversation and accurate information so it's even more surprising how good their model was!
 
 In 2020, while taking an NLP, course I thought it would be fun to finetune GPT-2 on a corpus of then President Trump's tweets seeing as he has such a distinct style and voice. I obtained his tweets from the super convenient [Trump Twitter Archive](https://www.thetrumparchive.com/) which contained ~56,500 of his tweets from 2009 until he was banned from the platform on January 8th, 2021.
 
