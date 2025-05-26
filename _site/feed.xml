@@ -1,4 +1,36 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-01-15T21:50:54-08:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">Physics-Constrained Neural Networks for Solving Partial Differential Equations</title><link href="http://localhost:4000/deep-learning/2024/03/11/darcy-flow.html" rel="alternate" type="text/html" title="Physics-Constrained Neural Networks for Solving Partial Differential Equations" /><published>2024-03-11T06:11:17-07:00</published><updated>2024-03-11T06:11:17-07:00</updated><id>http://localhost:4000/deep-learning/2024/03/11/darcy-flow</id><content type="html" xml:base="http://localhost:4000/deep-learning/2024/03/11/darcy-flow.html"><![CDATA[<script type="text/javascript" async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-05-25T17:11:11-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">ducky</title><link href="http://localhost:4000/deep-learning/2025/05/23/ducky.html" rel="alternate" type="text/html" title="ducky" /><published>2025-05-23T09:06:17-07:00</published><updated>2025-05-23T09:06:17-07:00</updated><id>http://localhost:4000/deep-learning/2025/05/23/ducky</id><content type="html" xml:base="http://localhost:4000/deep-learning/2025/05/23/ducky.html"><![CDATA[<p>Please <a href="">try out</a> the extension on the VSCode extension marketplace and let me know what you think!</p>
+
+<hr />
+<p><br />
+<br />
+A few weeks ago I thought I was bothering my coworker by calling him to help debug something too often. In two separate conversations I exclaimed because I knew exactly what my bug was without him having said a word on the call - and felt embarassed as he laughed at me through the computer sceen.</p>
+
+<p>I thought what if I could create an AI rubber ducky that I could call instead of him?</p>
+
+<p>In my head I wanted to create a UX where I could talk to the rubber ducky and it would both be able to hear me and see the code that I was talking about, just like a Zoom call with your coworker.</p>
+
+<p>[interaction gif]</p>
+
+<p>To test if this is useful I created a dummy codebase for training a simple vision tranformer for classification on a small subset of the <a href="https://huggingface.co/datasets/uoft-cs/cifar100">CIFAR-100</a> dataset. I introduced a small bug in the <code class="language-plaintext highlighter-rouge">init()</code> of the model:</p>
+
+<p>❌ <code class="language-plaintext highlighter-rouge">num_patches = (img_size // patch_size) * (img_size // patch_size - 1)</code><br />
+✅ <code class="language-plaintext highlighter-rouge">num_patches = (img_size // patch_size) * (img_size // patch_size)</code>\</p>
+
+<p>and asked my friend to use the AI rubber ducky to help him debug what was going wrong.</p>
+
+<p>[loki gif]</p>
+
+<p>Future features:</p>
+<ul>
+  <li>Visualize debugging path attempts</li>
+  <li>Integrate with Cursor / GitHub Copilot</li>
+</ul>
+
+<h4 id="references">References:</h4>
+
+<ul>
+  <li><a href="https://code.visualstudio.com/api/working-with-extensions/publishing-extension">Publishing Extensions</a></li>
+</ul>]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[Please try out the extension on the VSCode extension marketplace and let me know what you think!]]></summary></entry><entry><title type="html">Physics-Constrained Neural Networks for Solving Partial Differential Equations</title><link href="http://localhost:4000/deep-learning/2024/03/11/darcy-flow.html" rel="alternate" type="text/html" title="Physics-Constrained Neural Networks for Solving Partial Differential Equations" /><published>2024-03-11T06:11:17-07:00</published><updated>2024-03-11T06:11:17-07:00</updated><id>http://localhost:4000/deep-learning/2024/03/11/darcy-flow</id><content type="html" xml:base="http://localhost:4000/deep-learning/2024/03/11/darcy-flow.html"><![CDATA[<script type="text/javascript" async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
 </script>
 
 <p><strong>Background</strong></p>

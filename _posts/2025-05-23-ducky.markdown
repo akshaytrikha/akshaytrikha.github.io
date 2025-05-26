@@ -1,0 +1,36 @@
+---
+layout: post
+title: "ducky"
+date: 2025-05-23 16:06:17 -0000
+categories: deep-learning
+---
+
+Please [try out]() the extension on the VSCode extension marketplace and let me know what you think!
+
+----------------------
+\\
+\\
+A few weeks ago I thought I was bothering my coworker by calling him to help debug something too often. In two separate conversations I exclaimed because I knew exactly what my bug was without him having said a word on the call - and felt embarassed as he laughed at me through the computer sceen. 
+
+I thought what if I could create an AI rubber ducky that I could call instead of him?
+
+In my head I wanted to create a UX where I could talk to the rubber ducky and it would both be able to hear me and see the code that I was talking about, just like a Zoom call with your coworker.
+
+[interaction gif]
+
+To test if this is useful I created a dummy codebase for training a simple vision tranformer for classification on a small subset of the [CIFAR-100](https://huggingface.co/datasets/uoft-cs/cifar100) dataset. I introduced a small bug in the `init()` of the model:
+
+❌ `num_patches = (img_size // patch_size) * (img_size // patch_size - 1)`\\
+✅ `num_patches = (img_size // patch_size) * (img_size // patch_size)`\\
+
+and asked my friend to use the AI rubber ducky to help him debug what was going wrong. 
+
+[loki gif]
+
+Future features:
+- Visualize debugging path attempts
+- Integrate with Cursor / GitHub Copilot
+
+#### References:
+
+- [Publishing Extensions](https://code.visualstudio.com/api/working-with-extensions/publishing-extension)
