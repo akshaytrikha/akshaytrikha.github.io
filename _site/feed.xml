@@ -1,36 +1,138 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-05-25T17:11:11-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">ducky</title><link href="http://localhost:4000/deep-learning/2025/05/23/ducky.html" rel="alternate" type="text/html" title="ducky" /><published>2025-05-23T09:06:17-07:00</published><updated>2025-05-23T09:06:17-07:00</updated><id>http://localhost:4000/deep-learning/2025/05/23/ducky</id><content type="html" xml:base="http://localhost:4000/deep-learning/2025/05/23/ducky.html"><![CDATA[<p>Please <a href="">try out</a> the extension on the VSCode extension marketplace and let me know what you think!</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-05-27T08:28:00-10:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">AI Rubber Ducky Pair Programmer</title><link href="http://localhost:4000/deep-learning/2025/05/23/ducky.html" rel="alternate" type="text/html" title="AI Rubber Ducky Pair Programmer" /><published>2025-05-23T09:06:17-07:00</published><updated>2025-05-23T09:06:17-07:00</updated><id>http://localhost:4000/deep-learning/2025/05/23/ducky</id><content type="html" xml:base="http://localhost:4000/deep-learning/2025/05/23/ducky.html"><![CDATA[<p>Please try out the extension on the VSCode extension marketplace and let me know what you think! Enter your email to get access:</p>
+
+<!-- gated signup + link reveal -->
+<div id="signup-container">
+  <form id="signup-form">
+    <input type="email" id="email-input" name="email" placeholder="you@domain.com" required="" />
+    <button type="submit">Sign up →</button>
+  </form>
+</div>
+
+<div id="link-container" style="display:none; margin-top:1em;">
+  <a href="" target="_blank" rel="noopener">
+    🐤 Get the Ducky VSCode extension
+  </a>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<script>
+  // initialize Supabase client
+  const supabaseClient = supabase.createClient(
+    'https://jpwoombwzqxfxebrpzkl.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impwd29vbWJ3enF4ZnhlYnJwemtsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDgyMTY4NDgsImV4cCI6MjA2Mzc5Mjg0OH0.UzRsuRw63TN6rFNtLtBpXZy8JKvrzH1tliS7D_SgI50'
+  );
+
+  const form            = document.getElementById('signup-form');
+  const emailInput      = document.getElementById('email-input');
+  const signupContainer = document.getElementById('signup-container');
+  const linkContainer   = document.getElementById('link-container');
+
+  // if user already signed up, show the link immediately
+  if (localStorage.getItem('duckySignedUp') === 'true') {
+    signupContainer.style.display = 'none';
+    linkContainer.style.display   = 'block';
+  }
+
+  form.addEventListener('submit', async (evt) => {
+    evt.preventDefault();
+    const email = emailInput.value.trim();
+    if (!email) return;
+
+    // insert email into your Supabase table named "emails"
+    const { data, error } = await supabaseClient
+      .from('Users')
+      .insert([{ email }]);
+
+    if (error) {
+      console.error(error);
+      alert('Oops—something went wrong. Please try again.');
+    } else {
+      localStorage.setItem('duckySignedUp', 'true');
+      signupContainer.style.display = 'none';
+      linkContainer.style.display   = 'block';
+    }
+  });
+</script>
+
+<!-- end gated block -->
+<p><br /></p>
 
 <hr />
+
 <p><br />
-<br />
-A few weeks ago I thought I was bothering my coworker by calling him to help debug something too often. In two separate conversations I exclaimed because I knew exactly what my bug was without him having said a word on the call - and felt embarassed as he laughed at me through the computer sceen.</p>
+A few weeks ago I thought I was bothering my coworker by calling him to help debug something too often. In two separate conversations I exclaimed because I knew exactly what my bug was without him having said a word on the call—and felt embarrassed as he laughed at me through the computer screen.</p>
 
-<p>I thought what if I could create an AI rubber ducky that I could call instead of him?</p>
+<p>I thought: <em>what if I could create an AI rubber ducky that I could call instead of him?</em></p>
 
-<p>In my head I wanted to create a UX where I could talk to the rubber ducky and it would both be able to hear me and see the code that I was talking about, just like a Zoom call with your coworker.</p>
+<p><br />
+<strong>UX</strong></p>
 
-<p>[interaction gif]</p>
+<p>In my head I wanted to create a UX where I could talk to the rubber ducky and it would both hear me and see the code I was talking about, just like a Zoom call with your coworker.</p>
 
-<p>To test if this is useful I created a dummy codebase for training a simple vision tranformer for classification on a small subset of the <a href="https://huggingface.co/datasets/uoft-cs/cifar100">CIFAR-100</a> dataset. I introduced a small bug in the <code class="language-plaintext highlighter-rouge">init()</code> of the model:</p>
+<div class="video-container">
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/g_rt8n8Dnec?rel=0&amp;origin=https://localhost:400
+    \" frameborder="0" allowfullscreen="">
+  </iframe>
+</div>
 
-<p>❌ <code class="language-plaintext highlighter-rouge">num_patches = (img_size // patch_size) * (img_size // patch_size - 1)</code><br />
-✅ <code class="language-plaintext highlighter-rouge">num_patches = (img_size // patch_size) * (img_size // patch_size)</code>\</p>
+<p><br />
+<strong>Quickstart</strong></p>
+
+<p>BYO-API key</p>
+
+<p><br />
+<strong>User Test</strong></p>
+
+<p>To test if this is useful I created a dummy codebase for training a simple Vision Transformer for classification on a small subset of the <a href="https://huggingface.co/datasets/uoft-cs/cifar100">CIFAR-100</a> dataset. I introduced a small bug in the <code class="language-plaintext highlighter-rouge">init()</code> of the model:</p>
+
+<div class="language-diff highlighter-rouge"><div class="highlight"><pre class="highlight"><code>❌ num_patches = (img_size // patch_size) * (img_size // patch_size - 1)
+✅ num_patches = (img_size // patch_size) * (img_size // patch_size)
+</code></pre></div></div>
 
 <p>and asked my friend to use the AI rubber ducky to help him debug what was going wrong.</p>
 
-<p>[loki gif]</p>
+<div class="video-container">
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/ITSSergQAos?rel=0&amp;origin=https://localhost:400
+    \" frameborder="0" allowfullscreen="">
+  </iframe>
+</div>
 
-<p>Future features:</p>
+<p><br />
+<strong>Why now?</strong></p>
+
+<p>I’m seeing a divergence in the way people write code at Berkeley vs. at my job. Students / entreprenuers are vibe coding to the max while my coworkers / friends at other companies are using LLM tools but still handwriting their bugfixes &amp; features. I believe this is because production codebases are:</p>
+<ol>
+  <li>about more than just the code i.e. there are business decisions being made outside the repo</li>
+  <li>too large &amp; expensive to feed into a prompt</li>
+</ol>
+
+<p>I can see a future where there are fewer programmers than there are today, but I believe the paradigm of asking an AI for help getting unstuck before bothering your coworker is here to stay for all knowledge work.</p>
+
+<p><br />
+<strong>Cost</strong></p>
+
+<p>This entire project cost me around $40 to make split evenly between a Cursor subscription and the OpenAI realtime API with 4o-mini. The spike in cost is while using the full 4o model.</p>
+
+<p>[OpenAI API cost]</p>
+
+<p><br />
+<strong>Future features:</strong>
+<!-- - Format model's code responses --></p>
 <ul>
-  <li>Visualize debugging path attempts</li>
+  <li>Visualize debugging attempt paths</li>
   <li>Integrate with Cursor / GitHub Copilot</li>
+  <li>Ducky learns from past conversations</li>
+  <li>Track user file edits</li>
+  <li>Let ducky have a cursor</li>
 </ul>
 
 <h4 id="references">References:</h4>
 
 <ul>
+  <li><a href="">OpenAI Realtime API docs</a></li>
   <li><a href="https://code.visualstudio.com/api/working-with-extensions/publishing-extension">Publishing Extensions</a></li>
-</ul>]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[Please try out the extension on the VSCode extension marketplace and let me know what you think!]]></summary></entry><entry><title type="html">Physics-Constrained Neural Networks for Solving Partial Differential Equations</title><link href="http://localhost:4000/deep-learning/2024/03/11/darcy-flow.html" rel="alternate" type="text/html" title="Physics-Constrained Neural Networks for Solving Partial Differential Equations" /><published>2024-03-11T06:11:17-07:00</published><updated>2024-03-11T06:11:17-07:00</updated><id>http://localhost:4000/deep-learning/2024/03/11/darcy-flow</id><content type="html" xml:base="http://localhost:4000/deep-learning/2024/03/11/darcy-flow.html"><![CDATA[<script type="text/javascript" async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+</ul>]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[Please try out the extension on the VSCode extension marketplace and let me know what you think! Enter your email to get access:]]></summary></entry><entry><title type="html">Physics-Constrained Neural Networks for Solving Partial Differential Equations</title><link href="http://localhost:4000/deep-learning/2024/03/11/darcy-flow.html" rel="alternate" type="text/html" title="Physics-Constrained Neural Networks for Solving Partial Differential Equations" /><published>2024-03-11T06:11:17-07:00</published><updated>2024-03-11T06:11:17-07:00</updated><id>http://localhost:4000/deep-learning/2024/03/11/darcy-flow</id><content type="html" xml:base="http://localhost:4000/deep-learning/2024/03/11/darcy-flow.html"><![CDATA[<script type="text/javascript" async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
 </script>
 
 <p><strong>Background</strong></p>
