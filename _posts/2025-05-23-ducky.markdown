@@ -175,13 +175,228 @@ This entire project cost around ~$40 to make, split evenly between a Cursor subs
 
 <br>
 **Future features:**
-- Visualize debugging attempt paths
 - Integrate with Cursor / GitHub Copilot
 - Transcribe user's voice into chat
 - Allow users to modify system prompt for personality
 - Ducky learns from past conversations
 - Track user file edits
 - Let ducky have a cursor
+- Visualize debugging attempt paths e.g.
+
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f9fafb;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            margin: 0 auto;
+            max-width: 768px;
+            width: 100%;
+            background-color: #f9fafb;
+            padding: 16px;
+            border-radius: 8px;
+            gap: 40px;
+        }
+
+        .header {
+            text-align: center;
+        }
+
+        .title {
+            font-size: 24px;
+            <!-- font-weight: bold; -->
+            margin-bottom: 8px;
+            color: #111827;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            margin-top: -20px;
+        }
+
+        .timeline-container {
+            position: relative;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 84px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: #60a5fa;
+        }
+
+        .timeline-events {
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .timeline-event {
+            display: flex;
+            align-items: flex-start;
+            position: relative;
+        }
+
+        .timestamp {
+            width: 60px;
+            padding-top: 8px;
+            padding-right: 12px;
+            text-align: right;
+            font-weight: 600;
+            color: #6b7280;
+            flex-shrink: 0;
+        }
+
+        .content-box {
+            flex-grow: 1;
+            background-color: white;
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid;
+        }
+
+        .border-red { border-left-color: #ef4444; }
+        .border-yellow { border-left-color: #eab308; }
+        .border-blue { border-left-color: #3b82f6; }
+        .border-purple { border-left-color: #a855f7; }
+        .border-green { border-left-color: #22c55e; }
+
+        .event-title {
+            margin-bottom: 8px;
+        }
+
+        .title-red { color: #ef4444; }
+        .title-yellow { color: #eab308; }
+        .title-blue { color: #3b82f6; }
+        .title-purple { color: #a855f7; }
+        .title-green { color: #22c55e; }
+
+        .event-description {
+            color: #374151;
+            line-height: 1.5;
+        }
+
+        .code-block {
+            background-color: #f3f4f6;
+            padding: 8px;
+            margin-top: 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', Consolas, Monaco, monospace;
+            font-size: 14px;
+            color: #1f2937;
+        }
+
+        .success-message {
+            margin-top: 8px;
+            font-weight: 600;
+            color: #059669;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+            }
+            
+            .timestamp {
+                width: 50px;
+                font-size: 14px;
+                padding-right: 8px;
+            }
+            
+            .timeline-line {
+                left: 66px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h4 style="margin-bottom: -10px">Vision Transformer Debugging Journey</h4>
+        </div>
+        <!-- Timeline visualization -->
+        <div class="timeline-container">
+            <!-- Main timeline line -->
+            <div class="timeline-line"></div>
+            <!-- Timeline events -->
+            <div class="timeline-events">
+                <!-- Initial problem -->
+                <div class="timeline-event">
+                    <div class="timestamp">0:00</div>
+                    <div class="content-box border-red">
+                        <h4 class="event-title">Problem Identified</h4>
+                        <p class="event-description">User is experiencing an error with a Vision Transformer (ViT) model implementation</p>
+                    </div>
+                </div>
+                <!-- Code exploration -->
+                <div class="timeline-event">
+                    <div class="timestamp">0:30</div>
+                    <div class="content-box border-yellow">
+                        <h4 class="event-title">Initial Exploration</h4>
+                        <p class="event-description">Started exploring model.py, looking at model initialization parameters and forward pass implementation</p>
+                        <div class="code-block">model = ViT(
+                            img_size=IMG_SIZE,
+                            patch_size=16,
+                            emb_dim=64,
+                            depth=4,
+                            num_heads=2
+                            )
+                        </div>
+                    </div>
+                </div>
+                <!-- First insight -->
+                <div class="timeline-event">
+                    <div class="timestamp">2:00</div>
+                    <div class="content-box border-blue">
+                        <h4 class="event-title">First Insight</h4>
+                        <p class="event-description">Discovered potential issue with patch calculation:</p>
+                        <div class="code-block">num_patches = (img_size // patch_size) * (img_size // patch_size - 1) # Wrong calculation</div>
+                    </div>
+                </div>
+                <!-- Key discovery -->
+                <div class="timeline-event">
+                    <div class="timestamp">5:00</div>
+                    <div class="content-box border-purple">
+                        <h4 class="event-title">Key Discovery</h4>
+                        <p class="event-description">Identified critical error in forward pass:</p>
+                        <div class="code-block">cls_tokens = self.cls_token.expand(b, -1, -1)</div>
+                        <p class="event-description" style="margin-top: 8px;">Variable 'cls_tokens' is referenced but 'self.cls_token' is undefined in the model!</p>
+                    </div>
+                </div>
+                <!-- Solution -->
+                <div class="timeline-event">
+                    <div class="timestamp">7:30</div>
+                    <div class="content-box border-green">
+                        <h4 class="event-title">Solution</h4>
+                        <p class="event-description">Added missing class token initialization in __init__:</p>
+                        <div class="code-block">self.cls_token = nn.Parameter(torch.randn(1, 1, emb_dim))</div>
+                        <p class="success-message">✓ Bug fixed! Model now works properly</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
 
 #### References:
 
