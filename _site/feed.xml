@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-05-29T15:08:17-10:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">AI Rubber Ducky Pair Programmer</title><link href="http://localhost:4000/deep-learning/2025/05/23/ducky.html" rel="alternate" type="text/html" title="AI Rubber Ducky Pair Programmer" /><published>2025-05-23T06:06:17-10:00</published><updated>2025-05-23T06:06:17-10:00</updated><id>http://localhost:4000/deep-learning/2025/05/23/ducky</id><content type="html" xml:base="http://localhost:4000/deep-learning/2025/05/23/ducky.html"><![CDATA[<p>Please try out the extension on the VSCode extension marketplace and let me know what you think! Enter your email to get access:</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-05-29T15:16:49-10:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">AI Rubber Ducky Pair Programmer</title><link href="http://localhost:4000/deep-learning/2025/05/23/ducky.html" rel="alternate" type="text/html" title="AI Rubber Ducky Pair Programmer" /><published>2025-05-23T06:06:17-10:00</published><updated>2025-05-23T06:06:17-10:00</updated><id>http://localhost:4000/deep-learning/2025/05/23/ducky</id><content type="html" xml:base="http://localhost:4000/deep-learning/2025/05/23/ducky.html"><![CDATA[<p>Please try out the extension on the VSCode extension marketplace and let me know what you think! Enter your email to get access:</p>
 
 <!-- gated signup + link reveal -->
 <div id="signup-container">
@@ -170,7 +170,6 @@ A few weeks ago I thought I was bothering my coworker by calling him to help deb
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vision Transformer Debugging Journey</title>
     <style>
         * {
             margin: 0;
@@ -202,7 +201,7 @@ A few weeks ago I thought I was bothering my coworker by calling him to help deb
 
         .title {
             font-size: 24px;
-            font-weight: bold;
+            <!-- font-weight: bold; -->
             margin-bottom: 8px;
             color: #111827;
         }
@@ -263,7 +262,6 @@ A few weeks ago I thought I was bothering my coworker by calling him to help deb
         .border-green { border-left-color: #22c55e; }
 
         .event-title {
-            font-weight: bold;
             margin-bottom: 8px;
         }
 
@@ -314,7 +312,7 @@ A few weeks ago I thought I was bothering my coworker by calling him to help deb
 <body>
     <div class="container">
         <div class="header">
-            <h3 class="title">Vision Transformer Debugging Journey</h3>
+            <h4 style="margin-bottom: -10px">Vision Transformer Debugging Journey</h4>
         </div>
         <!-- Timeline visualization -->
         <div class="timeline-container">
@@ -326,7 +324,7 @@ A few weeks ago I thought I was bothering my coworker by calling him to help deb
                 <div class="timeline-event">
                     <div class="timestamp">0:00</div>
                     <div class="content-box border-red">
-                        <h3 class="event-title title-red">Problem Identified</h3>
+                        <h4 class="event-title">Problem Identified</h4>
                         <p class="event-description">User is experiencing an error with a Vision Transformer (ViT) model implementation</p>
                     </div>
                 </div>
@@ -334,7 +332,7 @@ A few weeks ago I thought I was bothering my coworker by calling him to help deb
                 <div class="timeline-event">
                     <div class="timestamp">0:30</div>
                     <div class="content-box border-yellow">
-                        <h3 class="event-title title-yellow">Initial Exploration</h3>
+                        <h4 class="event-title">Initial Exploration</h4>
                         <p class="event-description">Started exploring model.py, looking at model initialization parameters and forward pass implementation</p>
                         <div class="code-block">model = ViT(
                             img_size=IMG_SIZE,
@@ -350,7 +348,7 @@ A few weeks ago I thought I was bothering my coworker by calling him to help deb
                 <div class="timeline-event">
                     <div class="timestamp">2:00</div>
                     <div class="content-box border-blue">
-                        <h3 class="event-title title-blue">First Insight</h3>
+                        <h4 class="event-title">First Insight</h4>
                         <p class="event-description">Discovered potential issue with patch calculation:</p>
                         <div class="code-block">num_patches = (img_size // patch_size) * (img_size // patch_size - 1) # Wrong calculation</div>
                     </div>
@@ -359,7 +357,7 @@ A few weeks ago I thought I was bothering my coworker by calling him to help deb
                 <div class="timeline-event">
                     <div class="timestamp">5:00</div>
                     <div class="content-box border-purple">
-                        <h3 class="event-title title-purple">Key Discovery</h3>
+                        <h4 class="event-title">Key Discovery</h4>
                         <p class="event-description">Identified critical error in forward pass:</p>
                         <div class="code-block">cls_tokens = self.cls_token.expand(b, -1, -1)</div>
                         <p class="event-description" style="margin-top: 8px;">Variable 'cls_tokens' is referenced but 'self.cls_token' is undefined in the model!</p>
@@ -369,7 +367,7 @@ A few weeks ago I thought I was bothering my coworker by calling him to help deb
                 <div class="timeline-event">
                     <div class="timestamp">7:30</div>
                     <div class="content-box border-green">
-                        <h3 class="event-title title-green">Solution</h3>
+                        <h4 class="event-title">Solution</h4>
                         <p class="event-description">Added missing class token initialization in __init__:</p>
                         <div class="code-block">self.cls_token = nn.Parameter(torch.randn(1, 1, emb_dim))</div>
                         <p class="success-message">✓ Bug fixed! Model now works properly</p>
