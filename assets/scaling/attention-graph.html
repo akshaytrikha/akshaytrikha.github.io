@@ -412,7 +412,7 @@
                 const atom = atoms.find(a => a.id === nodeId);
                 if (nodeId === atomId) {
                     circle.setAttribute('r', atom.radius * 1.25);
-                    circle.style.fill = '#667eea';
+                    circle.style.fill = atom.color;
                 } else {
                     circle.style.opacity = '0.3';
                 }
