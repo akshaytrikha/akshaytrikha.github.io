@@ -1,0 +1,922 @@
+<!-- <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BaTiO3 Transformer vs GNN Visualization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: transparent; /* or #fff if you prefer */
+            color: #2c3e50;
+            padding: 0;
+        }
+
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+        
+        .controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .control-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .slider-container {
+            position: relative;
+            width: 200px;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        .slider-fill {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        
+        .slider-thumb {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 50%;
+            cursor: grab;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        
+        .slider-thumb:active {
+            cursor: grabbing;
+        }
+        
+        .value-display {
+            font-size: 18px;
+            font-weight: 600;
+            color: #667eea;
+            min-width: 50px;
+        }
+        
+        .visualizations {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .viz-container {
+            position: relative;
+        }
+        
+        .viz-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        
+        .viz-description {
+            font-size: 13px;
+            color: #777;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        svg {
+            width: 100%;
+            height: 400px;
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e8e8e8;
+        }
+        
+        .node {
+            cursor: pointer;
+        }
+        
+        .node-circle {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .node-circle:hover {
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+        }
+        
+        .node-label {
+            font-size: 11px;
+            font-weight: 600;
+            fill: white;
+            pointer-events: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .edge {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+        
+        .edge-active {
+            stroke: #667eea !important;
+            stroke-width: 2.5 !important;
+            opacity: 0.8 !important;
+        }
+        
+        .edge-inactive {
+            stroke: #e0e0e0 !important;
+            opacity: 0.15 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="controls">
+            <span class="control-label">GNN Cutoff Radius</span>
+            <div class="slider-container" id="sliderContainer">
+                <div class="slider-fill" id="sliderFill"></div>
+                <div class="slider-thumb" id="sliderThumb"></div>
+            </div>
+            <span class="value-display" id="cutoffValue">2.5Å</span>
+        </div>
+        
+        <div class="visualizations">
+            <div class="viz-container">
+                <div class="viz-title">Transformer</div>
+                <div class="viz-description">Complete graph with learned attention weights</div>
+                <svg id="transformer-viz"></svg>
+            </div>
+            <div class="viz-container">
+                <div class="viz-title">GNN</div>
+                <div class="viz-description">Sparse graph with radius cutoff</div>
+                <svg id="gnn-viz"></svg>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // BaTiO3 perovskite structure (unit cell)
+        // Ba at corners, Ti at body center, O at face centers
+        const atoms3D = [
+            // Ba atoms at cube corners (cyan/blue)
+            {id: 'Ba1', x: 0, y: 0, z: 0, element: 'Ba', color: '#3b82f6'},
+            {id: 'Ba2', x: 4, y: 0, z: 0, element: 'Ba', color: '#3b82f6'},
+            {id: 'Ba3', x: 4, y: 4, z: 0, element: 'Ba', color: '#3b82f6'},
+            {id: 'Ba4', x: 0, y: 4, z: 0, element: 'Ba', color: '#3b82f6'},
+            {id: 'Ba5', x: 0, y: 0, z: 4, element: 'Ba', color: '#3b82f6'},
+            {id: 'Ba6', x: 4, y: 0, z: 4, element: 'Ba', color: '#3b82f6'},
+            {id: 'Ba7', x: 4, y: 4, z: 4, element: 'Ba', color: '#3b82f6'},
+            {id: 'Ba8', x: 0, y: 4, z: 4, element: 'Ba', color: '#3b82f6'},
+            
+            // Ti atom at body center (orange)
+            {id: 'Ti1', x: 2, y: 2, z: 2, element: 'Ti', color: '#f59e0b'},
+            
+            // O atoms at face centers (red)
+            {id: 'O1', x: 2, y: 0, z: 2, element: 'O', color: '#dc2626'},
+            {id: 'O2', x: 2, y: 4, z: 2, element: 'O', color: '#dc2626'},
+            {id: 'O3', x: 0, y: 2, z: 2, element: 'O', color: '#dc2626'},
+            {id: 'O4', x: 4, y: 2, z: 2, element: 'O', color: '#dc2626'},
+            {id: 'O5', x: 2, y: 2, z: 0, element: 'O', color: '#dc2626'},
+            {id: 'O6', x: 2, y: 2, z: 4, element: 'O', color: '#dc2626'}
+        ];
+        
+        // Isometric projection: convert 3D to 2D
+        function project(x, y, z) {
+            const scale = 35;
+            const offsetX = 230;
+            const offsetY = 150;
+            
+            // Isometric projection formulas
+            const isoX = (x - z) * Math.cos(Math.PI / 6) * scale + offsetX;
+            const isoY = (x + z) * Math.sin(Math.PI / 6) * scale - y * scale + offsetY;
+            const depth = x + y + z; // Simple depth calculation for layering
+            
+            return {x: isoX, y: isoY, depth: depth};
+        }
+        
+        // Project all atoms and sort by depth
+        let atoms = atoms3D.map(atom => {
+            const proj = project(atom.x, atom.y, atom.z);
+            return {
+                ...atom,
+                px: proj.x,
+                py: proj.y,
+                depth: proj.depth,
+                // Size and opacity based on depth
+                radius: 14 + (proj.depth / 12) * 4,
+                opacity: 0.7 + (proj.depth / 12) * 0.3
+            };
+        }).sort((a, b) => a.depth - b.depth); // Back to front rendering
+        
+        let cutoffRadius = 2.5;
+        let hoveredAtom = null;
+        
+        // Custom slider implementation
+        function setupSlider() {
+            const container = document.getElementById('sliderContainer');
+            const thumb = document.getElementById('sliderThumb');
+            const fill = document.getElementById('sliderFill');
+            const minVal = 1.0;
+            const maxVal = 6.0;
+            let isDragging = false;
+            
+            function updateSlider(clientX) {
+                const rect = container.getBoundingClientRect();
+                const percent = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+                cutoffRadius = minVal + (maxVal - minVal) * percent;
+                
+                thumb.style.left = `${percent * 100}%`;
+                fill.style.width = `${percent * 100}%`;
+                document.getElementById('cutoffValue').textContent = `${cutoffRadius.toFixed(1)}Å`;
+                
+                updateGNNVisualization();
+            }
+            
+            thumb.addEventListener('mousedown', () => isDragging = true);
+            document.addEventListener('mousemove', (e) => {
+                if (isDragging) updateSlider(e.clientX);
+            });
+            document.addEventListener('mouseup', () => isDragging = false);
+            container.addEventListener('click', (e) => updateSlider(e.clientX));
+            
+            // Initialize
+            const initialPercent = (cutoffRadius - minVal) / (maxVal - minVal);
+            thumb.style.left = `${initialPercent * 100}%`;
+            fill.style.width = `${initialPercent * 100}%`;
+        }
+        
+        function calculateDistance3D(a1, a2) {
+            return Math.sqrt(
+                Math.pow(a1.x - a2.x, 2) + 
+                Math.pow(a1.y - a2.y, 2) + 
+                Math.pow(a1.z - a2.z, 2)
+            );
+        }
+        
+        function createTransformerVisualization() {
+            const svg = document.getElementById('transformer-viz');
+            svg.innerHTML = '';
+            svg.setAttribute('viewBox', '0 0 460 400');
+            
+            // Create edges (complete graph) - sorted by depth
+            const edgeGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            const edges = [];
+            
+            for (let i = 0; i < atoms.length; i++) {
+                for (let j = i + 1; j < atoms.length; j++) {
+                    const avgDepth = (atoms[i].depth + atoms[j].depth) / 2;
+                    edges.push({
+                        from: atoms[i],
+                        to: atoms[j],
+                        depth: avgDepth
+                    });
+                }
+            }
+            
+            edges.sort((a, b) => a.depth - b.depth);
+            
+            edges.forEach(({from, to}) => {
+                const edge = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                edge.setAttribute('x1', from.px);
+                edge.setAttribute('y1', from.py);
+                edge.setAttribute('x2', to.px);
+                edge.setAttribute('y2', to.py);
+                
+                // Color edges: cube edges (Ba-Ba) in blue, internal bonds in gray
+                const isCubeEdge = from.element === 'Ba' && to.element === 'Ba';
+                edge.setAttribute('stroke', isCubeEdge ? '#3b82f6' : '#9ca3af');
+                edge.setAttribute('stroke-width', isCubeEdge ? '1.5' : '0.8');
+                const edgeOpacity = Math.min(from.opacity, to.opacity) * (isCubeEdge ? 0.5 : 0.3);
+                edge.setAttribute('opacity', edgeOpacity);
+                edge.classList.add('edge');
+                edge.setAttribute('data-from', from.id);
+                edge.setAttribute('data-to', to.id);
+                edgeGroup.appendChild(edge);
+            });
+            
+            svg.appendChild(edgeGroup);
+            
+            // Create nodes (back to front)
+            atoms.forEach(atom => {
+                const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                g.classList.add('node');
+                g.setAttribute('data-id', atom.id);
+                
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', atom.px);
+                circle.setAttribute('cy', atom.py);
+                circle.setAttribute('r', atom.radius);
+                circle.setAttribute('fill', atom.color);
+                circle.setAttribute('opacity', atom.opacity);
+                circle.setAttribute('filter', `drop-shadow(0 ${atom.depth/4}px ${atom.depth/2}px rgba(0,0,0,0.2))`);
+                circle.classList.add('node-circle');
+                
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', atom.px);
+                text.setAttribute('y', atom.py + 4);
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('opacity', atom.opacity);
+                text.classList.add('node-label');
+                text.textContent = atom.element;
+                
+                g.appendChild(circle);
+                g.appendChild(text);
+                svg.appendChild(g);
+                
+                g.addEventListener('mouseenter', () => highlightNode(atom.id));
+                g.addEventListener('mouseleave', () => resetHighlight());
+            });
+        }
+        
+        function updateGNNVisualization() {
+            const svg = document.getElementById('gnn-viz');
+            svg.innerHTML = '';
+            svg.setAttribute('viewBox', '0 0 460 400');
+            
+            // Create edges based on cutoff - sorted by depth
+            const edgeGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            const edges = [];
+            
+            for (let i = 0; i < atoms.length; i++) {
+                for (let j = i + 1; j < atoms.length; j++) {
+                    const dist = calculateDistance3D(atoms3D[i], atoms3D[j]);
+                    if (dist <= cutoffRadius) {
+                        const avgDepth = (atoms[i].depth + atoms[j].depth) / 2;
+                        edges.push({
+                            from: atoms[i],
+                            to: atoms[j],
+                            depth: avgDepth
+                        });
+                    }
+                }
+            }
+            
+            edges.sort((a, b) => a.depth - b.depth);
+            
+            edges.forEach(({from, to}) => {
+                const edge = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                edge.setAttribute('x1', from.px);
+                edge.setAttribute('y1', from.py);
+                edge.setAttribute('x2', to.px);
+                edge.setAttribute('y2', to.py);
+                
+                // Color edges: cube edges (Ba-Ba) in blue, internal bonds in gray
+                const isCubeEdge = from.element === 'Ba' && to.element === 'Ba';
+                edge.setAttribute('stroke', isCubeEdge ? '#3b82f6' : '#9ca3af');
+                edge.setAttribute('stroke-width', isCubeEdge ? '1.5' : '0.8');
+                const edgeOpacity = Math.min(from.opacity, to.opacity) * (isCubeEdge ? 0.5 : 0.3);
+                edge.setAttribute('opacity', edgeOpacity);
+                edge.classList.add('edge');
+                edge.setAttribute('data-from', from.id);
+                edge.setAttribute('data-to', to.id);
+                edgeGroup.appendChild(edge);
+            });
+            
+            svg.appendChild(edgeGroup);
+            
+            // Create nodes (back to front)
+            atoms.forEach(atom => {
+                const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+                g.classList.add('node');
+                g.setAttribute('data-id', atom.id);
+                
+                const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                circle.setAttribute('cx', atom.px);
+                circle.setAttribute('cy', atom.py);
+                circle.setAttribute('r', atom.radius);
+                circle.setAttribute('fill', atom.color);
+                circle.setAttribute('opacity', atom.opacity);
+                circle.setAttribute('filter', `drop-shadow(0 ${atom.depth/4}px ${atom.depth/2}px rgba(0,0,0,0.2))`);
+                circle.classList.add('node-circle');
+                
+                const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                text.setAttribute('x', atom.px);
+                text.setAttribute('y', atom.py + 4);
+                text.setAttribute('text-anchor', 'middle');
+                text.setAttribute('opacity', atom.opacity);
+                text.classList.add('node-label');
+                text.textContent = atom.element;
+                
+                g.appendChild(circle);
+                g.appendChild(text);
+                svg.appendChild(g);
+                
+                g.addEventListener('mouseenter', () => highlightNode(atom.id));
+                g.addEventListener('mouseleave', () => resetHighlight());
+            });
+        }
+        
+        function highlightNode(atomId) {
+            hoveredAtom = atomId;
+            
+            ['transformer-viz', 'gnn-viz'].forEach(vizId => {
+                const svg = document.getElementById(vizId);
+                
+                svg.querySelectorAll('.edge').forEach(edge => {
+                    const from = edge.getAttribute('data-from');
+                    const to = edge.getAttribute('data-to');
+                    
+                    if (from === atomId || to === atomId) {
+                        edge.classList.add('edge-active');
+                        edge.classList.remove('edge-inactive');
+                    } else {
+                        edge.classList.add('edge-inactive');
+                        edge.classList.remove('edge-active');
+                    }
+                });
+                
+                svg.querySelectorAll('.node').forEach(node => {
+                    const nodeId = node.getAttribute('data-id');
+                    const circle = node.querySelector('.node-circle');
+                    const atom = atoms.find(a => a.id === nodeId);
+                    
+                    if (nodeId === atomId) {
+                        circle.setAttribute('r', atom.radius * 1.3);
+                        circle.style.fill = '#667eea';
+                    } else {
+                        circle.style.opacity = '0.3';
+                    }
+                });
+            });
+        }
+        
+        function resetHighlight() {
+            hoveredAtom = null;
+            
+            ['transformer-viz', 'gnn-viz'].forEach(vizId => {
+                const svg = document.getElementById(vizId);
+                
+                svg.querySelectorAll('.edge').forEach(edge => {
+                    edge.classList.remove('edge-active', 'edge-inactive');
+                });
+                
+                svg.querySelectorAll('.node').forEach(node => {
+                    const circle = node.querySelector('.node-circle');
+                    const atom = atoms.find(a => a.id === node.getAttribute('data-id'));
+                    circle.setAttribute('r', atom.radius);
+                    circle.style.fill = atom.color;
+                    circle.style.opacity = atom.opacity;
+                });
+            });
+        }
+        
+        // Initialize
+        setupSlider();
+        createTransformerVisualization();
+        updateGNNVisualization();
+    </script>
+</body>
+
+
+
+
+
+ -->
+
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>BaTiO3 Transformer vs GNN Visualization</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background: transparent;
+            color: #2c3e50;
+            padding: 0;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+        .controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .control-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #555;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .slider-container {
+            position: relative;
+            width: 200px;
+            height: 6px;
+            background: #e0e0e0;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .slider-fill {
+            position: absolute;
+            left: 0; top: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+        .slider-thumb {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px; height: 20px;
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 50%;
+            cursor: grab;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .slider-thumb:active { cursor: grabbing; }
+        .value-display { font-size: 18px; font-weight: 600; color: #667eea; min-width: 50px; }
+
+        .visualizations {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        .viz-container { position: relative; }
+        .viz-title { font-size: 18px; font-weight: 600; color: #2c3e50; margin-bottom: 8px; text-align: center; }
+        .viz-description { font-size: 13px; color: #777; text-align: center; margin-bottom: 20px; }
+
+
+        /* Make each unit cell ~25% smaller and keep centered */
+        svg {
+            width: 75%;                /* was: 100% */
+            height: auto;              /* scales height proportionally */
+            background: #fafafa;
+            border-radius: 8px;
+            border: 1px solid #e8e8e8;
+            display: block;
+            margin: 0 auto;            /* center inside its column */
+        }
+
+        .node { cursor: pointer; }
+        .node-circle { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .node-circle:hover { filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); }
+        .node-label { font-size: 11px; font-weight: 600; fill: white; pointer-events: none; text-transform: uppercase; letter-spacing: 0.5px; }
+        .edge { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; }
+        .edge-active { stroke: #667eea !important; stroke-width: 2.5 !important; opacity: 0.8 !important; }
+        .edge-inactive { stroke: #e0e0e0 !important; opacity: 0.15 !important; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="controls">
+        <span class="control-label">GNN Cutoff Radius</span>
+        <div class="slider-container" id="sliderContainer">
+            <div class="slider-fill" id="sliderFill"></div>
+            <div class="slider-thumb" id="sliderThumb"></div>
+        </div>
+        <span class="value-display" id="cutoffValue">2.8Å</span>
+    </div>
+
+    <div class="visualizations">
+        <div class="viz-container">
+            <div class="viz-title">Transformer</div>
+            <div class="viz-description">Complete graph with learned attention weights</div>
+            <svg id="transformer-viz"></svg>
+        </div>
+        <div class="viz-container">
+            <div class="viz-title">GNN</div>
+            <div class="viz-description">Sparse graph with radius cutoff</div>
+            <svg id="gnn-viz"></svg>
+        </div>
+    </div>
+</div>
+
+<script>
+    // BaTiO3 perovskite structure (unit cell)
+    const atoms3D = [
+        {id: 'Ba1', x: 0, y: 0, z: 0, element: 'Ba', color: '#3b82f6'},
+        {id: 'Ba2', x: 4, y: 0, z: 0, element: 'Ba', color: '#3b82f6'},
+        {id: 'Ba3', x: 4, y: 4, z: 0, element: 'Ba', color: '#3b82f6'},
+        {id: 'Ba4', x: 0, y: 4, z: 0, element: 'Ba', color: '#3b82f6'},
+        {id: 'Ba5', x: 0, y: 0, z: 4, element: 'Ba', color: '#3b82f6'},
+        {id: 'Ba6', x: 4, y: 0, z: 4, element: 'Ba', color: '#3b82f6'},
+        {id: 'Ba7', x: 4, y: 4, z: 4, element: 'Ba', color: '#3b82f6'},
+        {id: 'Ba8', x: 0, y: 4, z: 4, element: 'Ba', color: '#3b82f6'},
+        {id: 'Ti1', x: 2, y: 2, z: 2, element: 'Ti', color: '#f59e0b'},
+        {id: 'O1', x: 2, y: 0, z: 2, element: 'O', color: '#dc2626'},
+        {id: 'O2', x: 2, y: 4, z: 2, element: 'O', color: '#dc2626'},
+        {id: 'O3', x: 0, y: 2, z: 2, element: 'O', color: '#dc2626'},
+        {id: 'O4', x: 4, y: 2, z: 2, element: 'O', color: '#dc2626'},
+        {id: 'O5', x: 2, y: 2, z: 0, element: 'O', color: '#dc2626'},
+        {id: 'O6', x: 2, y: 2, z: 4, element: 'O', color: '#dc2626'}
+    ];
+
+    function project(x, y, z) {
+        const scale = 35;
+        const offsetX = 230;
+        const offsetY = 150;
+        const isoX = (x - z) * Math.cos(Math.PI / 6) * scale + offsetX;
+        const isoY = (x + z) * Math.sin(Math.PI / 6) * scale - y * scale + offsetY;
+        const depth = x + y + z;
+        return {x: isoX, y: isoY, depth: depth};
+    }
+
+    let atoms = atoms3D.map(atom => {
+        const proj = project(atom.x, atom.y, atom.z);
+        return {
+            ...atom,
+            px: proj.x,
+            py: proj.y,
+            depth: proj.depth,
+            radius: 14 + (proj.depth / 12) * 4,
+            opacity: 0.7 + (proj.depth / 12) * 0.3
+        };
+    }).sort((a, b) => a.depth - b.depth);
+
+    let cutoffRadius = 2.5;
+    let hoveredAtom = null;
+
+    // Custom slider
+    function setupSlider() {
+        const container = document.getElementById('sliderContainer');
+        const thumb = document.getElementById('sliderThumb');
+        const fill = document.getElementById('sliderFill');
+        const minVal = 1.0;
+        const maxVal = 6.0;
+        let isDragging = false;
+
+        function updateSlider(clientX) {
+            const rect = container.getBoundingClientRect();
+            const percent = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+            cutoffRadius = minVal + (maxVal - minVal) * percent;
+
+            thumb.style.left = `${percent * 100}%`;
+            fill.style.width = `${percent * 100}%`;
+            document.getElementById('cutoffValue').textContent = `${cutoffRadius.toFixed(1)}Å`;
+
+            updateGNNVisualization();
+        }
+
+        thumb.addEventListener('mousedown', () => isDragging = true);
+        document.addEventListener('mousemove', (e) => { if (isDragging) updateSlider(e.clientX); });
+        document.addEventListener('mouseup', () => isDragging = false);
+        container.addEventListener('click', (e) => updateSlider(e.clientX));
+
+        const initialPercent = (cutoffRadius - minVal) / (maxVal - minVal);
+        thumb.style.left = `${initialPercent * 100}%`;
+        fill.style.width = `${initialPercent * 100}%`;
+    }
+
+    function calculateDistance3D(a1, a2) {
+        return Math.sqrt(
+            Math.pow(a1.x - a2.x, 2) +
+            Math.pow(a1.y - a2.y, 2) +
+            Math.pow(a1.z - a2.z, 2)
+        );
+    }
+
+    // -------- TIGHT VIEWBOX (minimal helper) --------
+    function applyTightViewBox(svg, padding = 16) {
+        const circles = [...svg.querySelectorAll('circle')];
+        if (!circles.length) return;
+
+        let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+        for (const c of circles) {
+            const cx = +c.getAttribute('cx'), cy = +c.getAttribute('cy'), r = +c.getAttribute('r');
+            minX = Math.min(minX, cx - r);
+            maxX = Math.max(maxX, cx + r);
+            minY = Math.min(minY, cy - r);
+            maxY = Math.max(maxY, cy + r);
+        }
+        minX -= padding; minY -= padding; maxX += padding; maxY += padding;
+        const w = maxX - minX, h = maxY - minY;
+
+        svg.setAttribute('viewBox', `${minX} ${minY} ${w} ${h}`);
+        svg.setAttribute('preserveAspectRatio', 'xMidYMid meet'); // remain centered
+    }
+    // ------------------------------------------------
+
+    function createTransformerVisualization() {
+        const svg = document.getElementById('transformer-viz');
+        svg.innerHTML = '';
+
+        // (Minimal change: removed fixed viewBox)
+
+        // Edges (complete graph)
+        const edgeGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        const edges = [];
+        for (let i = 0; i < atoms.length; i++) {
+            for (let j = i + 1; j < atoms.length; j++) {
+                const avgDepth = (atoms[i].depth + atoms[j].depth) / 2;
+                edges.push({ from: atoms[i], to: atoms[j], depth: avgDepth });
+            }
+        }
+        edges.sort((a, b) => a.depth - b.depth);
+        edges.forEach(({from, to}) => {
+            const edge = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            edge.setAttribute('x1', from.px); edge.setAttribute('y1', from.py);
+            edge.setAttribute('x2', to.px);   edge.setAttribute('y2', to.py);
+            const isCubeEdge = from.element === 'Ba' && to.element === 'Ba';
+            edge.setAttribute('stroke', isCubeEdge ? '#3b82f6' : '#9ca3af');
+            edge.setAttribute('stroke-width', isCubeEdge ? '1.5' : '0.8');
+            const edgeOpacity = Math.min(from.opacity, to.opacity) * (isCubeEdge ? 0.5 : 0.3);
+            edge.setAttribute('opacity', edgeOpacity);
+            edge.classList.add('edge');
+            edge.setAttribute('data-from', from.id);
+            edge.setAttribute('data-to', to.id);
+            edgeGroup.appendChild(edge);
+        });
+        svg.appendChild(edgeGroup);
+
+        // Nodes
+        atoms.forEach(atom => {
+            const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            g.classList.add('node');
+            g.setAttribute('data-id', atom.id);
+
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', atom.px);
+            circle.setAttribute('cy', atom.py);
+            circle.setAttribute('r', atom.radius);
+            circle.setAttribute('fill', atom.color);
+            circle.setAttribute('opacity', atom.opacity);
+            circle.setAttribute('filter', `drop-shadow(0 ${atom.depth/4}px ${atom.depth/2}px rgba(0,0,0,0.2))`);
+            circle.classList.add('node-circle');
+
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('x', atom.px);
+            text.setAttribute('y', atom.py + 4);
+            text.setAttribute('text-anchor', 'middle');
+            text.setAttribute('opacity', atom.opacity);
+            text.classList.add('node-label');
+            text.textContent = atom.element;
+
+            g.appendChild(circle);
+            g.appendChild(text);
+            svg.appendChild(g);
+
+            g.addEventListener('mouseenter', () => highlightNode(atom.id));
+            g.addEventListener('mouseleave', () => resetHighlight());
+        });
+
+        // MINIMAL CHANGE: tighten and center
+        applyTightViewBox(svg);
+    }
+
+    function updateGNNVisualization() {
+        const svg = document.getElementById('gnn-viz');
+        svg.innerHTML = '';
+
+        // (Minimal change: removed fixed viewBox)
+
+        // Edges by cutoff
+        const edgeGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+        const edges = [];
+        for (let i = 0; i < atoms.length; i++) {
+            for (let j = i + 1; j < atoms.length; j++) {
+                const dist = calculateDistance3D(atoms3D[i], atoms3D[j]);
+                if (dist <= cutoffRadius) {
+                    const avgDepth = (atoms[i].depth + atoms[j].depth) / 2;
+                    edges.push({ from: atoms[i], to: atoms[j], depth: avgDepth });
+                }
+            }
+        }
+        edges.sort((a, b) => a.depth - b.depth);
+        edges.forEach(({from, to}) => {
+            const edge = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            edge.setAttribute('x1', from.px); edge.setAttribute('y1', from.py);
+            edge.setAttribute('x2', to.px);   edge.setAttribute('y2', to.py);
+            const isCubeEdge = from.element === 'Ba' && to.element === 'Ba';
+            edge.setAttribute('stroke', isCubeEdge ? '#3b82f6' : '#9ca3af');
+            edge.setAttribute('stroke-width', isCubeEdge ? '1.5' : '0.8');
+            const edgeOpacity = Math.min(from.opacity, to.opacity) * (isCubeEdge ? 0.5 : 0.3);
+            edge.setAttribute('opacity', edgeOpacity);
+            edge.classList.add('edge');
+            edge.setAttribute('data-from', from.id);
+            edge.setAttribute('data-to', to.id);
+            edgeGroup.appendChild(edge);
+        });
+        svg.appendChild(edgeGroup);
+
+        // Nodes
+        atoms.forEach(atom => {
+            const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+            g.classList.add('node');
+            g.setAttribute('data-id', atom.id);
+
+            const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+            circle.setAttribute('cx', atom.px);
+            circle.setAttribute('cy', atom.py);
+            circle.setAttribute('r', atom.radius);
+            circle.setAttribute('fill', atom.color);
+            circle.setAttribute('opacity', atom.opacity);
+            circle.setAttribute('filter', `drop-shadow(0 ${atom.depth/4}px ${atom.depth/2}px rgba(0,0,0,0.2))`);
+            circle.classList.add('node-circle');
+
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('x', atom.px);
+            text.setAttribute('y', atom.py + 4);
+            text.setAttribute('text-anchor', 'middle');
+            text.setAttribute('opacity', atom.opacity);
+            text.classList.add('node-label');
+            text.textContent = atom.element;
+
+            g.appendChild(circle);
+            g.appendChild(text);
+            svg.appendChild(g);
+
+            g.addEventListener('mouseenter', () => highlightNode(atom.id));
+            g.addEventListener('mouseleave', () => resetHighlight());
+        });
+
+        // MINIMAL CHANGE: tighten and center
+        applyTightViewBox(svg);
+    }
+
+    function highlightNode(atomId) {
+        hoveredAtom = atomId;
+        ['transformer-viz', 'gnn-viz'].forEach(vizId => {
+            const svg = document.getElementById(vizId);
+            svg.querySelectorAll('.edge').forEach(edge => {
+                const from = edge.getAttribute('data-from');
+                const to = edge.getAttribute('data-to');
+                if (from === atomId || to === atomId) {
+                    edge.classList.add('edge-active');
+                    edge.classList.remove('edge-inactive');
+                } else {
+                    edge.classList.add('edge-inactive');
+                    edge.classList.remove('edge-active');
+                }
+            });
+            svg.querySelectorAll('.node').forEach(node => {
+                const nodeId = node.getAttribute('data-id');
+                const circle = node.querySelector('.node-circle');
+                const atom = atoms.find(a => a.id === nodeId);
+                if (nodeId === atomId) {
+                    circle.setAttribute('r', atom.radius * 1.3);
+                    circle.style.fill = '#667eea';
+                } else {
+                    circle.style.opacity = '0.3';
+                }
+            });
+        });
+    }
+
+    function resetHighlight() {
+        hoveredAtom = null;
+        ['transformer-viz', 'gnn-viz'].forEach(vizId => {
+            const svg = document.getElementById(vizId);
+            svg.querySelectorAll('.edge').forEach(edge => {
+                edge.classList.remove('edge-active', 'edge-inactive');
+            });
+            svg.querySelectorAll('.node').forEach(node => {
+                const circle = node.querySelector('.node-circle');
+                const atom = atoms.find(a => a.id === node.getAttribute('data-id'));
+                circle.setAttribute('r', atom.radius);
+                circle.style.fill = atom.color;
+                circle.style.opacity = atom.opacity;
+            });
+        });
+    }
+
+    // Initialize
+    setupSlider();
+    createTransformerVisualization();
+    updateGNNVisualization();
+</script>
+</body>
