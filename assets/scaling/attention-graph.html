@@ -124,23 +124,28 @@
 </div>
 
 <script>
-    // BaTiO3 perovskite structure (unit cell)
+    // BaTiO3 tetragonal unit cell (P4mm-like) in Å.
+    // Ideal fractional positions scaled by a,c; no PBC.
+    const aAng = 3.99, cAng = 4.03;
     const atoms3D = [
-        {id: 'Ba1', x: 0, y: 0, z: 0, element: 'Ba', color: '#3b82f6'},
-        {id: 'Ba2', x: 4, y: 0, z: 0, element: 'Ba', color: '#3b82f6'},
-        {id: 'Ba3', x: 4, y: 4, z: 0, element: 'Ba', color: '#3b82f6'},
-        {id: 'Ba4', x: 0, y: 4, z: 0, element: 'Ba', color: '#3b82f6'},
-        {id: 'Ba5', x: 0, y: 0, z: 4, element: 'Ba', color: '#3b82f6'},
-        {id: 'Ba6', x: 4, y: 0, z: 4, element: 'Ba', color: '#3b82f6'},
-        {id: 'Ba7', x: 4, y: 4, z: 4, element: 'Ba', color: '#3b82f6'},
-        {id: 'Ba8', x: 0, y: 4, z: 4, element: 'Ba', color: '#3b82f6'},
-        {id: 'Ti1', x: 2, y: 2, z: 2, element: 'Ti', color: '#f59e0b'},
-        {id: 'O1', x: 2, y: 0, z: 2, element: 'O', color: '#dc2626'},
-        {id: 'O2', x: 2, y: 4, z: 2, element: 'O', color: '#dc2626'},
-        {id: 'O3', x: 0, y: 2, z: 2, element: 'O', color: '#dc2626'},
-        {id: 'O4', x: 4, y: 2, z: 2, element: 'O', color: '#dc2626'},
-        {id: 'O5', x: 2, y: 2, z: 0, element: 'O', color: '#dc2626'},
-        {id: 'O6', x: 2, y: 2, z: 4, element: 'O', color: '#dc2626'}
+        // Ba at corners
+        {id: 'Ba1', x: 0,      y: 0,      z: 0,      element: 'Ba', color: '#3b82f6'},
+        {id: 'Ba2', x: aAng,   y: 0,      z: 0,      element: 'Ba', color: '#3b82f6'},
+        {id: 'Ba3', x: aAng,   y: aAng,   z: 0,      element: 'Ba', color: '#3b82f6'},
+        {id: 'Ba4', x: 0,      y: aAng,   z: 0,      element: 'Ba', color: '#3b82f6'},
+        {id: 'Ba5', x: 0,      y: 0,      z: cAng,   element: 'Ba', color: '#3b82f6'},
+        {id: 'Ba6', x: aAng,   y: 0,      z: cAng,   element: 'Ba', color: '#3b82f6'},
+        {id: 'Ba7', x: aAng,   y: aAng,   z: cAng,   element: 'Ba', color: '#3b82f6'},
+        {id: 'Ba8', x: 0,      y: aAng,   z: cAng,   element: 'Ba', color: '#3b82f6'},
+        // Ti at body center
+        {id: 'Ti1', x: aAng/2, y: aAng/2, z: cAng/2, element: 'Ti', color: '#f59e0b'},
+        // O at face centers
+        {id: 'O1',  x: aAng/2, y: 0,      z: cAng/2, element: 'O', color: '#dc2626'},
+        {id: 'O2',  x: aAng/2, y: aAng,   z: cAng/2, element: 'O', color: '#dc2626'},
+        {id: 'O3',  x: 0,      y: aAng/2, z: cAng/2, element: 'O', color: '#dc2626'},
+        {id: 'O4',  x: aAng,   y: aAng/2, z: cAng/2, element: 'O', color: '#dc2626'},
+        {id: 'O5',  x: aAng/2, y: aAng/2, z: 0,      element: 'O', color: '#dc2626'},
+        {id: 'O6',  x: aAng/2, y: aAng/2, z: cAng,   element: 'O', color: '#dc2626'}
     ];
 
     // Front-face orthographic with cabinet oblique depth (φ=45°, k=0.5)
@@ -184,7 +189,9 @@
         };
     }).sort((a, b) => a.depth - b.depth);
 
-    let cutoffRadius = 2.5;
+    // Global cutoff in Å with small numerical tolerance.
+    const DIST_TOL = 0.05; // Å
+    let cutoffRadius = 2.8;
     let hoveredAtom = null;
 
     // Custom slider
@@ -320,13 +327,14 @@
 
         // (Minimal change: removed fixed viewBox)
 
-        // Edges by cutoff
+        // Edges by global cutoff (includes like-like pairs)
         const edgeGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
         const edges = [];
         for (let i = 0; i < atoms.length; i++) {
             for (let j = i + 1; j < atoms.length; j++) {
-                const dist = calculateDistance3D(atoms3D[i], atoms3D[j]);
-                if (dist <= cutoffRadius) {
+                // Use the same (sorted) atoms array for both distance and rendering to avoid index mismatches.
+                const dist = calculateDistance3D(atoms[i], atoms[j]);
+                if (dist <= cutoffRadius + DIST_TOL) {
                     const avgDepth = (atoms[i].depth + atoms[j].depth) / 2;
                     edges.push({ from: atoms[i], to: atoms[j], depth: avgDepth });
                 }
