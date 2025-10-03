@@ -210,18 +210,20 @@
             {id: 'O6', x: 2, y: 2, z: 4, element: 'O', color: '#dc2626'}
         ];
         
-        // Isometric projection: convert 3D to 2D
+        // Front-face orthographic with cabinet oblique depth (φ=45°, k=0.5)
+        // Front edges are axis-aligned; back face slants up-right.
         function project(x, y, z) {
             const scale = 35;
             const offsetX = 230;
             const offsetY = 150;
-            
-            // Isometric projection formulas
-            const isoX = (x - z) * Math.cos(Math.PI / 6) * scale + offsetX;
-            const isoY = (x + z) * Math.sin(Math.PI / 6) * scale - y * scale + offsetY;
-            const depth = x + y + z; // Simple depth calculation for layering
-            
-            return {x: isoX, y: isoY, depth: depth};
+            const phi = Math.PI / 4;   // 45°
+            const k = 0.5;             // cabinet (half depth scale)
+            // x right, y up; z goes "back" (up-right)
+            const px = (x + k * z * Math.cos(phi)) * scale + offsetX;
+            const py = (-y - k * z * Math.sin(phi)) * scale + offsetY;
+            // keep depth used for sizing/opacity consistent with previous code
+            const depth = x + y + z;
+            return { x: px, y: py, depth };
         }
         
         // Project all atoms and sort by depth
@@ -646,14 +648,20 @@
         {id: 'O6', x: 2, y: 2, z: 4, element: 'O', color: '#dc2626'}
     ];
 
+    // Front-face orthographic with cabinet oblique depth (φ=45°, k=0.5)
+    // Front edges are axis-aligned; back face slants up-right.
     function project(x, y, z) {
         const scale = 35;
         const offsetX = 230;
         const offsetY = 150;
-        const isoX = (x - z) * Math.cos(Math.PI / 6) * scale + offsetX;
-        const isoY = (x + z) * Math.sin(Math.PI / 6) * scale - y * scale + offsetY;
+        const phi = Math.PI / 4;   // 45°
+        const k = 0.5;             // cabinet (half depth scale)
+        // x right, y up; z goes "back" (up-right)
+        const px = (x + k * z * Math.cos(phi)) * scale + offsetX;
+        const py = (-y - k * z * Math.sin(phi)) * scale + offsetY;
+        // keep depth used for sizing/opacity consistent with previous code
         const depth = x + y + z;
-        return {x: isoX, y: isoY, depth: depth};
+        return { x: px, y: py, depth };
     }
 
     let atoms = atoms3D.map(atom => {
