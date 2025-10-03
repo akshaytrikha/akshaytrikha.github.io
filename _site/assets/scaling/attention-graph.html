@@ -91,7 +91,10 @@
         .node-circle:hover { filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); }
         .node-label { font-size: 11px; font-weight: 600; fill: white; pointer-events: none; text-transform: uppercase; letter-spacing: 0.5px; }
         .edge { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); pointer-events: none; }
-        .edge-active { stroke: #667eea !important; stroke-width: 2.5 !important; opacity: 0.8 !important; }
+        /* Active edges now take the hovered atom's color via JS.
+           Keep width/opacity only; do NOT force a stroke color here. */
+        .edge-active { stroke-width: 2.5 !important; opacity: 0.8 !important; }
+
         .edge-inactive { stroke: #e0e0e0 !important; opacity: 0.15 !important; }
     </style>
 </head>
@@ -383,6 +386,8 @@
 
     function highlightNode(atomId) {
         hoveredAtom = atomId;
+        const activeAtom = atoms.find(a => a.id === atomId);
+        const activeColor = activeAtom ? activeAtom.color : null;
         ['transformer-viz', 'gnn-viz'].forEach(vizId => {
             const svg = document.getElementById(vizId);
             svg.querySelectorAll('.edge').forEach(edge => {
@@ -391,11 +396,16 @@
                 if (from === atomId || to === atomId) {
                     edge.classList.add('edge-active');
                     edge.classList.remove('edge-inactive');
+                    // Color bonds by the hovered "source" atom element
+                    if (activeColor) edge.style.stroke = activeColor;
                 } else {
                     edge.classList.add('edge-inactive');
                     edge.classList.remove('edge-active');
+                    // Reset any temporary stroke color
+                    edge.style.stroke = '';
                 }
             });
+
             svg.querySelectorAll('.node').forEach(node => {
                 const nodeId = node.getAttribute('data-id');
                 const circle = node.querySelector('.node-circle');
@@ -416,6 +426,8 @@
             const svg = document.getElementById(vizId);
             svg.querySelectorAll('.edge').forEach(edge => {
                 edge.classList.remove('edge-active', 'edge-inactive');
+                // Remove any stroke color set during hover so defaults apply
+                edge.style.stroke = '';
             });
             svg.querySelectorAll('.node').forEach(node => {
                 const circle = node.querySelector('.node-circle');
