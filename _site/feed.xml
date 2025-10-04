@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-10-03T12:30:12-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">Lessons in Scaling Neural Network Interatomic Potentials</title><link href="http://localhost:4000/deep-learning/2025/09/25/scaling.html" rel="alternate" type="text/html" title="Lessons in Scaling Neural Network Interatomic Potentials" /><published>2025-09-25T06:11:17-07:00</published><updated>2025-09-25T06:11:17-07:00</updated><id>http://localhost:4000/deep-learning/2025/09/25/scaling</id><content type="html" xml:base="http://localhost:4000/deep-learning/2025/09/25/scaling.html"><![CDATA[<p><em>Or, Why My Master’s Thesis Failed</em></p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-10-03T18:15:51-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">Lessons in Scaling Neural Network Interatomic Potentials</title><link href="http://localhost:4000/deep-learning/2025/09/25/scaling.html" rel="alternate" type="text/html" title="Lessons in Scaling Neural Network Interatomic Potentials" /><published>2025-09-25T06:11:17-07:00</published><updated>2025-09-25T06:11:17-07:00</updated><id>http://localhost:4000/deep-learning/2025/09/25/scaling</id><content type="html" xml:base="http://localhost:4000/deep-learning/2025/09/25/scaling.html"><![CDATA[<p><em>Or, Why My Master’s Thesis Failed</em></p>
 
 <p>A little over a year ago I got pretty interested in training neural networks that can learn physics from data. I took an amazing class called <a href="https://classes.berkeley.edu/content/2024-spring-compsci-294-254-lec-254">Physics Inspired Deep Learning</a> taught by Professor Aditi Krishnapriyan at Berkeley. I <a href="http://localhost:4000/deep-learning/2024/03/11/darcy-flow.html">wrote</a> about one of the projects from the class where we forced a neural network to only learn solutions to partial differential equations of a certain form, which we knew to be correct from prior physics knowledge.</p>
 
 <p>Around the same time, neural network interatomic potential (NNIP) models were becoming popular. These models broadly take as input a material’s atomic configuration and predict properties related to its potential energy. All the papers I was reading had great results, but I felt they were selling an incomplete story because they were missing scaling information. To me, understanding how a model scales is perhaps the most important thing and just having 1 datapoint of a final test loss was insufficent to understand how any architecture would stand the test of time.</p>
 
-<p>I tried to investigate whether vanilla transformers, given sufficient data, could learn to predict material properties as well as architectures explicitly equivariant architectures. Inspired by the Bitter Lesson, my hypothesis was that that transformers would scale more slowly than specialized architectures but that their scaling laws would hold out over more orders-of-magntiude (OOM).</p>
+<p>I tried to investigate whether vanilla transformers, given sufficient data, could learn to predict material properties as well as architectures explicitly equivariant architectures, like EquiformerV2 (EqV2). Inspired by the Bitter Lesson, my hypothesis was that that transformers would scale more slowly than specialized architectures but that their scaling laws would hold out over more orders-of-magntiude (OOM).</p>
 
 <!-- <div style="">
   <iframe
@@ -16,7 +16,6 @@
   ></iframe>
 </div> -->
 
-<!-- Where you want the chart -->
 <div id="nnip-scaling" style="width:75%; max-width:900px; margin:auto; border:0;">
 </div>
 
@@ -117,11 +116,11 @@ class MetaTransformerModels:
 
     <pre><code class="language-Python">def __getitem__(self, idx):
     # dataset is an AseDBDataset
-    # Every call: lookup file → open SQLite → query → deserialize
-    return self.dataset.get_atoms(idx)  # Disk I/O every time
+    # lookup file → open SQLite → query → deserialize
+    return self.dataset.get_atoms(idx) 
 </code></pre>
 
-    <p>The result is that all of this work repeats:</p>
+    <p>The result is that all of this work repeats every call:</p>
     <ul>
       <li>With random shuffling causing worst-case random disk access</li>
       <li>Accross multiple worker processes (each with their own DB connections)</li>
@@ -152,17 +151,34 @@ dataset = OMatDataset(atoms_list)
 <p>At a small dataset scale the first approach didn’t matter. But it wasted a lot of time as I scaled my dataset size.</p>
 
 <p><br />
-<strong>Sin #3: Assuming the transformer would learn invariant and equivariant features by itself</strong></p>
+<strong>Sin #3: Transformer featurization</strong></p>
 
-<p>In the first attempt at training transformers I used a standard embedding layer for atom types to give the model a dictionary lookup of what each atom is across different structures. The 3D positions were concatenated to the embedding vector. However, this was purposefully not a rotationally invariant featurization as I wanted to see if the model could learn this through augmentation. It also did not account for the fact crystal structures are periodic, which means that forces on atoms can come from adjacent cells. This led to the model learning global structure energy and stresses well, but forces were not learned well.</p>
+<p>In my attempt at training transformers I wanted to use as few inductive biases as possible. i.e. no equivariant features, no invariant features, no periodic boundary conditions. This was an attempt to learn everything from the data + augmentation, regardless of sample efficiency.</p>
 
-<p>Around the time I was stuck some researchers at FAIR published a paper using diffusion transformers to create a unified representation of both periodic and non-periodic systems (i.e. materials vs. molecules) and generate new structures. I thought their encoder was neat, and borrowed it for my task by adjusting the output heads.</p>
+<p>I used a standard embedding layer for atom types to give the model a dictionary lookup of what each atom is across different structures. This was important because the model needed to understand that each atom is the same in different in every structure but gets modified by its context, similar to how each word is the same in different sequences and is modified by its context. The 3D positions were concatenated to the embedding vector because I thought the model might have an easier time disentangling meaning vs. saving parameters by adding the positions to the embeddings.</p>
+
+<p>This was purposefully not a rotationally invariant featurization as I wanted to see if the model could learn this through augmentation. It also did not account for the fact crystal structures are periodic, which means that forces on atoms can come from adjacent cells. My findings are that this featurization led to the model learning global structure energy and stresses well, but not 3D per-atom forces. It’s not to say that forces weren’t learned at all, but they were certainly not comparable to the EquiformerV2.</p>
+
+<figure style="display: flex; justify-content: center;">
+    <div style="text-align: center; width: 80%;">
+        <img src="http://localhost:4000/assets/scaling/train-force-loss.png" alt="transformer train force loss sweep" />
+        <figcaption>Sweeping 1M parameter transformers on 100k structures</figcaption>
+    </div>
+    <br />
+</figure>
+
+<p>I got stuck with this phenomena of an apparent plateau in force loss only for certain hyperparam configs. There were other runs that would break through but still plateau much higher than the EqV2. I suspect that training stability had a role with the former, and ultimately the lack of periodic boundary conditions impacting latter.</p>
+
+<!-- Around the time I was stuck some researchers at FAIR published a paper using diffusion transformers to create a unified representation of both periodic and non-periodic systems (i.e. materials vs. molecules) and generate new structures. I thought their encoder was neat, and borrowed it for my task by adjusting its output heads. The main difference is that they also embedded the positions as well as fractional coordinates alongside the atom types and then added them all together in the forward pass. -->
 
 <!-- Global energy and stresses were easy to learn, forces was where the instability was -->
 
 <!-- Periodicity -->
 
 <!-- Assuming I could feed the transformer just atom positions -->
+
+<p><br />
+<strong>Win #0: Some EquiformerV2 results</strong></p>
 
 <p><br />
 <strong>Win #1: Making an inference visualization tool</strong></p>
@@ -275,15 +291,17 @@ References:
 <strong>Learning #2: Scale with Chinchilla’s Hyperparam Config</strong></p>
 
 <p><br />
-<strong>The model’s just want to learn</strong>
-A tough lesson I also learned that the models just want to learn and given enough parameters the loss will go</p>
+<strong>Learning #3: The model’s just want to learn</strong></p>
+
+<p>A tough lesson I also learned that the models just want to learn and given enough parameters the loss will go</p>
 
 <h4 id="references">References:</h4>
 
 <ul>
+  <li><a href="https://arxiv.org/pdf/2306.12059">[1] EquiformerV2</a></li>
   <li><a href="https://arxiv.org/html/2410.03989v1">[1] Symmetry From Scratch: Group Equivariance as a Supervised Learning Task</a></li>
   <li><a href="https://distill.pub/2020/circuits/equivariance/">[2] Naturally Occurring Equivariance in Neural Networks</a></li>
-  <li><a href="">[3]</a></li>
+  <li><a href="https://github.com/facebookresearch/all-atom-diffusion-transformer/blob/main/src/models/encoders/transformer.py">[3] All-atom Diffusion Transformers Encoder</a></li>
   <li><a href="">[4]</a></li>
   <li><a href="">[5]</a></li>
 </ul>]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[Or, Why My Master’s Thesis Failed]]></summary></entry><entry><title type="html">AI Rubber Ducky Pair Programmer</title><link href="http://localhost:4000/deep-learning/2025/05/23/ducky.html" rel="alternate" type="text/html" title="AI Rubber Ducky Pair Programmer" /><published>2025-05-23T09:06:17-07:00</published><updated>2025-05-23T09:06:17-07:00</updated><id>http://localhost:4000/deep-learning/2025/05/23/ducky</id><content type="html" xml:base="http://localhost:4000/deep-learning/2025/05/23/ducky.html"><![CDATA[<p>Please try out the extension on the VSCode extension marketplace and let me know what you think! Enter your email to get access:</p>

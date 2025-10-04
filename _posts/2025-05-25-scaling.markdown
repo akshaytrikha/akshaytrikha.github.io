@@ -11,7 +11,7 @@ A little over a year ago I got pretty interested in training neural networks tha
 
 Around the same time, neural network interatomic potential (NNIP) models were becoming popular. These models broadly take as input a material's atomic configuration and predict properties related to its potential energy. All the papers I was reading had great results, but I felt they were selling an incomplete story because they were missing scaling information. To me, understanding how a model scales is perhaps the most important thing and just having 1 datapoint of a final test loss was insufficent to understand how any architecture would stand the test of time. 
 
-I tried to investigate whether vanilla transformers, given sufficient data, could learn to predict material properties as well as architectures explicitly equivariant architectures. Inspired by the Bitter Lesson, my hypothesis was that that transformers would scale more slowly than specialized architectures but that their scaling laws would hold out over more orders-of-magntiude (OOM).
+I tried to investigate whether vanilla transformers, given sufficient data, could learn to predict material properties as well as architectures explicitly equivariant architectures, like EquiformerV2 (EqV2). Inspired by the Bitter Lesson, my hypothesis was that that transformers would scale more slowly than specialized architectures but that their scaling laws would hold out over more orders-of-magntiude (OOM).
 
 
 <!-- <div style="">
@@ -26,7 +26,6 @@ I tried to investigate whether vanilla transformers, given sufficient data, coul
 
 
 
-<!-- Where you want the chart -->
 <div id="nnip-scaling"
   style="width:75%; max-width:900px; margin:auto; border:0;">
 </div>
@@ -135,11 +134,11 @@ Over all the experiments I ran I found that dataloading was typically the bottle
 ```Python
 def __getitem__(self, idx):
     # dataset is an AseDBDataset
-    # Every call: lookup file → open SQLite → query → deserialize
-    return self.dataset.get_atoms(idx)  # Disk I/O every time
+    # lookup file → open SQLite → query → deserialize
+    return self.dataset.get_atoms(idx) 
 ```
 
-The result is that all of this work repeats:
+The result is that all of this work repeats every call:
 - With random shuffling causing worst-case random disk access
 - Accross multiple worker processes (each with their own DB connections)
 
@@ -171,11 +170,30 @@ At a small dataset scale the first approach didn't matter. But it wasted a lot o
 
 
 <br>
-**Sin #3: Assuming the transformer would learn invariant and equivariant features by itself**
+**Sin #3: Transformer featurization**
 
-In the first attempt at training transformers I used a standard embedding layer for atom types to give the model a dictionary lookup of what each atom is across different structures. The 3D positions were concatenated to the embedding vector. However, this was purposefully not a rotationally invariant featurization as I wanted to see if the model could learn this through augmentation. It also did not account for the fact crystal structures are periodic, which means that forces on atoms can come from adjacent cells. This led to the model learning global structure energy and stresses well, but forces were not learned well. 
+In my attempt at training transformers I wanted to use as few inductive biases as possible. i.e. no equivariant features, no invariant features, no periodic boundary conditions. This was an attempt to learn everything from the data + augmentation, regardless of sample efficiency.
 
-Around the time I was stuck some researchers at FAIR published a paper using diffusion transformers to create a unified representation of both periodic and non-periodic systems (i.e. materials vs. molecules) and generate new structures. I thought their encoder was neat, and borrowed it for my task by adjusting the output heads.
+I used a standard embedding layer for atom types to give the model a dictionary lookup of what each atom is across different structures. This was important because the model needed to understand that each atom is the same in different in every structure but gets modified by its context, similar to how each word is the same in different sequences and is modified by its context. The 3D positions were concatenated to the embedding vector because I thought the model might have an easier time disentangling meaning vs. saving parameters by adding the positions to the embeddings. 
+
+This was purposefully not a rotationally invariant featurization as I wanted to see if the model could learn this through augmentation. It also did not account for the fact crystal structures are periodic, which means that forces on atoms can come from adjacent cells. My findings are that this featurization led to the model learning global structure energy and stresses well, but not 3D per-atom forces. It's not to say that forces weren't learned at all, but they were certainly not comparable to the EquiformerV2.
+
+<figure style="display: flex; justify-content: center;">
+    <div style="text-align: center; width: 80%;">
+        <img src="{{site.url}}/assets/scaling/train-force-loss.png" alt="transformer train force loss sweep"/>
+        <figcaption>Sweeping 1M parameter transformers on 100k structures</figcaption>
+    </div>
+    <br>
+</figure>
+
+I got stuck with this phenomena of an apparent plateau in force loss only for certain hyperparam configs. There were other runs that would break through but still plateau much higher than the EqV2. I suspect that training stability had a role with the former, and ultimately the lack of periodic boundary conditions impacting latter.
+
+
+
+
+
+
+<!-- Around the time I was stuck some researchers at FAIR published a paper using diffusion transformers to create a unified representation of both periodic and non-periodic systems (i.e. materials vs. molecules) and generate new structures. I thought their encoder was neat, and borrowed it for my task by adjusting its output heads. The main difference is that they also embedded the positions as well as fractional coordinates alongside the atom types and then added them all together in the forward pass. -->
 
 
 
@@ -184,6 +202,9 @@ Around the time I was stuck some researchers at FAIR published a paper using dif
 <!-- Periodicity -->
 
 <!-- Assuming I could feed the transformer just atom positions -->
+
+<br>
+**Win #0: Some EquiformerV2 results**
 
 <br>
 **Win #1: Making an inference visualization tool**
@@ -311,16 +332,18 @@ Through my PI, I got access to Berkeley's Savio which gave me ~55 days running a
 
 
 <br>
-**The model's just want to learn**
+**Learning #3: The model's just want to learn**
+
 A tough lesson I also learned that the models just want to learn and given enough parameters the loss will go 
 
 
 
 #### References:
 
+- [[1] EquiformerV2](https://arxiv.org/pdf/2306.12059)
 - [[1] Symmetry From Scratch: Group Equivariance as a Supervised Learning Task](https://arxiv.org/html/2410.03989v1)
 - [[2] Naturally Occurring Equivariance in Neural Networks](https://distill.pub/2020/circuits/equivariance/)
-- [[3]]()
+- [[3] All-atom Diffusion Transformers Encoder](https://github.com/facebookresearch/all-atom-diffusion-transformer/blob/main/src/models/encoders/transformer.py)
 - [[4]]()
 - [[5]]()
 
