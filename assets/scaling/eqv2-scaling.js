@@ -79,6 +79,11 @@ export function renderEqV2Scaling(plot1Id, plot2Id, plot3Id) {
   const layout1 = overlayLegendAndButtons(Object.assign({autosize: true}, DATA.plot1.layout || {}));
   const layout2 = overlayLegendAndButtons(Object.assign({autosize: true}, DATA.plot2.layout || {}));
   const layout3 = overlayLegendAndButtons(Object.assign({autosize: true}, DATA.plot3.layout || {}));
+  
+  // Set smaller title font sizes
+  if (layout1.title) layout1.title.font = {size: 14};
+  if (layout2.title) layout2.title.font = {size: 14};
+  if (layout3.title) layout3.title.font = {size: 14};
 
   Plotly.newPlot(el1, DATA.plot1.data, layout1, {responsive: true});
   Plotly.newPlot(el2, [], layout2, {responsive: true});
@@ -126,11 +131,17 @@ export function renderEqV2Scaling(plot1Id, plot2Id, plot3Id) {
       });
     });
 
-    Plotly.react(el2, trainTraces, Object.assign({}, layout2, {
-      title: `Train Loss Curves for Dataset Size = ${Math.round(dsSize)}`
-    }));
-    Plotly.react(el3, valTraces, Object.assign({}, layout3, {
-      title: `Val Loss Curves for Dataset Size = ${Math.round(dsSize)}`
-    }));
+    const updatedLayout2 = Object.assign({}, layout2);
+    updatedLayout2.title = Object.assign({}, layout2.title, {
+      text: `Train Loss Curves for Dataset Size = ${Math.round(dsSize)}`,
+    });
+    
+    const updatedLayout3 = Object.assign({}, layout3);
+    updatedLayout3.title = Object.assign({}, layout3.title, {
+      text: `Val Loss Curves for Dataset Size = ${Math.round(dsSize)}`,
+    });
+    
+    Plotly.react(el2, trainTraces, updatedLayout2);
+    Plotly.react(el3, valTraces, updatedLayout3);
   });
 }
