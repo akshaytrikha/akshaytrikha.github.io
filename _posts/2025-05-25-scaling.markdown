@@ -1,15 +1,13 @@
 ---
 layout: post
-title: "Lessons in Scaling Neural Network Interatomic Potentials"
+title: "Lessons in Scaling Machine Learning Interatomic Potentials"
 date: 2025-09-25 13:11:17 -0000
 categories: deep-learning
 ---
 
 *Or, Why My Master's Thesis Failed*
 
-A little over a year ago I got pretty interested in training neural networks that can learn physics from data. I took an amazing class called [Physics Inspired Deep Learning](https://classes.berkeley.edu/content/2024-spring-compsci-294-254-lec-254) taught by Professor Aditi Krishnapriyan at Berkeley. I [wrote](http://localhost:4000/deep-learning/2024/03/11/darcy-flow.html) about one of the projects from the class where we forced a neural network to only learn solutions to partial differential equations of a certain form, which we knew to be correct from prior physics knowledge. 
-
-Around the same time, neural network interatomic potential (NNIP) models were becoming popular. These models broadly take as input a material's atomic configuration and predict properties related to its potential energy. All the papers I was reading had great results, but I felt they were selling an incomplete story because they were missing scaling information. To me, understanding how a model scales is perhaps the most important thing and just having 1 datapoint of a final test loss was insufficent to understand how any architecture would stand the test of time. 
+A little over a year ago I got pretty interested in training neural networks that can learn physics from data. Around the time machine learning interatomic potential (NNIP) models were becoming popular. These models broadly take as input a material's atomic configuration and predict properties related to its potential energy. All the papers I was reading had great results, but I felt they were selling an incomplete story because they were missing scaling information. To me, understanding how a model scales is perhaps the most important thing and just having 1 datapoint of a final test loss was insufficent to understand how any architecture would stand the test of time. 
 
 I tried to investigate whether vanilla transformers, given sufficient data, could learn to predict material properties as well as architectures explicitly equivariant architectures, like EquiformerV2 (EqV2). Inspired by the Bitter Lesson, my hypothesis was that that transformers would scale more slowly than specialized architectures but that their scaling laws would hold out over more orders-of-magntiude (OOM).
 
