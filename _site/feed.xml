@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-10-03T18:15:51-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">Lessons in Scaling Neural Network Interatomic Potentials</title><link href="http://localhost:4000/deep-learning/2025/09/25/scaling.html" rel="alternate" type="text/html" title="Lessons in Scaling Neural Network Interatomic Potentials" /><published>2025-09-25T06:11:17-07:00</published><updated>2025-09-25T06:11:17-07:00</updated><id>http://localhost:4000/deep-learning/2025/09/25/scaling</id><content type="html" xml:base="http://localhost:4000/deep-learning/2025/09/25/scaling.html"><![CDATA[<p><em>Or, Why My Master’s Thesis Failed</em></p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-10-04T11:54:27-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">Lessons in Scaling Neural Network Interatomic Potentials</title><link href="http://localhost:4000/deep-learning/2025/09/25/scaling.html" rel="alternate" type="text/html" title="Lessons in Scaling Neural Network Interatomic Potentials" /><published>2025-09-25T06:11:17-07:00</published><updated>2025-09-25T06:11:17-07:00</updated><id>http://localhost:4000/deep-learning/2025/09/25/scaling</id><content type="html" xml:base="http://localhost:4000/deep-learning/2025/09/25/scaling.html"><![CDATA[<p><em>Or, Why My Master’s Thesis Failed</em></p>
 
 <p>A little over a year ago I got pretty interested in training neural networks that can learn physics from data. I took an amazing class called <a href="https://classes.berkeley.edu/content/2024-spring-compsci-294-254-lec-254">Physics Inspired Deep Learning</a> taught by Professor Aditi Krishnapriyan at Berkeley. I <a href="http://localhost:4000/deep-learning/2024/03/11/darcy-flow.html">wrote</a> about one of the projects from the class where we forced a neural network to only learn solutions to partial differential equations of a certain form, which we knew to be correct from prior physics knowledge.</p>
 
@@ -112,7 +112,7 @@ class MetaTransformerModels:
 </style>
 <div class="code-comparison">
 
-    <p><strong>Bad approach:</strong></p>
+    <p><strong>Bad approach ❌</strong></p>
 
     <pre><code class="language-Python">def __getitem__(self, idx):
     # dataset is an AseDBDataset
@@ -131,7 +131,7 @@ class MetaTransformerModels:
   </div>
 <div class="code-comparison">
 
-    <p><strong>Better approach:</strong></p>
+    <p><strong>Better approach ✅</strong></p>
 
     <pre><code class="language-Python">atoms_list = []
 
@@ -178,10 +178,10 @@ dataset = OMatDataset(atoms_list)
 <!-- Assuming I could feed the transformer just atom positions -->
 
 <p><br />
-<strong>Win #0: Some EquiformerV2 results</strong></p>
+<strong>Win #1: Some EquiformerV2 results</strong></p>
 
 <p><br />
-<strong>Win #1: Making an inference visualization tool</strong></p>
+<strong>Win #2: Making an inference visualization tool</strong></p>
 
 <figure style="display: flex; justify-content: center;">
     <div style="text-align: center; width: 80%;">
@@ -191,7 +191,7 @@ dataset = OMatDataset(atoms_list)
 </figure>
 
 <p><br />
-<strong>Win #4: Making an scaling law run tool</strong></p>
+<strong>Win #3: Making a scaling law run tool</strong></p>
 
 <div class="scaling-plots-container">
   <div id="eqv2-scaling-plot1" class="plot-main"></div>
@@ -202,53 +202,29 @@ dataset = OMatDataset(atoms_list)
 </div>
 
 <style>
-.scaling-plots-container {
-  width: 95%;
-  max-width: 1600px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-}
+.scaling-plots-container{
+  /* full width breakout */
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
 
-.plot-main {
-  width: 100%;
-  height: 450px;
-  margin-bottom: 2rem;
-}
-
-.plot-dual-container {
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -37.5vw;
-  margin-right: -37.5vw;
-  width: 75vw;
-  max-width: 1400px;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  /* keep your 3-up grid */
+  padding-inline: 2rem;           /* optional gutter */
+  box-sizing: border-box;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2.5rem;
-  padding: 0 2rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+  align-items: stretch;
 }
 
-.plot-secondary {
-  width: 100%;
-  height: 400px;
-}
+/* keep these from Option A */
+.plot-dual-container{ display: contents; }
+.plot-main, .plot-secondary{ width:100%; height:400px; margin:0; }
 
-@media (max-width: 768px) {
-  .plot-dual-container {
-    grid-template-columns: 1fr;
-    width: 100%;
-    left: 0;
-    right: 0;
-    margin-left: 0;
-    margin-right: 0;
-  }
-  .plot-main, .plot-secondary {
-    height: 400px;
-  }
-}
+/* responsive wrap-downs */
+@media (max-width: 1200px){ .scaling-plots-container{ grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 768px){  .scaling-plots-container{ grid-template-columns: 1fr; } }
 </style>
 
 <!-- Plotly -->
@@ -261,7 +237,11 @@ dataset = OMatDataset(atoms_list)
 </script>
 
 <p><br />
-<strong>Win #5: Getting to talk to John Jumper about scaling Alphafold</strong></p>
+<strong>Win #4: Getting to talk to John Jumper about scaling Alphafold</strong></p>
+
+<p>I think my life peaked a little when I got to have a pizza and a beer with John Jumper at the YC AI Startup School and pitch him this unfinished research.</p>
+
+<p>I met one of my heros and he turned out to be extremely kind.</p>
 
 <!-- A Dummy’s Guide to Empirically Deriving Scaling Laws
 

@@ -129,7 +129,7 @@ Over all the experiments I ran I found that dataloading was typically the bottle
 </style>
 <div markdown="1" class="code-comparison">
 
-**Bad approach:**
+**Bad approach ❌**
 
 ```Python
 def __getitem__(self, idx):
@@ -147,7 +147,7 @@ This is painful.
 </div>
 <div markdown="1" class="code-comparison">
 
-**Better approach:**
+**Better approach ✅**
 
 ```Python
 atoms_list = []
@@ -204,10 +204,10 @@ I got stuck with this phenomena of an apparent plateau in force loss only for ce
 <!-- Assuming I could feed the transformer just atom positions -->
 
 <br>
-**Win #0: Some EquiformerV2 results**
+**Win #1: Some EquiformerV2 results**
 
 <br>
-**Win #1: Making an inference visualization tool**
+**Win #2: Making an inference visualization tool**
 
 <figure style="display: flex; justify-content: center;">
     <div style="text-align: center; width: 80%;">
@@ -217,7 +217,7 @@ I got stuck with this phenomena of an apparent plateau in force loss only for ce
 </figure>
 
 <br>
-**Win #4: Making an scaling law run tool**
+**Win #3: Making a scaling law run tool**
 
 <div class="scaling-plots-container">
   <div id="eqv2-scaling-plot1" class="plot-main"></div>
@@ -228,54 +228,31 @@ I got stuck with this phenomena of an apparent plateau in force loss only for ce
 </div>
 
 <style>
-.scaling-plots-container {
-  width: 95%;
-  max-width: 1600px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-}
+.scaling-plots-container{
+  /* full width breakout */
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
 
-.plot-main {
-  width: 100%;
-  height: 450px;
-  margin-bottom: 2rem;
-}
-
-.plot-dual-container {
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -37.5vw;
-  margin-right: -37.5vw;
-  width: 75vw;
-  max-width: 1400px;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  /* keep your 3-up grid */
+  padding-inline: 2rem;           /* optional gutter */
+  box-sizing: border-box;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2.5rem;
-  padding: 0 2rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+  align-items: stretch;
 }
 
-.plot-secondary {
-  width: 100%;
-  height: 400px;
-}
+/* keep these from Option A */
+.plot-dual-container{ display: contents; }
+.plot-main, .plot-secondary{ width:100%; height:400px; margin:0; }
 
-@media (max-width: 768px) {
-  .plot-dual-container {
-    grid-template-columns: 1fr;
-    width: 100%;
-    left: 0;
-    right: 0;
-    margin-left: 0;
-    margin-right: 0;
-  }
-  .plot-main, .plot-secondary {
-    height: 400px;
-  }
-}
+/* responsive wrap-downs */
+@media (max-width: 1200px){ .scaling-plots-container{ grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 768px){  .scaling-plots-container{ grid-template-columns: 1fr; } }
 </style>
+
 
 <!-- Plotly -->
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
@@ -290,10 +267,12 @@ I got stuck with this phenomena of an apparent plateau in force loss only for ce
 
 
 <br>
-**Win #5: Getting to talk to John Jumper about scaling Alphafold**
+**Win #4: Getting to talk to John Jumper about scaling Alphafold**
 
 
+I think my life peaked a little when I got to have a pizza and a beer with John Jumper at the YC AI Startup School and pitch him this unfinished research. 
 
+I met one of my heros and he turned out to be extremely kind.
 
 
 
