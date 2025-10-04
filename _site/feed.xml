@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-10-04T12:38:13-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">Lessons in Scaling Neural Network Interatomic Potentials</title><link href="http://localhost:4000/deep-learning/2025/09/25/scaling.html" rel="alternate" type="text/html" title="Lessons in Scaling Neural Network Interatomic Potentials" /><published>2025-09-25T06:11:17-07:00</published><updated>2025-09-25T06:11:17-07:00</updated><id>http://localhost:4000/deep-learning/2025/09/25/scaling</id><content type="html" xml:base="http://localhost:4000/deep-learning/2025/09/25/scaling.html"><![CDATA[<p><em>Or, Why My Master’s Thesis Failed</em></p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-10-04T13:23:09-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">Lessons in Scaling Neural Network Interatomic Potentials</title><link href="http://localhost:4000/deep-learning/2025/09/25/scaling.html" rel="alternate" type="text/html" title="Lessons in Scaling Neural Network Interatomic Potentials" /><published>2025-09-25T06:11:17-07:00</published><updated>2025-09-25T06:11:17-07:00</updated><id>http://localhost:4000/deep-learning/2025/09/25/scaling</id><content type="html" xml:base="http://localhost:4000/deep-learning/2025/09/25/scaling.html"><![CDATA[<p><em>Or, Why My Master’s Thesis Failed</em></p>
 
 <p>A little over a year ago I got pretty interested in training neural networks that can learn physics from data. I took an amazing class called <a href="https://classes.berkeley.edu/content/2024-spring-compsci-294-254-lec-254">Physics Inspired Deep Learning</a> taught by Professor Aditi Krishnapriyan at Berkeley. I <a href="http://localhost:4000/deep-learning/2024/03/11/darcy-flow.html">wrote</a> about one of the projects from the class where we forced a neural network to only learn solutions to partial differential equations of a certain form, which we knew to be correct from prior physics knowledge.</p>
 
@@ -179,6 +179,56 @@ dataset = OMatDataset(atoms_list)
 
 <p><br />
 <strong>Win #1: Some EquiformerV2 results</strong></p>
+
+<div class="eqv2-results-container">
+  <div class="result-img">
+    <img src="http://localhost:4000/assets/scaling/eqv2-param-scaling.png" alt="EquiformerV2 Parameter Scaling" />
+  </div>
+  <div class="result-img">
+    <img src="http://localhost:4000/assets/scaling/eqv2-compute-scaling.png" alt="EquiformerV2 Compute Scaling" />
+  </div>
+  <div class="result-img">
+    <img src="http://localhost:4000/assets/scaling/eqv2-dataset-scaling.png" alt="EquiformerV2 Dataset Scaling" />
+  </div>
+</div>
+
+<style>
+.eqv2-results-container{
+  /* full width breakout */
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+
+  /* 3-up grid */
+  padding-inline: 2rem;           /* optional gutter */
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+  align-items: stretch;
+}
+
+.result-img{ 
+  width:100%; 
+  margin:0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.result-img img{
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* responsive wrap-downs */
+@media (max-width: 1200px){ .eqv2-results-container{ grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 768px){  .eqv2-results-container{ grid-template-columns: 1fr; } }
+</style>
 
 <p><br />
 <strong>Win #2: Making an inference visualization tool</strong></p>

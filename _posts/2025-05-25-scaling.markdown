@@ -206,6 +206,56 @@ I got stuck with this phenomena of an apparent plateau in force loss only for ce
 <br>
 **Win #1: Some EquiformerV2 results**
 
+<div class="eqv2-results-container">
+  <div class="result-img">
+    <img src="{{site.url}}/assets/scaling/eqv2-param-scaling.png" alt="EquiformerV2 Parameter Scaling">
+  </div>
+  <div class="result-img">
+    <img src="{{site.url}}/assets/scaling/eqv2-compute-scaling.png" alt="EquiformerV2 Compute Scaling">
+  </div>
+  <div class="result-img">
+    <img src="{{site.url}}/assets/scaling/eqv2-dataset-scaling.png" alt="EquiformerV2 Dataset Scaling">
+  </div>
+</div>
+
+<style>
+.eqv2-results-container{
+  /* full width breakout */
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+
+  /* 3-up grid */
+  padding-inline: 2rem;           /* optional gutter */
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+  align-items: stretch;
+}
+
+.result-img{ 
+  width:100%; 
+  margin:0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.result-img img{
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* responsive wrap-downs */
+@media (max-width: 1200px){ .eqv2-results-container{ grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 768px){  .eqv2-results-container{ grid-template-columns: 1fr; } }
+</style>
+
 <br>
 **Win #2: Making an inference visualization tool**
 
