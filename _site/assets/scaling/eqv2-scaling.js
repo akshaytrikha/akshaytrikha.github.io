@@ -6,44 +6,50 @@ const DATA = {"plot1":{"data":[{"customdata":[{"experiment":"experiments_2025030
 // X button = bottom-right BELOW axis
 function overlayLegendAndButtons(layout) {
   const l = JSON.parse(JSON.stringify(layout || {}));
+  l.autosize = true;
 
-  // Legend
-  l.legend = Object.assign({}, l.legend, {
+  // 1) Legend overlays the plot (no extra domain/margins reserved)
+  l.legend = {
+    ...(l.legend || {}),
     xref: 'paper', yref: 'paper',
-    x: 0.985, xanchor: 'right',
-    y: 0.985, yanchor: 'top',
+    x: 0.99, y: 0.99,
+    xanchor: 'right', yanchor: 'top',
     bgcolor: 'rgba(255,255,255,0.35)',
-    bordercolor: 'rgba(0,0,0,0.10)', borderwidth: 1
-  });
+    bordercolor: 'rgba(0,0,0,0.10)',
+    borderwidth: 1
+  };
 
-  // Make room below the x-axis for the two buttons
-  l.margin = Object.assign({ r: 24, b: 110 }, l.margin, { r: 24, b: Math.max(110, (l.margin?.b || 0)) });
+  // 2) Buttons sit below the x-axis; keep them from consuming huge space
+  const menus = (l.updatemenus || []).map(m => ({
+    ...m,
+    xref: 'paper', yref: 'paper',
+    x: m.name === 'xaxis_toggle' ? 1 : 0,
+    xanchor: m.name === 'xaxis_toggle' ? 'right' : 'left',
+    y: -0.14,           // just below the axis title band
+    yanchor: 'top',
+    bgcolor: 'rgba(255,255,255,0.35)',
+    bordercolor: 'rgba(0,0,0,0.10)',
+    borderwidth: 1,
+    pad: { l: 8, r: 8, t: 2, b: 2 },
+    showactive: false,
+    direction: 'up'
+  }));
+  l.updatemenus = menus;
 
-  (l.updatemenus || []).forEach((m) => {
-    Object.assign(m, {
-      xref: 'paper', yref: 'paper',
-      bgcolor: 'rgba(255,255,255,0.35)',
-      bordercolor: 'rgba(0,0,0,0.10)', borderwidth: 1,
-      pad: { l: 8, r: 8, t: 2, b: 2 },
-      showactive: false,
-      direction: 'up' // open upward since we're below the axis
-    });
+  // 3) Clamp margins (wipe inherited r:170, avoid giant top/bottom)
+  const btnBand = menus.length ? 32 : 0;  // extra pixels only if buttons exist
+  l.margin = { l: 48, r: 16, t: 36, b: Math.max(48, 36 + btnBand), pad: 0 };
 
-    // y ~ -0.18 sits in the same band as a typical x-axis title;
-    // tweak to -0.14 … -0.22 depending on your font size.
-    const yBelow = -0.18;
+  // 4) Keep axis titles tight so auto-margins don’t balloon
+  l.xaxis = { ...(l.xaxis || {}), automargin: true, title: { ...(l.xaxis?.title || {}), standoff: 6 } };
+  l.yaxis = { ...(l.yaxis || {}), automargin: true, title: { ...(l.yaxis?.title || {}), standoff: 6 } };
 
-    if (m.name === 'yaxis_toggle') {
-      m.x = 0.0;   m.xanchor = 'left';
-      m.y = yBelow; m.yanchor = 'top';
-    } else if (m.name === 'xaxis_toggle') {
-      m.x = 1.0;   m.xanchor = 'right';
-      m.y = yBelow; m.yanchor = 'top';
-    }
-  });
+  // Optional: tighten multi-line titles a bit
+  if (l.title) l.title = { ...l.title, pad: { t: 2, b: 2 } };
 
   return l;
 }
+
 
 
 // Hover fade/solid that adapts to however many updatemenus exist
@@ -84,6 +90,9 @@ export function renderEqV2Scaling(plot1Id, plot2Id, plot3Id) {
   if (layout1.title) layout1.title.font = {size: 14};
   if (layout2.title) layout2.title.font = {size: 14};
   if (layout3.title) layout3.title.font = {size: 14};
+  if (layout1.title) layout1.title.x = 0.01; 
+  if (layout2.title) layout2.title.x = 0.01; 
+  if (layout3.title) layout3.title.x = 0.01; 
 
   Plotly.newPlot(el1, DATA.plot1.data, layout1, {responsive: true});
   Plotly.newPlot(el2, [], layout2, {responsive: true});
