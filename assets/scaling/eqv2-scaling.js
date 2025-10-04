@@ -81,6 +81,9 @@ export function renderEqV2Scaling(plot1Id, plot2Id, plot3Id) {
   const el2 = document.getElementById(plot2Id);
   const el3 = document.getElementById(plot3Id);
 
+  // Track if the highlighted point has been clicked
+  let hasClickedHighlight = false;
+
   // Apply overlay treatment to each layout
   const layout1 = overlayLegendAndButtons(Object.assign({autosize: true}, DATA.plot1.layout || {}));
   const layout2 = overlayLegendAndButtons(Object.assign({autosize: true}, DATA.plot2.layout || {}));
@@ -94,7 +97,48 @@ export function renderEqV2Scaling(plot1Id, plot2Id, plot3Id) {
   if (layout2.title) layout2.title.x = 0.01; 
   if (layout3.title) layout3.title.x = 0.01; 
 
-  Plotly.newPlot(el1, DATA.plot1.data, layout1, {responsive: true});
+  // Modify the first trace to highlight the third point (index 2, dataset size = 10075)
+  const modifiedData = JSON.parse(JSON.stringify(DATA.plot1.data));
+  if (modifiedData[0] && modifiedData[0].x && modifiedData[0].x.length > 2) {
+    // Make all markers slightly larger and set individual colors
+    modifiedData[0].marker = {
+      ...modifiedData[0].marker,
+      size: modifiedData[0].x.map((_, i) => i === 2 ? 14 : 8),
+      color: modifiedData[0].x.map((_, i) => i === 2 ? '#FFA500' : '#636EFA'),
+      line: {
+        color: modifiedData[0].x.map((_, i) => i === 2 ? '#FF6B00' : 'rgba(255,255,255,0)'),
+        width: modifiedData[0].x.map((_, i) => i === 2 ? 3 : 0)
+      }
+    };
+  }
+
+  // Add "Click Me" annotation for the highlighted point
+  layout1.annotations = layout1.annotations || [];
+  if (modifiedData[0] && modifiedData[0].x && modifiedData[0].x.length > 2) {
+    layout1.annotations.push({
+      x: Math.log10(modifiedData[0].x[2]),
+      y: Math.log10(modifiedData[0].y[2]),
+      xref: 'x',
+      yref: 'y',
+      text: 'Click Me',
+      showarrow: false,
+      font: {
+        size: 13,
+        color: '#FF6B00',
+        family: 'Arial, sans-serif',
+        weight: 'light'
+      },
+      bgcolor: 'rgba(255,255,255,0.9)',
+      bordercolor: '#FF6B00',
+      borderwidth: 1,
+      borderpad: 4,
+      xanchor: 'left',
+      yanchor: 'middle',
+      xshift: 15
+    });
+  }
+
+  Plotly.newPlot(el1, modifiedData, layout1, {responsive: true});
   Plotly.newPlot(el2, [], layout2, {responsive: true});
   Plotly.newPlot(el3, [], layout3, {responsive: true});
 
@@ -110,10 +154,45 @@ export function renderEqV2Scaling(plot1Id, plot2Id, plot3Id) {
   wireOverlayHover(el2);
   wireOverlayHover(el3);
 
-  // Click handler (unchanged) …
+  // Add pulsing animation using setInterval
+  let pulseInterval = setInterval(() => {
+    if (hasClickedHighlight) {
+      clearInterval(pulseInterval);
+      return;
+    }
+    
+    const currentSize = modifiedData[0].marker.size[2];
+    const newSize = currentSize === 14 ? 18 : 14;
+    
+    Plotly.restyle(el1, {
+      'marker.size[2]': newSize
+    }, [0]);
+  }, 500);
+
+  // Click handler
   el1.on('plotly_click', function(eventData) {
     const point = eventData.points[0];
     const { experiment: filename, dataset_size: dsSize } = point.customdata;
+    
+    // Check if the clicked point is the highlighted one (index 2, dataset size = 10075)
+    if (point.pointIndex === 2 && !hasClickedHighlight) {
+      hasClickedHighlight = true;
+      
+      // Remove the "Click Me" annotation
+      const updatedLayout1 = Object.assign({}, layout1);
+      updatedLayout1.annotations = [];
+      
+      // Reset the marker to original appearance (blue color, normal size)
+      Plotly.restyle(el1, {
+        'marker.size[2]': 8,
+        'marker.color[2]': '#636EFA',
+        'marker.line.width[2]': 0,
+        'marker.line.color[2]': 'rgba(255,255,255,0)'
+      }, [0]);
+      
+      Plotly.relayout(el1, updatedLayout1);
+    }
+    
     const runs = DATA.experimentData[filename][dsSize.toString()] || [];
     const trainTraces = [], valTraces = [];
 
