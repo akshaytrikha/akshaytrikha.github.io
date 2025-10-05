@@ -3,9 +3,9 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>Lessons from Scaling Machine Learning Interatomic Potentials | Akshay Trikha</title>
+<title>(Bitter) Lessons from Scaling Machine Learning Interatomic Potentials | Akshay Trikha</title>
 <meta name="generator" content="Jekyll v4.3.2" />
-<meta property="og:title" content="Lessons from Scaling Machine Learning Interatomic Potentials" />
+<meta property="og:title" content="(Bitter) Lessons from Scaling Machine Learning Interatomic Potentials" />
 <meta property="og:locale" content="en_US" />
 <link rel="canonical" href="http://localhost:4000/deep-learning/2025/09/25/scaling.html" />
 <meta property="og:url" content="http://localhost:4000/deep-learning/2025/09/25/scaling.html" />
@@ -13,9 +13,9 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2025-09-25T06:11:17-07:00" />
 <meta name="twitter:card" content="summary" />
-<meta property="twitter:title" content="Lessons from Scaling Machine Learning Interatomic Potentials" />
+<meta property="twitter:title" content="(Bitter) Lessons from Scaling Machine Learning Interatomic Potentials" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-09-25T06:11:17-07:00","datePublished":"2025-09-25T06:11:17-07:00","headline":"Lessons from Scaling Machine Learning Interatomic Potentials","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/deep-learning/2025/09/25/scaling.html"},"url":"http://localhost:4000/deep-learning/2025/09/25/scaling.html"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-09-25T06:11:17-07:00","datePublished":"2025-09-25T06:11:17-07:00","headline":"(Bitter) Lessons from Scaling Machine Learning Interatomic Potentials","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/deep-learning/2025/09/25/scaling.html"},"url":"http://localhost:4000/deep-learning/2025/09/25/scaling.html"}</script>
 <!-- End Jekyll SEO tag -->
 <link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Akshay Trikha" /></head>
 <body><header class="site-header" role="banner">
@@ -38,7 +38,7 @@
         <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
-    <h1 class="post-title p-name" itemprop="name headline">Lessons from Scaling Machine Learning Interatomic Potentials</h1>
+    <h1 class="post-title p-name" itemprop="name headline">(Bitter) Lessons from Scaling Machine Learning Interatomic Potentials</h1>
     <p class="post-meta">
       <time class="dt-published" datetime="2025-09-25T06:11:17-07:00" itemprop="datePublished">Sep 25, 2025
       </time></p>
@@ -50,13 +50,15 @@
 
 <p><em>Or, Why My Master’s Thesis Failed</em></p>
 
-<p><strong>TL;DR:</strong> I tested whether a plain transformer (no equivariance, no periodic boundary conditions) can learn interatomic forces as data &amp; params scale vs. EquiformerV2. EqV2 followed clean power laws and hit much lower loss. My transformer failed and plataued hard, leading me to believe my featurization was insufficient. I share the wins &amp; failures.</p>
+<p><strong>TL;DR:</strong> I tested whether a plain transformer encoder (no equivariance, no periodic boundary conditions) can learn interatomic forces as data &amp; params scale vs. EquiformerV2. EqV2 followed clean power laws and hit much lower loss. My transformer failed and plataued hard, leading me to believe my featurization was insufficient. I share the wins &amp; failures.</p>
+
+<p>Code is open sourced <a href="https://github.com/akshaytrikha/materials-scaling">here</a>.</p>
 
 <hr />
 <p><br />
 A little over a year ago I got pretty interested in training neural networks that can learn physics from data. Around the time machine learning interatomic potential (NNIP) models were becoming popular. These models broadly take as input a material’s atomic configuration and predict properties related to its potential energy. All the papers I was reading had great results, but I felt they were selling an incomplete story because they were missing scaling information. To me, understanding how a model scales is perhaps the most important thing and just having 1 datapoint of a final test loss was insufficent to understand how any architecture would stand the test of time.</p>
 
-<p>I tried to investigate whether vanilla transformers, given sufficient data, could learn to predict material properties as well as architectures explicitly equivariant architectures, like EquiformerV2 (EqV2) <a href="https://arxiv.org/pdf/2306.12059">[1]</a>. Inspired by the Bitter Lesson <a href="https://www.cs.utexas.edu/~eunsol/courses/data/bitter_lesson.pdf">[2]</a>, my hypothesis was that that transformers would scale more slowly than specialized architectures but that their scaling laws <a href="https://arxiv.org/pdf/2001.08361">[3]</a><a href="https://arxiv.org/pdf/1712.00409">[4]</a><a href="https://arxiv.org/pdf/2210.16859">[5]</a> would hold out over more orders-of-magntiude (OOM).</p>
+<p>I tried to investigate whether vanilla transformer encoders, given sufficient data, could learn to predict material properties as well as architectures explicitly equivariant architectures, like EquiformerV2 (EqV2) <a href="https://arxiv.org/pdf/2306.12059">[1]</a>. Inspired by the Bitter Lesson <a href="https://www.cs.utexas.edu/~eunsol/courses/data/bitter_lesson.pdf">[2]</a>, my hypothesis was that that transformers would scale more slowly than specialized architectures but that their scaling laws <a href="https://arxiv.org/pdf/2001.08361">[3]</a><a href="https://arxiv.org/pdf/1712.00409">[4]</a><a href="https://arxiv.org/pdf/2210.16859">[5]</a> would hold out over more orders-of-magntiude (OOM).</p>
 
 <p>I failed to stably train transformers most likely due to the featurization I chose. I still learned a great deal along the way, and found power laws for EqV2.</p>
 
@@ -185,6 +187,23 @@ class MetaTransformerModels:
 
 <p>I used a standard embedding layer for atom types to give the model a dictionary lookup of what each atom is across different structures. This was important because the model needed to understand that each atom is the same in different in every structure but gets modified by its context, similar to how each word is the same in different sequences and is modified by its context. The 3D positions were concatenated to the embedding vector because I thought the model might have an easier time disentangling meaning vs. saving parameters by adding the positions to the embeddings.</p>
 
+<!-- $$
+\begin{align}
+&\overbrace{\begin{matrix}\phantom{e_{11}}&\cdots&\phantom{e_{1d}}\end{matrix}}^{\text{embedding }(d)}
+\;\Big|\;
+\overbrace{\begin{matrix}\phantom{x_1}&\phantom{y_1}&\phantom{z_1}\end{matrix}}^{\text{xyz }(3)}
+\\[-0.4em]
+&\left[
+\begin{array}{ccc|ccc}
+e_{11} & \cdots & e_{1d} & x_1 & y_1 & z_1 \\
+\vdots & \ddots & \vdots & \vdots & \vdots & \vdots \\
+e_{N1} & \cdots & e_{Nd} & x_N & y_N & z_N
+\end{array}
+\right]
+\in \mathbb{R}^{N\times(d+3)}
+\end{align}
+$$ -->
+
 <p>This was purposefully not a rotationally invariant featurization as I wanted to see if the model could learn this through augmentation. It also did not account for the fact crystal structures are periodic, which means that forces on atoms can come from adjacent cells. My findings are that this featurization led to the model learning global structure energy and stresses well, but not 3D per-atom forces. It’s not to say that forces weren’t learned at all, but they were certainly not comparable to the EquiformerV2.</p>
 
 <figure style="display: flex; justify-content: center;">
@@ -264,7 +283,7 @@ Takeaways:</p>
   <li>Demonstrated power laws</li>
   <li>Data scaling shows diminishing returns compared to param scaling</li>
   <li>Identified compute-optimal training configs with a real pareto frontier</li>
-  <li>My data and training pipeline worked for EqV2, so there was something inherently wrong with the transformer</li>
+  <li>Data and training pipeline worked for EqV2, so there was something inherently wrong with the transformer</li>
 </ul>
 
 <p><br />
@@ -324,6 +343,13 @@ Takeaways:</p>
   import { renderEqV2Scaling } from "/assets/scaling/eqv2-scaling.js";
   renderEqV2Scaling('eqv2-scaling-plot1', 'eqv2-scaling-plot2', 'eqv2-scaling-plot3');
 </script>
+
+<p>This tool helped group families of runs and studying their behavior on the same plot. Before training any models I established naive (no deep learning) baselines that would help understand the loss number. The three baselines were:</p>
+<ul>
+  <li>Loss while predicting 0 everywhere</li>
+  <li>Loss while predicting the mean of the dataset everywhere</li>
+  <li>Loss from a k = 1 nearest-neighbor Markov model</li>
+</ul>
 
 <p><br />
 <strong>Win #4: Getting to talk to John Jumper about scaling AlphaFold</strong></p>

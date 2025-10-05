@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Lessons from Scaling Machine Learning Interatomic Potentials"
+title: "(Bitter) Lessons from Scaling Machine Learning Interatomic Potentials"
 date: 2025-09-25 13:11:17 -0000
 categories: deep-learning
 ---
@@ -11,13 +11,15 @@ categories: deep-learning
 
 *Or, Why My Master's Thesis Failed*
 
-**TL;DR:** I tested whether a plain transformer (no equivariance, no periodic boundary conditions) can learn interatomic forces as data & params scale vs. EquiformerV2. EqV2 followed clean power laws and hit much lower loss. My transformer failed and plataued hard, leading me to believe my featurization was insufficient. I share the wins & failures.
+**TL;DR:** I tested whether a plain transformer encoder (no equivariance, no periodic boundary conditions) can learn interatomic forces as data & params scale vs. EquiformerV2. EqV2 followed clean power laws and hit much lower loss. My transformer failed and plataued hard, leading me to believe my featurization was insufficient. I share the wins & failures.
+
+Code is open sourced [here](https://github.com/akshaytrikha/materials-scaling).
 
 ----------------------
 <br>
 A little over a year ago I got pretty interested in training neural networks that can learn physics from data. Around the time machine learning interatomic potential (NNIP) models were becoming popular. These models broadly take as input a material's atomic configuration and predict properties related to its potential energy. All the papers I was reading had great results, but I felt they were selling an incomplete story because they were missing scaling information. To me, understanding how a model scales is perhaps the most important thing and just having 1 datapoint of a final test loss was insufficent to understand how any architecture would stand the test of time. 
 
-I tried to investigate whether vanilla transformers, given sufficient data, could learn to predict material properties as well as architectures explicitly equivariant architectures, like EquiformerV2 (EqV2) [[1]](https://arxiv.org/pdf/2306.12059). Inspired by the Bitter Lesson [[2]](https://www.cs.utexas.edu/~eunsol/courses/data/bitter_lesson.pdf), my hypothesis was that that transformers would scale more slowly than specialized architectures but that their scaling laws [[3]](https://arxiv.org/pdf/2001.08361)[[4]](https://arxiv.org/pdf/1712.00409)[[5]](https://arxiv.org/pdf/2210.16859) would hold out over more orders-of-magntiude (OOM).
+I tried to investigate whether vanilla transformer encoders, given sufficient data, could learn to predict material properties as well as architectures explicitly equivariant architectures, like EquiformerV2 (EqV2) [[1]](https://arxiv.org/pdf/2306.12059). Inspired by the Bitter Lesson [[2]](https://www.cs.utexas.edu/~eunsol/courses/data/bitter_lesson.pdf), my hypothesis was that that transformers would scale more slowly than specialized architectures but that their scaling laws [[3]](https://arxiv.org/pdf/2001.08361)[[4]](https://arxiv.org/pdf/1712.00409)[[5]](https://arxiv.org/pdf/2210.16859) would hold out over more orders-of-magntiude (OOM).
 
 I failed to stably train transformers most likely due to the featurization I chose. I still learned a great deal along the way, and found power laws for EqV2.
 
@@ -148,6 +150,24 @@ In my attempt at training transformers I wanted to use as few inductive biases a
 
 I used a standard embedding layer for atom types to give the model a dictionary lookup of what each atom is across different structures. This was important because the model needed to understand that each atom is the same in different in every structure but gets modified by its context, similar to how each word is the same in different sequences and is modified by its context. The 3D positions were concatenated to the embedding vector because I thought the model might have an easier time disentangling meaning vs. saving parameters by adding the positions to the embeddings. 
 
+<!-- $$
+\begin{align}
+&\overbrace{\begin{matrix}\phantom{e_{11}}&\cdots&\phantom{e_{1d}}\end{matrix}}^{\text{embedding }(d)}
+\;\Big|\;
+\overbrace{\begin{matrix}\phantom{x_1}&\phantom{y_1}&\phantom{z_1}\end{matrix}}^{\text{xyz }(3)}
+\\[-0.4em]
+&\left[
+\begin{array}{ccc|ccc}
+e_{11} & \cdots & e_{1d} & x_1 & y_1 & z_1 \\
+\vdots & \ddots & \vdots & \vdots & \vdots & \vdots \\
+e_{N1} & \cdots & e_{Nd} & x_N & y_N & z_N
+\end{array}
+\right]
+\in \mathbb{R}^{N\times(d+3)}
+\end{align}
+$$ -->
+
+
 This was purposefully not a rotationally invariant featurization as I wanted to see if the model could learn this through augmentation. It also did not account for the fact crystal structures are periodic, which means that forces on atoms can come from adjacent cells. My findings are that this featurization led to the model learning global structure energy and stresses well, but not 3D per-atom forces. It's not to say that forces weren't learned at all, but they were certainly not comparable to the EquiformerV2.
 
 <figure style="display: flex; justify-content: center;">
@@ -224,7 +244,7 @@ Takeaways:
 - Demonstrated power laws
 - Data scaling shows diminishing returns compared to param scaling
 - Identified compute-optimal training configs with a real pareto frontier
-- My data and training pipeline worked for EqV2, so there was something inherently wrong with the transformer
+- Data and training pipeline worked for EqV2, so there was something inherently wrong with the transformer
 
 <br>
 **Win #2: Making an inference visualization tool**
@@ -284,6 +304,10 @@ This ended up being a very useful debugging tool to understand how the models we
   renderEqV2Scaling('eqv2-scaling-plot1', 'eqv2-scaling-plot2', 'eqv2-scaling-plot3');
 </script>
 
+This tool helped group families of runs and studying their behavior on the same plot. Before training any models I established naive (no deep learning) baselines that would help understand the loss number. The three baselines were:
+- Loss while predicting 0 everywhere
+- Loss while predicting the mean of the dataset everywhere
+- Loss from a k = 1 nearest-neighbor Markov model
 
 <br>
 **Win #4: Getting to talk to John Jumper about scaling AlphaFold**
