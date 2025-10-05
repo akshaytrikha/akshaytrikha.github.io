@@ -30,8 +30,8 @@ icons:
 
 **Currently**:
 
-- 👨🏾‍💻 Using computer vision models to accelerate battery research at [QuantumScape](https://www.quantumscape.com/){:target="\_blank" :rel="noopener noreferrer"}
-- 🔋 Exploring how to apply deep learning to predict material properties at [UC Berkeley](https://mse.berkeley.edu/){:target="\_blank" :rel="noopener noreferrer"}
+- 👨🏾‍💻 Building and buying LLM-tools at [QuantumScape](https://www.quantumscape.com/){:target="\_blank" :rel="noopener noreferrer"}
+- 🔋 (Recently) studied scaling laws for machine learning interatomic potential models at [Berkeley](https://mse.berkeley.edu/){:target="\_blank" :rel="noopener noreferrer"}
 - 🛫 Learning how to fly!
 <figure>
     <div style="text-align: center;">
