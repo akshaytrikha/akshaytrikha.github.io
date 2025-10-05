@@ -1,4 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-10-05T00:30:35-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">Lessons in Scaling Machine Learning Interatomic Potentials</title><link href="http://localhost:4000/deep-learning/2025/09/25/scaling.html" rel="alternate" type="text/html" title="Lessons in Scaling Machine Learning Interatomic Potentials" /><published>2025-09-25T06:11:17-07:00</published><updated>2025-09-25T06:11:17-07:00</updated><id>http://localhost:4000/deep-learning/2025/09/25/scaling</id><content type="html" xml:base="http://localhost:4000/deep-learning/2025/09/25/scaling.html"><![CDATA[<p><em>Or, Why My Master’s Thesis Failed</em></p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-10-05T11:41:36-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">Lessons from Scaling Machine Learning Interatomic Potentials</title><link href="http://localhost:4000/deep-learning/2025/09/25/scaling.html" rel="alternate" type="text/html" title="Lessons from Scaling Machine Learning Interatomic Potentials" /><published>2025-09-25T06:11:17-07:00</published><updated>2025-09-25T06:11:17-07:00</updated><id>http://localhost:4000/deep-learning/2025/09/25/scaling</id><content type="html" xml:base="http://localhost:4000/deep-learning/2025/09/25/scaling.html"><![CDATA[<script type="text/javascript" async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<p><em>Or, Why My Master’s Thesis Failed</em></p>
 
 <p><strong>TL;DR:</strong> I tested whether a plain transformer (no equivariance, no periodic boundary conditions) can learn interatomic forces as data &amp; params scale vs. EquiformerV2. EqV2 followed clean power laws and hit much lower loss. My transformer failed and plataued hard, leading me to believe my featurization was insufficient. I share the wins &amp; failures.</p>
 
@@ -280,7 +283,13 @@ Takeaways:</p>
 
 <p>I think my life peaked a little when I got to have a pizza and a beer with John Jumper at the YC AI Startup School and pitch him this unfinished research.</p>
 
-<p>I met one of my heros and he turned out to be extremely kind.</p>
+<figure style="display: flex; justify-content: center;">
+    <div style="text-align: center; width: 80%;">
+        <img src="http://localhost:4000/assets/scaling/john-jumper.jpg" alt="meeting John Jumper" />
+        <figcaption>I met one of my heroes and he turned out to be extremely kind.</figcaption>
+    </div>
+    <br />
+</figure>
 
 <!-- A Dummy’s Guide to Empirically Deriving Scaling Laws
 
@@ -309,7 +318,7 @@ Takeaways:</p>
   <li>[8] <a href="http://karpathy.github.io/2019/04/25/recipe/">A Recipe for Training Neural Networks</a> - Andrej Karpathy, 2019</li>
   <li><a href="https://arxiv.org/pdf/2203.15556">Training Compute-Optimal Large Language Models (Chinchilla)</a> - Hoffmann et al., 2022</li>
   <li><a href="https://distill.pub/2020/circuits/equivariance/">Naturally Occurring Equivariance in Neural Networks</a> - Olah et al., 2020</li>
-</ul>]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[Or, Why My Master’s Thesis Failed]]></summary></entry><entry><title type="html">AI Rubber Ducky Pair Programmer</title><link href="http://localhost:4000/deep-learning/2025/05/23/ducky.html" rel="alternate" type="text/html" title="AI Rubber Ducky Pair Programmer" /><published>2025-05-23T09:06:17-07:00</published><updated>2025-05-23T09:06:17-07:00</updated><id>http://localhost:4000/deep-learning/2025/05/23/ducky</id><content type="html" xml:base="http://localhost:4000/deep-learning/2025/05/23/ducky.html"><![CDATA[<p>Please try out the extension on the VSCode extension marketplace and let me know what you think! Enter your email to get access:</p>
+</ul>]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">AI Rubber Ducky Pair Programmer</title><link href="http://localhost:4000/deep-learning/2025/05/23/ducky.html" rel="alternate" type="text/html" title="AI Rubber Ducky Pair Programmer" /><published>2025-05-23T09:06:17-07:00</published><updated>2025-05-23T09:06:17-07:00</updated><id>http://localhost:4000/deep-learning/2025/05/23/ducky</id><content type="html" xml:base="http://localhost:4000/deep-learning/2025/05/23/ducky.html"><![CDATA[<p>Please try out the extension on the VSCode extension marketplace and let me know what you think! Enter your email to get access:</p>
 
 <!-- gated signup + link reveal -->
 <div id="signup-container">

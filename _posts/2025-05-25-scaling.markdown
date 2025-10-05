@@ -1,9 +1,13 @@
 ---
 layout: post
-title: "Lessons in Scaling Machine Learning Interatomic Potentials"
+title: "Lessons from Scaling Machine Learning Interatomic Potentials"
 date: 2025-09-25 13:11:17 -0000
 categories: deep-learning
 ---
+
+<script type="text/javascript" async
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+</script>
 
 *Or, Why My Master's Thesis Failed*
 
@@ -286,9 +290,13 @@ This ended up being a very useful debugging tool to understand how the models we
 
 I think my life peaked a little when I got to have a pizza and a beer with John Jumper at the YC AI Startup School and pitch him this unfinished research. 
 
-I met one of my heros and he turned out to be extremely kind.
-
-
+<figure style="display: flex; justify-content: center;">
+    <div style="text-align: center; width: 80%;">
+        <img src="{{site.url}}/assets/scaling/john-jumper.jpg" alt="meeting John Jumper"/>
+        <figcaption>I met one of my heroes and he turned out to be extremely kind.</figcaption>
+    </div>
+    <br>
+</figure>
 
 
 <!-- A Dummy’s Guide to Empirically Deriving Scaling Laws
