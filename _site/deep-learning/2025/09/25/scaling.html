@@ -66,8 +66,6 @@
 <div id="nnip-scaling" style="width:75%; max-width:900px; margin:auto; border:0;">
 </div>
 
-<!-- Over the last year I was writing my master's thesis.  -->
-
 <p><br />
 <strong>Why the math makes sense:</strong></p>
 
@@ -143,8 +141,6 @@ class MetaTransformerModels:
 
 <p>On paper this sounds great to iterate over model sizes and lazily instantiate them, but in practice each OOM brings nuance and unexpectedness in behavior through e.g. hyperparameter sensitivity like early stoping. Instead, I should’ve started with small manual overfitting experiments and gradually increasing the parameters and data.</p>
 
-<!-- Insert MetaModelsClas -->
-
 <p><br />
 <strong>Sin #2: Not starting with a small, in-memory, dataset</strong></p>
 
@@ -216,14 +212,6 @@ dataset = OMatDataset(atoms_list)
 
 <p>I got stuck with this phenomena of an apparent plateau in force loss only for certain hyperparam configs. There were other runs that would break through but still plateau much higher than the EqV2. I suspect that training stability had a role with the former, and ultimately the lack of periodic boundary conditions impacting latter.</p>
 
-<!-- Around the time I was stuck some researchers at FAIR published a paper using diffusion transformers to create a unified representation of both periodic and non-periodic systems (i.e. materials vs. molecules) and generate new structures. I thought their encoder was neat, and borrowed it for my task by adjusting its output heads. The main difference is that they also embedded the positions as well as fractional coordinates alongside the atom types and then added them all together in the forward pass. -->
-
-<!-- Global energy and stresses were easy to learn, forces was where the instability was -->
-
-<!-- Periodicity -->
-
-<!-- Assuming I could feed the transformer just atom positions -->
-
 <p><br />
 <strong>Win #1: Some EquiformerV2 results</strong></p>
 
@@ -266,7 +254,7 @@ dataset = OMatDataset(atoms_list)
 
 .result-img img{
   width: 100%;
-  height: auto;
+  height: 350px;
   object-fit: contain;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -352,12 +340,7 @@ dataset = OMatDataset(atoms_list)
 4. Don’t forget to visualize & verify your outputs
 5. Training efficiency bells & whistles
     1. FlashAttention, mixed precision gradient clipping,
-
-
-References:
-- A Recipe for Training Neural Networks http://karpathy.github.io/2019/04/25/recipe/ 
-- Training Compute-Optimal Large Language Models (Chinchilla) https://arxiv.org/pdf/2203.15556 
-- Scaling Laws for Neural Language Models https://arxiv.org/pdf/2001.08361  -->
+-->
 
 <p><br />
 <strong>Learning #1: Source compute early on</strong></p>
@@ -370,19 +353,22 @@ References:
 <p><br />
 <strong>Learning #3: The model’s just want to learn</strong></p>
 
-<p>A tough lesson I also learned that the models just want to learn and given enough parameters the loss will go</p>
+<p>A tough lesson I also learned that the models just want to learn and given enough parameters the loss will go down even if it isn’t learning the right thing.</p>
 
 <h4 id="references">References:</h4>
 
 <ul>
-  <li><a href="https://arxiv.org/pdf/2306.12059">[1] EquiformerV2</a></li>
-  <li><a href="https://arxiv.org/html/2410.03989v1">[1] Symmetry From Scratch: Group Equivariance as a Supervised Learning Task</a></li>
-  <li><a href="https://distill.pub/2020/circuits/equivariance/">[2] Naturally Occurring Equivariance in Neural Networks</a></li>
-  <li><a href="https://github.com/facebookresearch/all-atom-diffusion-transformer/blob/main/src/models/encoders/transformer.py">[3] All-atom Diffusion Transformers Encoder</a></li>
-  <li><a href="">[4]</a></li>
-  <li><a href="">[5]</a></li>
+  <li><a href="http://karpathy.github.io/2019/04/25/recipe/">[] A Recipe for Training Neural Networks</a></li>
+  <li><a href="https://arxiv.org/pdf/2203.15556">[] Training Compute-Optimal Large Language Models (Chinchilla)</a></li>
+  <li><a href="https://arxiv.org/pdf/2001.08361">[] Scaling Laws for Neural Language Models</a></li>
+  <li><a href="https://arxiv.org/pdf/1712.00409">[] Deep Learning Scaling Is Predictable, Empirically</a></li>
+  <li><a href="https://huggingface.co/datasets/facebook/OMAT24">[] Open Materials 2024 Dataset</a></li>
+  <li><a href="https://arxiv.org/pdf/1704.01212">[] Neural message passing for quantum chemistry</a></li>
+  <li><a href="https://arxiv.org/pdf/2306.12059">[] EquiformerV2</a>
+<!-- - [[] Symmetry From Scratch: Group Equivariance as a Supervised Learning Task](https://arxiv.org/html/2410.03989v1) --></li>
+  <li><a href="https://distill.pub/2020/circuits/equivariance/">[] Naturally Occurring Equivariance in Neural Networks</a>
+<!-- - [[] All-atom Diffusion Transformers Encoder](https://github.com/facebookresearch/all-atom-diffusion-transformer/blob/main/src/models/encoders/transformer.py) --></li>
 </ul>
-
 
   </div><a class="u-url" href="/deep-learning/2025/09/25/scaling.html" hidden></a>
 </article>
