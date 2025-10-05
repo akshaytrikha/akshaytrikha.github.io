@@ -7,31 +7,20 @@ categories: deep-learning
 
 *Or, Why My Master's Thesis Failed*
 
+**TL;DR:** I tested whether a plain transformer (no equivariance, no periodic boundary conditions) can learn interatomic forces as data & params scale vs. EquiformerV2. EqV2 followed clean power laws and hit much lower loss. My transformer failed and plataued hard, leading me to believe my featurization was insufficient. I share the wins & failures.
+
+----------------------
+<br>
 A little over a year ago I got pretty interested in training neural networks that can learn physics from data. Around the time machine learning interatomic potential (NNIP) models were becoming popular. These models broadly take as input a material's atomic configuration and predict properties related to its potential energy. All the papers I was reading had great results, but I felt they were selling an incomplete story because they were missing scaling information. To me, understanding how a model scales is perhaps the most important thing and just having 1 datapoint of a final test loss was insufficent to understand how any architecture would stand the test of time. 
 
-I tried to investigate whether vanilla transformers, given sufficient data, could learn to predict material properties as well as architectures explicitly equivariant architectures, like EquiformerV2 (EqV2). Inspired by the Bitter Lesson, my hypothesis was that that transformers would scale more slowly than specialized architectures but that their scaling laws would hold out over more orders-of-magntiude (OOM).
+I tried to investigate whether vanilla transformers, given sufficient data, could learn to predict material properties as well as architectures explicitly equivariant architectures, like EquiformerV2 (EqV2) [[1]](https://arxiv.org/pdf/2306.12059). Inspired by the Bitter Lesson [[2]](https://www.cs.utexas.edu/~eunsol/courses/data/bitter_lesson.pdf), my hypothesis was that that transformers would scale more slowly than specialized architectures but that their scaling laws [[3]](https://arxiv.org/pdf/2001.08361)[[4]](https://arxiv.org/pdf/1712.00409)[[5]](https://arxiv.org/pdf/2210.16859) would hold out over more orders-of-magntiude (OOM).
 
-
-<!-- <div style="">
-  <iframe
-    src="{{site.url}}/assets/scaling/cartoon-scaling.html"
-    width="900"
-    height="600"
-    style="border:0; overflow:hidden;"
-    loading="lazy"
-  ></iframe>
-</div> -->
-
-
-<div id="nnip-scaling"
-  style="width:75%; max-width:900px; margin:auto; border:0;">
-</div>
-
+I failed to stably train transformers most likely due to the featurization I chose. I still learned a great deal along the way, and found power laws for EqV2.
 
 <br>
 **Why the math makes sense:**
 
-A Transformer is a graph neural network (GNN) on a complete graph with learned edge weights. A graph in a GNN is created through a rule, either a known relation between nodes i.e. this paper cites another or a cutoff i.e. this atom is too far from the other so we assume they won't interact.
+A Transformer is a graph neural network (GNN) on a complete graph with learned edge weights [[6]](https://arxiv.org/pdf/1704.01212). A graph in a GNN is created through a rule, either a known relation between nodes i.e. this paper cites another or a cutoff i.e. this atom is too far from the other so we assume they won't interact.
 
 <iframe id="attentionFrame" src="{{site.url}}/assets/scaling/attention-graph.html"
         width="100%" style="border:0; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,.1); background:#fff"></iframe>
@@ -45,7 +34,7 @@ A Transformer is a graph neural network (GNN) on a complete graph with learned e
 
 
 <br>
-A simple argument between the two architectures is that they fall into the bias - expressivity tradeoff. My take is that since self-attention on a fully connected graph is mathematically equivalent to message passing it should be able to learn weights between atoms without having to describe them.
+A simple argument between the two architectures is that they fall into the bias - expressivity tradeoff. My take is that since self-attention on a fully connected graph is mathematically equivalent to message passing [[6]](https://arxiv.org/pdf/1704.01212) it should be able to learn weights between atoms without having to describe them.
 
 <br>
 **Task and Dataset**
@@ -54,7 +43,9 @@ NNIPs are trained to take in a set atoms and their positions to predict the stru
 
 A common criticism of NNIPs trained on Density Functional Theory (DFT) calculations is that those datasets are relaxed structures around 0K. This means that they're not physically relevant in most cases to us because we don't live around 0K.
 
-The [Open Materials 2024](https://huggingface.co/datasets/facebook/OMAT24) dataset is a 110 million crystal structure dataset that addresses this problem by focusing on including non-equilibrium (high temperature, structurally perturbed) samples. It's also one of the largest datasets of its kind.
+The Open Materials 2024 (OMat24) [[7]](https://huggingface.co/datasets/facebook/OMAT24) dataset is a 110 million crystal structure dataset that addresses this problem by focusing on including non-equilibrium (high temperature, structurally perturbed) samples. It's also one of the largest datasets of its kind.
+
+----------------------
 
 <br>
 **Sin #1: Not starting with individual experiments**
@@ -72,6 +63,7 @@ class MetaTransformerModels:
         self.configurations = [
             {"d_model": 2, "depth": 1, "n_heads": 1, "d_ff_mult": 4}, # 2,280 params
             ...
+            {"d_model": 256, "depth": 3, "n_heads": 2, "d_ff_mult": 4}, # 2,414,000 params
         ]
         self.vocab_size = vocab_size
         self.max_seq_len = max_seq_len
@@ -103,14 +95,14 @@ class MetaTransformerModels:
     <br>
 </figure>
 
-On paper this sounds great to iterate over model sizes and lazily instantiate them, but in practice each OOM brings nuance and unexpectedness in behavior through e.g. hyperparameter sensitivity like early stoping. Instead, I should've started with small manual overfitting experiments and gradually increasing the parameters and data. 
+On paper this sounds great to iterate over model sizes and lazily instantiate them, but in practice each OOM brings nuance and unexpectedness in behavior through e.g. hyperparameter sensitivity like early stoping. Instead, I should've started with small manual overfitting experiments and gradually increasing the parameters and data [[8]](http://karpathy.github.io/2019/04/25/recipe/). 
 
 <br>
 **Sin #2: Not starting with a small, in-memory, dataset**
 
 Over all the experiments I ran I found that dataloading was typically the bottleneck in training time. This is an example of a bad dataset clase I wrote. The devil is in the details because the the `AseDBDataset.get_atoms(idx)` call looks like a simple getter but is actually doing disk I/O.
 
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0;">
+<div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; margin: 20px 0;">
 <style>
   .code-comparison pre,
   .code-comparison code {
@@ -121,12 +113,7 @@ Over all the experiments I ran I found that dataloading was typically the bottle
 
 **Bad approach ❌**
 
-```Python
-def __getitem__(self, idx):
-    # dataset is an AseDBDataset
-    # lookup file → open SQLite → query → deserialize
-    return self.dataset.get_atoms(idx) 
-```
+<img src="{{site.url}}/assets/scaling/bad-approach.png" alt="Bad approach code"/>
 
 The result is that all of this work repeats every call:
 - With random shuffling causing worst-case random disk access
@@ -139,16 +126,7 @@ This is painful.
 
 **Better approach ✅**
 
-```Python
-atoms_list = []
-
-for idx in tqdm(range(len(ase_dataset))):
-    atoms = ase_dataset.get_atoms(idx)
-    atoms_list.append(atoms)
-
-# Now __get_item__() is a list lookup in RAM
-dataset = OMatDataset(atoms_list)
-```
+<img src="{{site.url}}/assets/scaling/better-approach.png" alt="Better approach code"/>
 
 A very simple solution is to start experimenting with a very small dataset and iterate through it completely before training to cache it.
 
@@ -176,7 +154,13 @@ This was purposefully not a rotationally invariant featurization as I wanted to 
     <br>
 </figure>
 
-I got stuck with this phenomena of an apparent plateau in force loss only for certain hyperparam configs. There were other runs that would break through but still plateau much higher than the EqV2. I suspect that training stability had a role with the former, and ultimately the lack of periodic boundary conditions impacting latter.
+I got stuck with this phenomena of an apparent plateau in force loss only for certain hyperparam configs. There were other runs that would break through but still plateau much higher than the EqV2. I suspect that training stability had a role with the former, and ultimately the lack of periodic boundary conditions impacting the latter.
+
+Tough lessons learned:
+- The models just want to learn and given enough parameters the loss will go down even if they aren't learning the right thing.
+- If scaling behavior doesn't appear in smaller OOMs it's unlikely it will magically appear later
+
+----------------------
 
 <br>
 **Win #1: Some EquiformerV2 results**
@@ -232,6 +216,13 @@ I got stuck with this phenomena of an apparent plateau in force loss only for ce
 </style>
 
 <br>
+Takeaways:
+- Demonstrated power laws
+- Data scaling shows diminishing returns compared to param scaling
+- Identified compute-optimal training configs with a real pareto frontier
+- My data and training pipeline worked for EqV2, so there was something inherently wrong with the transformer
+
+<br>
 **Win #2: Making an inference visualization tool**
 
 <figure style="display: flex; justify-content: center;">
@@ -241,8 +232,10 @@ I got stuck with this phenomena of an apparent plateau in force loss only for ce
     <br>
 </figure>
 
+This ended up being a very useful debugging tool to understand how the models were behaving. For example as a sanity check it was nice to see the transformer wasn't only predicting 0 forces nor the mean of the dataset, and also that models were learning smaller magnitude forces as well as larger ones.
+
 <br>
-**Win #3: Making a scaling law run tool**
+**Win #3: Making a scaling law experiment run tool**
 
 <div class="scaling-plots-container">
   <div id="eqv2-scaling-plot1" class="plot-main"></div>
@@ -289,7 +282,7 @@ I got stuck with this phenomena of an apparent plateau in force loss only for ce
 
 
 <br>
-**Win #4: Getting to talk to John Jumper about scaling Alphafold**
+**Win #4: Getting to talk to John Jumper about scaling AlphaFold**
 
 I think my life peaked a little when I got to have a pizza and a beer with John Jumper at the YC AI Startup School and pitch him this unfinished research. 
 
@@ -313,32 +306,16 @@ I met one of my heros and he turned out to be extremely kind.
 -->
 
 
-<br>
-**Learning #1: Source compute early on**
-
-Through my PI, I got access to Berkeley's Savio which gave me ~55 days running an A5000. Nothing crazy but not small either. I also tried out RunPod for cheaper GPUs and Lambda Labs for when I was getting impatient and wanted a $1.49/hr H100. I didn't end up needing it, but I was considering applying to all the cloud companies for research credits [Azure](https://www.microsoft.com/en-us/azure-academic-research/#formMain ), [NVIDIA](https://academicgrants.nvidia.com/academicgrantprogram/s/welcome 
-), [AWS](https://pages.awscloud.com/aws-cloud-credit-for-research.html ), [GCP](https://edu.google.com/programs/credits/research/?modal_active=none ), [Oracle](https://www.oracle.com/a/ocom/docs/research/project-award-application.pdf).
-
-<br>
-**Learning #2: Scale with Chinchilla's Hyperparam Config**
-
-
-<br>
-**Learning #3: The model's just want to learn**
-
-A tough lesson I also learned that the models just want to learn and given enough parameters the loss will go down even if it isn't learning the right thing.
-
-
 
 #### References:
 
-- [[] A Recipe for Training Neural Networks](http://karpathy.github.io/2019/04/25/recipe/)
-- [[] Training Compute-Optimal Large Language Models (Chinchilla)](https://arxiv.org/pdf/2203.15556 )
-- [[] Scaling Laws for Neural Language Models](https://arxiv.org/pdf/2001.08361)
-- [[] Deep Learning Scaling Is Predictable, Empirically](https://arxiv.org/pdf/1712.00409)
-- [[] Open Materials 2024 Dataset](https://huggingface.co/datasets/facebook/OMAT24)
-- [[] Neural message passing for quantum chemistry](https://arxiv.org/pdf/1704.01212)
-- [[] EquiformerV2](https://arxiv.org/pdf/2306.12059)
-<!-- - [[] Symmetry From Scratch: Group Equivariance as a Supervised Learning Task](https://arxiv.org/html/2410.03989v1) -->
-- [[] Naturally Occurring Equivariance in Neural Networks](https://distill.pub/2020/circuits/equivariance/)
-<!-- - [[] All-atom Diffusion Transformers Encoder](https://github.com/facebookresearch/all-atom-diffusion-transformer/blob/main/src/models/encoders/transformer.py) -->
+- [1] [EquiformerV2](https://arxiv.org/pdf/2306.12059) - Liao et al., 2023
+- [2] [The Bitter Lesson](https://www.cs.utexas.edu/~eunsol/courses/data/bitter_lesson.pdf) - Richard Sutton, 2019
+- [3] [Scaling Laws for Neural Language Models](https://arxiv.org/pdf/2001.08361) - Kaplan et al., 2020
+- [4] [Deep Learning Scaling Is Predictable, Empirically](https://arxiv.org/pdf/1712.00409) - Hestness et al., 2017
+- [5] [A Solvable Model of Neural Scaling Laws](https://arxiv.org/pdf/2210.16859) - Maloney et al., 2022
+- [6] [Neural Message Passing for Quantum Chemistry](https://arxiv.org/pdf/1704.01212) - Gilmer et al., 2017
+- [7] [Open Materials 2024 (OMat24) Dataset](https://huggingface.co/datasets/facebook/OMAT24) - Meta AI, 2024
+- [8] [A Recipe for Training Neural Networks](http://karpathy.github.io/2019/04/25/recipe/) - Andrej Karpathy, 2019
+- [Training Compute-Optimal Large Language Models (Chinchilla)](https://arxiv.org/pdf/2203.15556) - Hoffmann et al., 2022
+- [Naturally Occurring Equivariance in Neural Networks](https://distill.pub/2020/circuits/equivariance/) - Olah et al., 2020
