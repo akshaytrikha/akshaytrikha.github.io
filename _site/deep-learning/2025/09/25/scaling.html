@@ -189,11 +189,7 @@ class MetaTransformerModels:
 
 <!-- $$
 \begin{align}
-&\overbrace{\begin{matrix}\phantom{e_{11}}&\cdots&\phantom{e_{1d}}\end{matrix}}^{\text{embedding }(d)}
-\;\Big|\;
-\overbrace{\begin{matrix}\phantom{x_1}&\phantom{y_1}&\phantom{z_1}\end{matrix}}^{\text{xyz }(3)}
-\\[-0.4em]
-&\left[
+&\text{Input feature matrix: } \left[
 \begin{array}{ccc|ccc}
 e_{11} & \cdots & e_{1d} & x_1 & y_1 & z_1 \\
 \vdots & \ddots & \vdots & \vdots & \vdots & \vdots \\
@@ -203,6 +199,23 @@ e_{N1} & \cdots & e_{Nd} & x_N & y_N & z_N
 \in \mathbb{R}^{N\times(d+3)}
 \end{align}
 $$ -->
+
+\[\begin{array}{c@{}c@{}c}
+\text{Input feature matrix: } &amp;
+\left[
+\begin{array}{ccc|ccc}
+e_{11} &amp; \cdots &amp; e_{1d} &amp; x_1 &amp; y_1 &amp; z_1 \\
+\vdots &amp; \ddots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots \\
+e_{N1} &amp; \cdots &amp; e_{Nd} &amp; x_N &amp; y_N &amp; z_N
+\end{array}
+\right] &amp;
+\in \mathbb{R}^{N\times(d+3)}
+\\[-2ex]
+&amp; \begin{array}{c@{\mkern8mu}c}
+\underbrace{\hphantom{e_{11}\ \cdots\ e_{1d}}}_{\text{atomic embeddings}} &amp;
+\underbrace{\hphantom{x_1\ y_1\ z_1}}_{\text{positional encoding}}
+\end{array}
+\end{array}\]
 
 <p>This was purposefully not a rotationally invariant featurization as I wanted to see if the model could learn this through augmentation. It also did not account for the fact crystal structures are periodic, which means that forces on atoms can come from adjacent cells. My findings are that this featurization led to the model learning global structure energy and stresses well, but not 3D per-atom forces. It’s not to say that forces weren’t learned at all, but they were certainly not comparable to the EquiformerV2.</p>
 
