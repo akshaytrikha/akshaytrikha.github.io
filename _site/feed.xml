@@ -1,4 +1,363 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-05-29T15:19:24-10:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">AI Rubber Ducky Pair Programmer</title><link href="http://localhost:4000/deep-learning/2025/05/23/ducky.html" rel="alternate" type="text/html" title="AI Rubber Ducky Pair Programmer" /><published>2025-05-23T06:06:17-10:00</published><updated>2025-05-23T06:06:17-10:00</updated><id>http://localhost:4000/deep-learning/2025/05/23/ducky</id><content type="html" xml:base="http://localhost:4000/deep-learning/2025/05/23/ducky.html"><![CDATA[<p>Please try out the extension on the VSCode extension marketplace and let me know what you think! Enter your email to get access:</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-10-05T23:44:43-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">(Bitter) Lessons from Scaling Machine Learning Interatomic Potentials</title><link href="http://localhost:4000/deep-learning/2025/09/25/scaling.html" rel="alternate" type="text/html" title="(Bitter) Lessons from Scaling Machine Learning Interatomic Potentials" /><published>2025-09-25T06:11:17-07:00</published><updated>2025-09-25T06:11:17-07:00</updated><id>http://localhost:4000/deep-learning/2025/09/25/scaling</id><content type="html" xml:base="http://localhost:4000/deep-learning/2025/09/25/scaling.html"><![CDATA[<script type="text/javascript" async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+</script>
+
+<p><em>Or, Why My Master’s Thesis Failed</em></p>
+
+<p><strong>TL;DR:</strong> I tested whether a plain transformer encoder (no equivariance, no periodic boundary conditions) can learn interatomic forces as data &amp; params scale vs. EquiformerV2. EqV2 followed clean power laws and hit much lower loss. My transformer failed and plateaued hard, leading me to believe my featurization was insufficient. I share the wins &amp; failures.</p>
+
+<p>Code is open sourced <a href="https://github.com/akshaytrikha/materials-scaling">here</a>.</p>
+
+<hr />
+<p><br />
+A little over a year ago I got pretty interested in training neural networks that can learn physics from data. Around the time machine learning interatomic potential (NNIP) models were becoming popular. These models broadly take as input a material’s atomic configuration and predict properties related to its potential energy. All the papers I was reading had great results, but I felt they were selling an incomplete story because they were missing scaling information. To me, understanding how a model scales is perhaps the most important factor and having just 1 datapoint of a final test loss was insufficient to understand how any architecture would stand the test of time.</p>
+
+<p>I tried to investigate whether vanilla transformer encoders, given sufficient data, could learn to predict material properties as well as architectures explicitly equivariant architectures, like EquiformerV2 (EqV2) <a href="https://arxiv.org/pdf/2306.12059">[1]</a>. Inspired by the Bitter Lesson <a href="https://www.cs.utexas.edu/~eunsol/courses/data/bitter_lesson.pdf">[2]</a>, my hypothesis was that that transformers would scale more slowly than specialized architectures but that their scaling laws <a href="https://arxiv.org/pdf/2001.08361">[3]</a><a href="https://arxiv.org/pdf/1712.00409">[4]</a><a href="https://arxiv.org/pdf/2210.16859">[5]</a> would hold out over more orders-of-magnitude (OOM).</p>
+
+<p>I failed to stably train transformers most likely due to the featurization I chose. I still learned a great deal along the way, and found power laws for EqV2.</p>
+
+<p><br />
+<strong>Why the math makes sense:</strong></p>
+
+<p>A Transformer is a graph neural network (GNN) on a complete graph with learned edge weights <a href="https://arxiv.org/pdf/1704.01212">[6]</a>. A graph in a GNN is created through a rule, either a known relation between nodes i.e. this paper cites another or a cutoff i.e. this atom is too far from the other so we assume they won’t interact.</p>
+
+<iframe id="attentionFrame" src="http://localhost:4000/assets/scaling/attention-graph.html" width="100%" style="border:0; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,.1); background:#fff"></iframe>
+<script>
+  const f = document.getElementById('attentionFrame');
+  f.addEventListener('load', () => {
+    const doc = f.contentDocument || f.contentWindow.document;
+    f.style.height = doc.documentElement.scrollHeight + 'px';
+  });
+</script>
+
+<p><br />
+A simple argument between the two architectures is that they fall into the bias - expressivity tradeoff. My take is that since self-attention on a fully connected graph is mathematically equivalent to message passing <a href="https://arxiv.org/pdf/1704.01212">[6]</a> it should be able to learn weights between atoms without having to describe them.</p>
+
+<p><br />
+<strong>Task and Dataset</strong></p>
+
+<p>MLIPs are trained to take in a set of atoms and their positions to predict the structure’s energy and typically the forces on the atoms as well as the structure’s stresses.</p>
+
+<p>A common criticism of NNIPs trained on Density Functional Theory (DFT) calculations is that those datasets are relaxed structures around 0K. This means that they’re not physically relevant in most cases to us because we don’t live around 0K.</p>
+
+<p>The Open Materials 2024 (OMat24) <a href="https://huggingface.co/datasets/facebook/OMAT24">[7]</a> dataset is a 110 million crystal structure dataset that addresses this problem by focusing on including non-equilibrium (high temperature, structurally perturbed) samples. It’s also one of the largest datasets of its kind.</p>
+
+<hr />
+
+<p><br />
+<strong>Sin #1: Transformer featurization</strong></p>
+
+<p>In my attempt at training transformers I wanted to use as few inductive biases as possible. i.e. no equivariant features, no invariant features, no periodic boundary conditions. This was an attempt to learn everything from the data + augmentation, regardless of sample efficiency.</p>
+
+<p>I used a standard embedding layer for atom types to give the model a dictionary lookup of what each atom is across different structures. This was important because the model needed to understand that each atom is the same in different structures but is modified by its context, similar to how each word is the same in different sequences and is modified by its context. The 3D positions were concatenated with the embedding vector because I thought the model might have an easier time disentangling meaning vs. saving parameters by adding the positions to the embeddings.</p>
+
+<!-- $$
+\begin{align}
+&\text{Input feature matrix: } \left[
+\begin{array}{ccc|ccc}
+e_{11} & \cdots & e_{1d} & x_1 & y_1 & z_1 \\
+\vdots & \ddots & \vdots & \vdots & \vdots & \vdots \\
+e_{N1} & \cdots & e_{Nd} & x_N & y_N & z_N
+\end{array}
+\right]
+\in \mathbb{R}^{N\times(d+3)}
+\end{align}
+$$ -->
+
+\[\begin{array}{c@{}c@{}c}
+\text{Input feature matrix: } &amp;
+\left[
+\begin{array}{ccc|ccc}
+e_{11} &amp; \cdots &amp; e_{1d} &amp; x_1 &amp; y_1 &amp; z_1 \\
+\vdots &amp; \ddots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots \\
+e_{N1} &amp; \cdots &amp; e_{Nd} &amp; x_N &amp; y_N &amp; z_N
+\end{array}
+\right] &amp;
+\in \mathbb{R}^{N\times(d+3)}
+\\[-2ex]
+&amp; \begin{array}{c@{\mkern8mu}c}
+\underbrace{\hphantom{e_{11}\ \cdots\ e_{1d}}}_{\text{atomic embeddings}} &amp;
+\underbrace{\hphantom{x_1\ y_1\ z_1}}_{\text{positional encoding}}
+\end{array}
+\end{array}\]
+
+<p>This was purposefully not a rotationally invariant featurization as I wanted to see if the model could learn this through augmentation. It also did not account for the fact crystal structures are periodic, which means that forces on atoms can come from adjacent cells. My findings are that this featurization led to the model learning global structure energy and stresses well, but not 3D per-atom forces. This isn’t to say that forces weren’t learned at all, but they were certainly not comparable to EquiformerV2.</p>
+
+<figure style="display: flex; justify-content: center;">
+    <div style="text-align: center; width: 80%;">
+        <img src="http://localhost:4000/assets/scaling/train-force-loss.png" alt="transformer train force loss sweep" />
+        <figcaption>Sweeping 1M parameter transformers on 100k structures</figcaption>
+    </div>
+    <br />
+</figure>
+
+<p>I got stuck with this phenomena of an apparent plateau in force loss only for certain hyperparam configs. There were other runs that would break through but still plateaued much higher than the EqV2. I suspect that training stability had a role with the former, and ultimately the lack of periodic boundary conditions impacting the latter.</p>
+
+<p>Tough lessons learned:</p>
+<ul>
+  <li>The models just want to learn and given enough parameters the loss will go down even if they aren’t learning the right thing.</li>
+  <li>If scaling behavior doesn’t appear in smaller OOMs it’s unlikely it will magically appear later</li>
+</ul>
+
+<p><br />
+<strong>Sin #2: Not starting with individual experiments</strong></p>
+
+<p>Instead, I rushed to create a more complex <a href="https://github.com/akshaytrikha/materials-scaling">set of scripts</a> that would automatically run scaling experiments over multiple OOMs. I came up with what I thought was a clever way of iterating through models:</p>
+
+<!-- ```Python
+class MetaTransformerModels:
+    def __init__(
+        self,
+        vocab_size,
+        max_seq_len,
+    ):
+        """Initializes TransformerModels with a list of configurations"""
+        self.configurations = [
+            {"d_model": 2, "depth": 1, "n_heads": 1, "d_ff_mult": 4}, # 2,280 params
+            ...
+            {"d_model": 256, "depth": 3, "n_heads": 2, "d_ff_mult": 4}, # 2,414,000 params
+        ]
+        self.vocab_size = vocab_size
+        self.max_seq_len = max_seq_len
+
+    def __getitem__(self, idx):
+        """Retrieves transformer model corresponding to the configuration at idx"""
+        config = self.configurations[idx]
+
+        return XTransformerModel(
+            num_tokens=self.vocab_size,
+            d_model=config["d_model"],
+            depth=config["depth"],
+            n_heads=config["n_heads"],
+            d_ff_mult=config["d_ff_mult"],
+        )
+
+    def __len__(self):
+        return len(self.configurations)
+
+    def __iter__(self):
+        for idx in range(len(self.configurations)):
+            yield self[idx]
+``` -->
+
+<figure style="display: flex; justify-content: center;">
+    <div style="text-align: center; width: 80%;">
+        <img src="http://localhost:4000/assets/scaling/MetaTransformerModels.png" alt="MetaTransformerModels" />
+    </div>
+    <br />
+</figure>
+
+<p>On paper this sounds great to iterate over model sizes and lazily instantiate them, but in practice each OOM brings nuance and unexpectedness in behavior through e.g. hyperparameter sensitivity like early stoping. Instead, I should’ve started with small manual overfitting experiments and gradually increasing the parameters and data <a href="http://karpathy.github.io/2019/04/25/recipe/">[8]</a>.</p>
+
+<p><br />
+<strong>Sin #3: Not starting with a small, in-memory, dataset</strong></p>
+
+<p>Over all the experiments I ran I found that dataloading was typically the bottleneck in training time. This is an example of a bad dataset class I wrote. The devil is in the details because the <code class="language-plaintext highlighter-rouge">AseDBDataset.get_atoms(idx)</code> call looks like a simple getter but is actually doing disk I/O.</p>
+
+<div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; margin: 20px 0;">
+<style>
+  .code-comparison pre,
+  .code-comparison code {
+    font-size: 0.85em;
+  }
+</style>
+<div class="code-comparison">
+
+    <p><strong>Bad approach ❌</strong></p>
+
+    <p><img src="http://localhost:4000/assets/scaling/bad-approach.png" alt="Bad approach code" /></p>
+
+    <p>The result is that all of this work repeats every call:</p>
+    <ul>
+      <li>With random shuffling causing worst-case random disk access</li>
+      <li>Across multiple worker processes (each with their own DB connections)</li>
+    </ul>
+
+    <p>This is painful.</p>
+
+  </div>
+<div class="code-comparison">
+
+    <p><strong>Better approach ✅</strong></p>
+
+    <p><img src="http://localhost:4000/assets/scaling/better-approach.png" alt="Better approach code" /></p>
+
+    <p>A very simple solution is to start experimenting with a very small dataset and iterate through it completely to cache it before training.</p>
+
+  </div>
+</div>
+
+<p>At a small dataset scale the first approach didn’t matter. But it wasted a lot of time as I scaled the dataset size.</p>
+
+<hr />
+
+<p><br />
+<strong>Win #1: Some EquiformerV2 results</strong></p>
+
+<div class="eqv2-results-container">
+  <div class="result-img">
+    <img src="http://localhost:4000/assets/scaling/eqv2-param-scaling.png" alt="EquiformerV2 Parameter Scaling" />
+  </div>
+  <div class="result-img">
+    <img src="http://localhost:4000/assets/scaling/eqv2-compute-scaling.png" alt="EquiformerV2 Compute Scaling" />
+  </div>
+  <div class="result-img">
+    <img src="http://localhost:4000/assets/scaling/eqv2-dataset-scaling.png" alt="EquiformerV2 Dataset Scaling" />
+  </div>
+</div>
+
+<style>
+.eqv2-results-container{
+  /* full width breakout */
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+
+  /* 3-up grid */
+  padding-inline: 2rem;           /* optional gutter */
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+  align-items: stretch;
+}
+
+.result-img{ 
+  width:100%; 
+  margin:0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.result-img img{
+  width: 100%;
+  height: 350px;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* responsive wrap-downs */
+@media (max-width: 1200px){ .eqv2-results-container{ grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 768px){  .eqv2-results-container{ grid-template-columns: 1fr; } }
+</style>
+
+<p><br />
+Takeaways:</p>
+<ul>
+  <li>Demonstrated power laws</li>
+  <li>Data scaling shows diminishing returns compared to param scaling</li>
+  <li>Identified compute-optimal training configs with a real pareto frontier</li>
+  <li>Data and training pipeline worked for EqV2, so there was something inherently wrong with the transformer</li>
+</ul>
+
+<p><br />
+<strong>Win #2: Making an inference visualization tool</strong></p>
+
+<figure style="display: flex; justify-content: center;">
+    <div style="text-align: center; width: 80%;">
+        <img src="http://localhost:4000/assets/scaling/inference.gif" alt="inference visualization" />
+    </div>
+    <br />
+</figure>
+
+<p>This ended up being a very useful debugging tool to understand how the models were behaving. For example as a sanity check it was nice to see the transformer wasn’t only predicting 0 forces nor the mean of the dataset, and also that models were learning smaller magnitude forces as well as larger ones.</p>
+
+<p><br />
+<strong>Win #3: Making a scaling law experiment run tool</strong></p>
+
+<div class="scaling-plots-container">
+  <div id="eqv2-scaling-plot1" class="plot-main"></div>
+  <div class="plot-dual-container">
+    <div id="eqv2-scaling-plot2" class="plot-secondary"></div>
+    <div id="eqv2-scaling-plot3" class="plot-secondary"></div>
+  </div>
+</div>
+
+<style>
+.scaling-plots-container{
+  /* full width breakout */
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+
+  /* keep your 3-up grid */
+  padding-inline: 2rem;           /* optional gutter */
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+  align-items: stretch;
+}
+
+/* keep these from Option A */
+.plot-dual-container{ display: contents; }
+.plot-main, .plot-secondary{ width:100%; height:400px; margin:0; }
+
+/* responsive wrap-downs */
+@media (max-width: 1200px){ .scaling-plots-container{ grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 768px){  .scaling-plots-container{ grid-template-columns: 1fr; } }
+</style>
+
+<!-- Plotly -->
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+
+<!-- Load your module and render -->
+<script type="module">
+  import { renderEqV2Scaling } from "/assets/scaling/eqv2-scaling.js";
+  renderEqV2Scaling('eqv2-scaling-plot1', 'eqv2-scaling-plot2', 'eqv2-scaling-plot3');
+</script>
+
+<p>This tool helped group families of runs and studying their behavior on the same plot. Before training any models I established naive (no deep learning) baselines that would help understand the loss number. The three baselines were:</p>
+<ul>
+  <li>Loss while predicting 0 everywhere</li>
+  <li>Loss while predicting the mean of the dataset everywhere</li>
+  <li>Loss from a k = 1 nearest-neighbor Markov model</li>
+</ul>
+
+<p><br />
+<strong>Win #4: Getting to talk to John Jumper about scaling AlphaFold</strong></p>
+
+<p>I think my life peaked a little when I got to have a pizza and a beer with John Jumper at the YC AI Startup School and pitch him this unfinished research.</p>
+
+<figure style="display: flex; justify-content: center;">
+    <div style="text-align: center; width: 80%;">
+        <img src="http://localhost:4000/assets/scaling/john-jumper.jpg" alt="meeting John Jumper" />
+        <figcaption>I met one of my heroes and he turned out to be extremely kind.</figcaption>
+    </div>
+    <br />
+</figure>
+
+<!-- A Dummy’s Guide to Empirically Deriving Scaling Laws
+
+(& What not to do)
+
+1. Source compute first (assuming you already have a large dataset)
+2. Do NOT start by YOLOing a huge run
+    - Each run is only 1 data point so a large one is still only 1 data point
+    - Stay small as long as possible
+3. Your first goal is to overfit a model. Do this by following http://karpathy.github.io/2019/04/25/recipe/
+4. Don’t forget to visualize & verify your outputs
+5. Training efficiency bells & whistles
+    1. FlashAttention, mixed precision gradient clipping,
+-->
+
+<h4 id="references">References:</h4>
+
+<ul>
+  <li>[1] <a href="https://arxiv.org/pdf/2306.12059">EquiformerV2</a> - Liao et al., 2023</li>
+  <li>[2] <a href="https://www.cs.utexas.edu/~eunsol/courses/data/bitter_lesson.pdf">The Bitter Lesson</a> - Richard Sutton, 2019</li>
+  <li>[3] <a href="https://arxiv.org/pdf/2001.08361">Scaling Laws for Neural Language Models</a> - Kaplan et al., 2020</li>
+  <li>[4] <a href="https://arxiv.org/pdf/1712.00409">Deep Learning Scaling Is Predictable, Empirically</a> - Hestness et al., 2017</li>
+  <li>[5] <a href="https://arxiv.org/pdf/2210.16859">A Solvable Model of Neural Scaling Laws</a> - Maloney et al., 2022</li>
+  <li>[6] <a href="https://arxiv.org/pdf/1704.01212">Neural Message Passing for Quantum Chemistry</a> - Gilmer et al., 2017</li>
+  <li>[7] <a href="https://huggingface.co/datasets/facebook/OMAT24">Open Materials 2024 (OMat24) Dataset</a> - Meta AI, 2024</li>
+  <li>[8] <a href="http://karpathy.github.io/2019/04/25/recipe/">A Recipe for Training Neural Networks</a> - Andrej Karpathy, 2019</li>
+  <li><a href="https://arxiv.org/pdf/2203.15556">Training Compute-Optimal Large Language Models (Chinchilla)</a> - Hoffmann et al., 2022</li>
+  <li><a href="https://distill.pub/2020/circuits/equivariance/">Naturally Occurring Equivariance in Neural Networks</a> - Olah et al., 2020</li>
+</ul>]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">AI Rubber Ducky Pair Programmer</title><link href="http://localhost:4000/deep-learning/2025/05/23/ducky.html" rel="alternate" type="text/html" title="AI Rubber Ducky Pair Programmer" /><published>2025-05-23T09:06:17-07:00</published><updated>2025-05-23T09:06:17-07:00</updated><id>http://localhost:4000/deep-learning/2025/05/23/ducky</id><content type="html" xml:base="http://localhost:4000/deep-learning/2025/05/23/ducky.html"><![CDATA[<p>Please try out the extension on the VSCode extension marketplace and let me know what you think! Enter your email to get access:</p>
 
 <!-- gated signup + link reveal -->
 <div id="signup-container">
@@ -387,7 +746,7 @@ A few weeks ago I thought I was bothering my coworker by calling him to help deb
   <li><a href="https://github.com/openai/openai-realtime-console">OpenAI Realtime API Example Repo</a></li>
   <li><a href="https://openai.com/api/pricing/">OpenAI API Pricing</a></li>
   <li><a href="https://code.visualstudio.com/api/working-with-extensions/publishing-extension">Publishing VSCode Extensions</a></li>
-</ul>]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[Please try out the extension on the VSCode extension marketplace and let me know what you think! Enter your email to get access:]]></summary></entry><entry><title type="html">Physics-Constrained Neural Networks for Solving Partial Differential Equations</title><link href="http://localhost:4000/deep-learning/2024/03/11/darcy-flow.html" rel="alternate" type="text/html" title="Physics-Constrained Neural Networks for Solving Partial Differential Equations" /><published>2024-03-11T03:11:17-10:00</published><updated>2024-03-11T03:11:17-10:00</updated><id>http://localhost:4000/deep-learning/2024/03/11/darcy-flow</id><content type="html" xml:base="http://localhost:4000/deep-learning/2024/03/11/darcy-flow.html"><![CDATA[<script type="text/javascript" async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+</ul>]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[Please try out the extension on the VSCode extension marketplace and let me know what you think! Enter your email to get access:]]></summary></entry><entry><title type="html">Physics-Constrained Neural Networks for Solving Partial Differential Equations</title><link href="http://localhost:4000/deep-learning/2024/03/11/darcy-flow.html" rel="alternate" type="text/html" title="Physics-Constrained Neural Networks for Solving Partial Differential Equations" /><published>2024-03-11T06:11:17-07:00</published><updated>2024-03-11T06:11:17-07:00</updated><id>http://localhost:4000/deep-learning/2024/03/11/darcy-flow</id><content type="html" xml:base="http://localhost:4000/deep-learning/2024/03/11/darcy-flow.html"><![CDATA[<script type="text/javascript" async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
 </script>
 
 <p><strong>Background</strong></p>
@@ -675,7 +1034,7 @@ class LinearSolve(torch.autograd.Function):
     \end{bmatrix}
 \end{align}\]
 
-<p>But if we have a large neural network calculating the entire Jacobian matrix becomes too computationally expensive. Instead we take advantage of its structure by only multiplying the upstream grad \(v\) with every row of \(J\) without ever having to instantiate \(J\) in its entirety.</p>]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Universal Mask Finding</title><link href="http://localhost:4000/2023/09/24/universal-mask-finding.html" rel="alternate" type="text/html" title="Universal Mask Finding" /><published>2023-09-24T10:29:00-10:00</published><updated>2023-09-24T10:29:00-10:00</updated><id>http://localhost:4000/2023/09/24/universal-mask-finding</id><content type="html" xml:base="http://localhost:4000/2023/09/24/universal-mask-finding.html"><![CDATA[<figure>
+<p>But if we have a large neural network calculating the entire Jacobian matrix becomes too computationally expensive. Instead we take advantage of its structure by only multiplying the upstream grad \(v\) with every row of \(J\) without ever having to instantiate \(J\) in its entirety.</p>]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Universal Mask Finding</title><link href="http://localhost:4000/2023/09/24/universal-mask-finding.html" rel="alternate" type="text/html" title="Universal Mask Finding" /><published>2023-09-24T13:29:00-07:00</published><updated>2023-09-24T13:29:00-07:00</updated><id>http://localhost:4000/2023/09/24/universal-mask-finding</id><content type="html" xml:base="http://localhost:4000/2023/09/24/universal-mask-finding.html"><![CDATA[<figure>
     <br />
     <div style="text-align: center;">
         <img src="http://localhost:4000/assets/mask-finding/fast_mask_finding.png" alt="ML defect detection" />
@@ -809,7 +1168,7 @@ class LinearSolve(torch.autograd.Function):
 
 <p>I’m proud this ML system has been robust while integrating new cameras and chocolate types and was able to scale to help the chocolate factory grow while delivering the best chocolate possible.</p>
 
-<!-- ![Fast Mask Finding](../../../assets/fast_mask_finding.gif) -->]]></content><author><name></name></author><summary type="html"><![CDATA[Fig 1. Mask finding of a chocolate bar in the making]]></summary></entry><entry><title type="html">Transfer Learning in Computer Vision</title><link href="http://localhost:4000/deep-learning/2023/07/04/transfer-learning.html" rel="alternate" type="text/html" title="Transfer Learning in Computer Vision" /><published>2023-07-04T06:06:17-10:00</published><updated>2023-07-04T06:06:17-10:00</updated><id>http://localhost:4000/deep-learning/2023/07/04/transfer-learning</id><content type="html" xml:base="http://localhost:4000/deep-learning/2023/07/04/transfer-learning.html"><![CDATA[<p>Recall when beginning to train a neural network its weights might be initialized randomly. What if you could start training with a leg up because the network already has some useful information inside of it? Transfer learning <em>is</em> that leg up where you can repurpose models trained on similar tasks and use them for your specific task instead of training from scratch.</p>
+<!-- ![Fast Mask Finding](../../../assets/fast_mask_finding.gif) -->]]></content><author><name></name></author><summary type="html"><![CDATA[Fig 1. Mask finding of a chocolate bar in the making]]></summary></entry><entry><title type="html">Transfer Learning in Computer Vision</title><link href="http://localhost:4000/deep-learning/2023/07/04/transfer-learning.html" rel="alternate" type="text/html" title="Transfer Learning in Computer Vision" /><published>2023-07-04T09:06:17-07:00</published><updated>2023-07-04T09:06:17-07:00</updated><id>http://localhost:4000/deep-learning/2023/07/04/transfer-learning</id><content type="html" xml:base="http://localhost:4000/deep-learning/2023/07/04/transfer-learning.html"><![CDATA[<p>Recall when beginning to train a neural network its weights might be initialized randomly. What if you could start training with a leg up because the network already has some useful information inside of it? Transfer learning <em>is</em> that leg up where you can repurpose models trained on similar tasks and use them for your specific task instead of training from scratch.</p>
 
 <p>Benefits include:</p>
 
@@ -999,7 +1358,7 @@ accuracy = accuracy_fn(outputs, y_train)
   <li><a href="https://cs231n.github.io/transfer-learning">https://cs231n.github.io/transfer-learning</a></li>
   <li><a href="https://arxiv.org/pdf/1411.1792.pdf">How transferable are features in deep neural networks?</a></li>
   <li><a href="https://www.learnpytorch.io/06_pytorch_transfer_learning/">https://www.learnpytorch.io/06_pytorch_transfer_learning/</a></li>
-</ul>]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[Recall when beginning to train a neural network its weights might be initialized randomly. What if you could start training with a leg up because the network already has some useful information inside of it? Transfer learning is that leg up where you can repurpose models trained on similar tasks and use them for your specific task instead of training from scratch.]]></summary></entry><entry><title type="html">Trump or Computer Dump?</title><link href="http://localhost:4000/deep-learning/2023/04/23/trump-or-computer-dump.html" rel="alternate" type="text/html" title="Trump or Computer Dump?" /><published>2023-04-23T11:53:17-10:00</published><updated>2023-04-23T11:53:17-10:00</updated><id>http://localhost:4000/deep-learning/2023/04/23/trump-or-computer-dump</id><content type="html" xml:base="http://localhost:4000/deep-learning/2023/04/23/trump-or-computer-dump.html"><![CDATA[<script type="module" src="https://gradio.s3-us-west-2.amazonaws.com/4.39.0/gradio.js"></script>
+</ul>]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[Recall when beginning to train a neural network its weights might be initialized randomly. What if you could start training with a leg up because the network already has some useful information inside of it? Transfer learning is that leg up where you can repurpose models trained on similar tasks and use them for your specific task instead of training from scratch.]]></summary></entry><entry><title type="html">Trump or Computer Dump?</title><link href="http://localhost:4000/deep-learning/2023/04/23/trump-or-computer-dump.html" rel="alternate" type="text/html" title="Trump or Computer Dump?" /><published>2023-04-23T14:53:17-07:00</published><updated>2023-04-23T14:53:17-07:00</updated><id>http://localhost:4000/deep-learning/2023/04/23/trump-or-computer-dump</id><content type="html" xml:base="http://localhost:4000/deep-learning/2023/04/23/trump-or-computer-dump.html"><![CDATA[<script type="module" src="https://gradio.s3-us-west-2.amazonaws.com/4.39.0/gradio.js"></script>
 
 <gradio-app src="https://akshaytrikha-gpt2-trump.hf.space"></gradio-app>
 
@@ -1160,7 +1519,7 @@ and First Responders of Puerto Rico to help those most affected by the
   <li><a href="https://huggingface.co/learn/nlp-course/chapter3/3?fw=pt">HuggingFace Trainer</a></li>
   <li><a href="https://huggingface.co/gpt2">GPT-2 Model Card</a></li>
   <li><a href="https://github.com/akshaytrikha/GPT-2-Trump/blob/master/huggingface_trump.ipynb">GPT-2 Trump notebook</a></li>
-</ul>]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Neural Style Transfer Webcam</title><link href="http://localhost:4000/deep-learning/2021/07/16/neural-style-transfer-webcam.html" rel="alternate" type="text/html" title="Neural Style Transfer Webcam" /><published>2021-07-16T02:50:00-10:00</published><updated>2021-07-16T02:50:00-10:00</updated><id>http://localhost:4000/deep-learning/2021/07/16/neural-style-transfer-webcam</id><content type="html" xml:base="http://localhost:4000/deep-learning/2021/07/16/neural-style-transfer-webcam.html"><![CDATA[<h3 id="overview">Overview</h3>
+</ul>]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">Neural Style Transfer Webcam</title><link href="http://localhost:4000/deep-learning/2021/07/16/neural-style-transfer-webcam.html" rel="alternate" type="text/html" title="Neural Style Transfer Webcam" /><published>2021-07-16T05:50:00-07:00</published><updated>2021-07-16T05:50:00-07:00</updated><id>http://localhost:4000/deep-learning/2021/07/16/neural-style-transfer-webcam</id><content type="html" xml:base="http://localhost:4000/deep-learning/2021/07/16/neural-style-transfer-webcam.html"><![CDATA[<h3 id="overview">Overview</h3>
 
 <p>I wanted to learn how to build and deploy an ML system in the real world and thought this would be a fun place to start. You can find my project’s code <a href="https://github.com/akshaytrikha/style-transfer">here</a>.</p>
 
@@ -1239,4 +1598,4 @@ const predict = async () =&gt; {
   <li><a href="https://github.com/reiinakano/arbitrary-image-stylization-tfjs">https://github.com/reiinakano/arbitrary-image-stylization-tfjs</a></li>
   <li><a href="https://magenta.tensorflow.org/blog/2018/12/20/style-transfer-js/">https://magenta.tensorflow.org/blog/2018/12/20/style-transfer-js/</a></li>
   <li><a href="https://styletransfer.art">https://styletransfer.art</a></li>
-</ul>]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[Overview]]></summary></entry><entry><title type="html">Barium Titanate Permittivity &amp;amp; Image Processing</title><link href="http://localhost:4000/2021/07/14/bto-image-processing.html" rel="alternate" type="text/html" title="Barium Titanate Permittivity &amp;amp; Image Processing" /><published>2021-07-14T11:53:17-10:00</published><updated>2021-07-14T11:53:17-10:00</updated><id>http://localhost:4000/2021/07/14/bto-image-processing</id><content type="html" xml:base="http://localhost:4000/2021/07/14/bto-image-processing.html"><![CDATA[]]></content><author><name></name></author><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">The Bias-Expressivity Trade-off</title><link href="http://localhost:4000/deep-learning/2019/11/09/bias-expressivity-tradeoff.html" rel="alternate" type="text/html" title="The Bias-Expressivity Trade-off" /><published>2019-11-09T11:53:17-10:00</published><updated>2019-11-09T11:53:17-10:00</updated><id>http://localhost:4000/deep-learning/2019/11/09/bias-expressivity-tradeoff</id><content type="html" xml:base="http://localhost:4000/deep-learning/2019/11/09/bias-expressivity-tradeoff.html"><![CDATA[]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">The Futility of Bias-Free Learning and Search</title><link href="http://localhost:4000/deep-learning/2019/07/25/futility-of-bias-free-learning-and-search.html" rel="alternate" type="text/html" title="The Futility of Bias-Free Learning and Search" /><published>2019-07-25T11:53:17-10:00</published><updated>2019-07-25T11:53:17-10:00</updated><id>http://localhost:4000/deep-learning/2019/07/25/futility-of-bias-free-learning-and-search</id><content type="html" xml:base="http://localhost:4000/deep-learning/2019/07/25/futility-of-bias-free-learning-and-search.html"><![CDATA[]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[]]></summary></entry></feed>
+</ul>]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[Overview]]></summary></entry><entry><title type="html">Barium Titanate Permittivity &amp;amp; Image Processing</title><link href="http://localhost:4000/2021/07/14/bto-image-processing.html" rel="alternate" type="text/html" title="Barium Titanate Permittivity &amp;amp; Image Processing" /><published>2021-07-14T14:53:17-07:00</published><updated>2021-07-14T14:53:17-07:00</updated><id>http://localhost:4000/2021/07/14/bto-image-processing</id><content type="html" xml:base="http://localhost:4000/2021/07/14/bto-image-processing.html"><![CDATA[]]></content><author><name></name></author><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">The Bias-Expressivity Trade-off</title><link href="http://localhost:4000/deep-learning/2019/11/09/bias-expressivity-tradeoff.html" rel="alternate" type="text/html" title="The Bias-Expressivity Trade-off" /><published>2019-11-09T13:53:17-08:00</published><updated>2019-11-09T13:53:17-08:00</updated><id>http://localhost:4000/deep-learning/2019/11/09/bias-expressivity-tradeoff</id><content type="html" xml:base="http://localhost:4000/deep-learning/2019/11/09/bias-expressivity-tradeoff.html"><![CDATA[]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">The Futility of Bias-Free Learning and Search</title><link href="http://localhost:4000/deep-learning/2019/07/25/futility-of-bias-free-learning-and-search.html" rel="alternate" type="text/html" title="The Futility of Bias-Free Learning and Search" /><published>2019-07-25T14:53:17-07:00</published><updated>2019-07-25T14:53:17-07:00</updated><id>http://localhost:4000/deep-learning/2019/07/25/futility-of-bias-free-learning-and-search</id><content type="html" xml:base="http://localhost:4000/deep-learning/2019/07/25/futility-of-bias-free-learning-and-search.html"><![CDATA[]]></content><author><name></name></author><category term="deep-learning" /><summary type="html"><![CDATA[]]></summary></entry></feed>
