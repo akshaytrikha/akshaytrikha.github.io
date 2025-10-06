@@ -81,8 +81,8 @@ export function renderEqV2Scaling(plot1Id, plot2Id, plot3Id) {
   const el2 = document.getElementById(plot2Id);
   const el3 = document.getElementById(plot3Id);
 
-  // Track if the highlighted point has been clicked
-  let hasClickedHighlight = false;
+  // Track which points have been clicked (by index)
+  const clickedPoints = new Set();
 
   // Apply overlay treatment to each layout
   const layout1 = overlayLegendAndButtons(Object.assign({autosize: true}, DATA.plot1.layout || {}));
@@ -97,18 +97,53 @@ export function renderEqV2Scaling(plot1Id, plot2Id, plot3Id) {
   if (layout2.title) layout2.title.x = 0.01; 
   if (layout3.title) layout3.title.x = 0.01; 
 
-  // Modify the first trace to highlight the third point (index 2, dataset size = 10075)
+  // Modify the first trace to make ALL points glow initially (orange with border)
   const modifiedData = JSON.parse(JSON.stringify(DATA.plot1.data));
-  if (modifiedData[0] && modifiedData[0].x && modifiedData[0].x.length > 2) {
-    // Make all markers slightly larger and set individual colors
+  if (modifiedData[0] && modifiedData[0].x && modifiedData[0].x.length > 0) {
+    // Make all markers orange with glow effect initially
     modifiedData[0].marker = {
       ...modifiedData[0].marker,
-      size: modifiedData[0].x.map((_, i) => i === 2 ? 14 : 8),
-      color: modifiedData[0].x.map((_, i) => i === 2 ? '#FFA500' : '#636EFA'),
+      size: modifiedData[0].x.map(() => 14),
+      color: modifiedData[0].x.map(() => '#FFA500'),
       line: {
-        color: modifiedData[0].x.map((_, i) => i === 2 ? '#FF6B00' : 'rgba(255,255,255,0)'),
-        width: modifiedData[0].x.map((_, i) => i === 2 ? 3 : 0)
+        color: modifiedData[0].x.map(() => '#FF6B00'),
+        width: modifiedData[0].x.map(() => 3)
       }
+    };
+  }
+
+  // Calculate axis ranges with padding to prevent layout jitter from pulsing markers
+  // This keeps markers from touching plot edges which would trigger automargin recalculation
+  if (modifiedData[0] && modifiedData[0].x && modifiedData[0].y && modifiedData[0].x.length > 0) {
+    const xVals = modifiedData[0].x;
+    const yVals = modifiedData[0].y;
+    
+    // Work in log space since axes are log scale
+    const logXVals = xVals.map(x => Math.log10(x));
+    const logYVals = yVals.map(y => Math.log10(y));
+    
+    const xMin = Math.min(...logXVals);
+    const xMax = Math.max(...logXVals);
+    const yMin = Math.min(...logYVals);
+    const yMax = Math.max(...logYVals);
+    
+    // Add padding: 10% of range on each side in log space
+    const xRange = xMax - xMin;
+    const yRange = yMax - yMin;
+    const xPadding = xRange * 0.05;
+    const yPadding = yRange * 0.05;
+    
+    // Set fixed ranges with padding
+    layout1.xaxis = {
+      ...layout1.xaxis,
+      range: [xMin - xPadding, xMax + xPadding],
+      autorange: false
+    };
+    
+    layout1.yaxis = {
+      ...layout1.yaxis,
+      range: [yMin - yPadding, yMax + yPadding],
+      autorange: false
     };
   }
 
@@ -154,43 +189,56 @@ export function renderEqV2Scaling(plot1Id, plot2Id, plot3Id) {
   wireOverlayHover(el2);
   wireOverlayHover(el3);
 
-  // Add pulsing animation using setInterval
+  // Add pulsing animation for all unclicked points (synchronized)
+  let isPulseLarge = false;
   let pulseInterval = setInterval(() => {
-    if (hasClickedHighlight) {
+    // Stop if all points have been clicked
+    if (clickedPoints.size >= modifiedData[0].x.length) {
       clearInterval(pulseInterval);
       return;
     }
     
-    const currentSize = modifiedData[0].marker.size[2];
-    const newSize = currentSize === 14 ? 18 : 14;
+    isPulseLarge = !isPulseLarge;
+    const newSize = isPulseLarge ? 18 : 14;
     
-    Plotly.restyle(el1, {
-      'marker.size[2]': newSize
-    }, [0]);
+    // Update size for each unclicked point
+    const sizeUpdates = {};
+    modifiedData[0].x.forEach((_, i) => {
+      if (!clickedPoints.has(i)) {
+        sizeUpdates[`marker.size[${i}]`] = newSize;
+      }
+    });
+    
+    if (Object.keys(sizeUpdates).length > 0) {
+      Plotly.restyle(el1, sizeUpdates, [0]);
+    }
   }, 500);
 
   // Click handler
   el1.on('plotly_click', function(eventData) {
     const point = eventData.points[0];
+    const pointIndex = point.pointIndex;
     const { experiment: filename, dataset_size: dsSize } = point.customdata;
     
-    // Check if the clicked point is the highlighted one (index 2, dataset size = 10075)
-    if (point.pointIndex === 2 && !hasClickedHighlight) {
-      hasClickedHighlight = true;
+    // Mark this point as clicked and reset its appearance
+    if (!clickedPoints.has(pointIndex)) {
+      clickedPoints.add(pointIndex);
       
-      // Remove the "Click Me" annotation
-      const updatedLayout1 = Object.assign({}, layout1);
-      updatedLayout1.annotations = [];
+      // Reset the marker to original appearance (blue color, normal size, no border)
+      const updates = {};
+      updates[`marker.size[${pointIndex}]`] = 8;
+      updates[`marker.color[${pointIndex}]`] = '#636EFA';
+      updates[`marker.line.width[${pointIndex}]`] = 0;
+      updates[`marker.line.color[${pointIndex}]`] = 'rgba(255,255,255,0)';
       
-      // Reset the marker to original appearance (blue color, normal size)
-      Plotly.restyle(el1, {
-        'marker.size[2]': 8,
-        'marker.color[2]': '#636EFA',
-        'marker.line.width[2]': 0,
-        'marker.line.color[2]': 'rgba(255,255,255,0)'
-      }, [0]);
+      Plotly.restyle(el1, updates, [0]);
       
-      Plotly.relayout(el1, updatedLayout1);
+      // Remove the "Click Me" annotation if this was the labeled point (index 2)
+      if (pointIndex === 2) {
+        const updatedLayout1 = Object.assign({}, layout1);
+        updatedLayout1.annotations = [];
+        Plotly.relayout(el1, updatedLayout1);
+      }
     }
     
     const runs = DATA.experimentData[filename][dsSize.toString()] || [];
