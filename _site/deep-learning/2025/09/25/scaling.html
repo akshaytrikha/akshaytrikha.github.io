@@ -52,6 +52,14 @@
 
 <p><strong>TL;DR:</strong> I tested whether a plain transformer encoder (no equivariance, no periodic boundary conditions) can learn interatomic forces as data &amp; params scale vs. EquiformerV2. EqV2 followed clean power laws and hit much lower loss. My transformer failed and plateaued hard, leading me to believe my featurization was insufficient. I share the wins &amp; failures.</p>
 
+<p>For EquiformerV2:</p>
+
+\[\begin{aligned}
+&amp;\quad\text{Parameter scaling law:} &amp;&amp;L \approx 7.76\times 10^{2}\, P^{-0.383} \\
+&amp;\quad\text{Compute scaling law:} &amp;&amp;L \approx 4.99\times 10^{5}\, C^{-0.339} \\
+&amp;\quad\text{Data scaling law:} &amp;&amp;L \approx 6.47\times 10^{1}\, D^{-0.242}
+\end{aligned}\]
+
 <p>Code is open sourced <a href="https://github.com/akshaytrikha/materials-scaling">here</a>.</p>
 
 <hr />
