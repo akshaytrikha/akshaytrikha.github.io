@@ -91,97 +91,7 @@ A simple argument between the two architectures is that they fall into the bias 
 <hr />
 
 <p><br />
-<strong>Sin #1: Not starting with individual experiments</strong></p>
-
-<p>Instead, I rushed to create a more complex <a href="https://github.com/akshaytrikha/materials-scaling">set of scripts</a> that would automatically run scaling experiments over multiple OOMs. I came up with what I thought was a clever way of iterating through models:</p>
-
-<!-- ```Python
-class MetaTransformerModels:
-    def __init__(
-        self,
-        vocab_size,
-        max_seq_len,
-    ):
-        """Initializes TransformerModels with a list of configurations"""
-        self.configurations = [
-            {"d_model": 2, "depth": 1, "n_heads": 1, "d_ff_mult": 4}, # 2,280 params
-            ...
-            {"d_model": 256, "depth": 3, "n_heads": 2, "d_ff_mult": 4}, # 2,414,000 params
-        ]
-        self.vocab_size = vocab_size
-        self.max_seq_len = max_seq_len
-
-    def __getitem__(self, idx):
-        """Retrieves transformer model corresponding to the configuration at idx"""
-        config = self.configurations[idx]
-
-        return XTransformerModel(
-            num_tokens=self.vocab_size,
-            d_model=config["d_model"],
-            depth=config["depth"],
-            n_heads=config["n_heads"],
-            d_ff_mult=config["d_ff_mult"],
-        )
-
-    def __len__(self):
-        return len(self.configurations)
-
-    def __iter__(self):
-        for idx in range(len(self.configurations)):
-            yield self[idx]
-``` -->
-
-<figure style="display: flex; justify-content: center;">
-    <div style="text-align: center; width: 80%;">
-        <img src="http://localhost:4000/assets/scaling/MetaTransformerModels.png" alt="MetaTransformerModels" />
-    </div>
-    <br />
-</figure>
-
-<p>On paper this sounds great to iterate over model sizes and lazily instantiate them, but in practice each OOM brings nuance and unexpectedness in behavior through e.g. hyperparameter sensitivity like early stoping. Instead, I should’ve started with small manual overfitting experiments and gradually increasing the parameters and data <a href="http://karpathy.github.io/2019/04/25/recipe/">[8]</a>.</p>
-
-<p><br />
-<strong>Sin #2: Not starting with a small, in-memory, dataset</strong></p>
-
-<p>Over all the experiments I ran I found that dataloading was typically the bottleneck in training time. This is an example of a bad dataset clase I wrote. The devil is in the details because the <code class="language-plaintext highlighter-rouge">AseDBDataset.get_atoms(idx)</code> call looks like a simple getter but is actually doing disk I/O.</p>
-
-<div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; margin: 20px 0;">
-<style>
-  .code-comparison pre,
-  .code-comparison code {
-    font-size: 0.85em;
-  }
-</style>
-<div class="code-comparison">
-
-    <p><strong>Bad approach ❌</strong></p>
-
-    <p><img src="http://localhost:4000/assets/scaling/bad-approach.png" alt="Bad approach code" /></p>
-
-    <p>The result is that all of this work repeats every call:</p>
-    <ul>
-      <li>With random shuffling causing worst-case random disk access</li>
-      <li>Accross multiple worker processes (each with their own DB connections)</li>
-    </ul>
-
-    <p>This is painful.</p>
-
-  </div>
-<div class="code-comparison">
-
-    <p><strong>Better approach ✅</strong></p>
-
-    <p><img src="http://localhost:4000/assets/scaling/better-approach.png" alt="Better approach code" /></p>
-
-    <p>A very simple solution is to start experimenting with a very small dataset and iterate through it completely to cache it before training.</p>
-
-  </div>
-</div>
-
-<p>At a small dataset scale the first approach didn’t matter. But it wasted a lot of time as I scaled the dataset size.</p>
-
-<p><br />
-<strong>Sin #3: Transformer featurization</strong></p>
+<strong>Sin #1: Transformer featurization</strong></p>
 
 <p>In my attempt at training transformers I wanted to use as few inductive biases as possible. i.e. no equivariant features, no invariant features, no periodic boundary conditions. This was an attempt to learn everything from the data + augmentation, regardless of sample efficiency.</p>
 
@@ -234,6 +144,96 @@ e_{N1} &amp; \cdots &amp; e_{Nd} &amp; x_N &amp; y_N &amp; z_N
   <li>The models just want to learn and given enough parameters the loss will go down even if they aren’t learning the right thing.</li>
   <li>If scaling behavior doesn’t appear in smaller OOMs it’s unlikely it will magically appear later</li>
 </ul>
+
+<p><br />
+<strong>Sin #2: Not starting with individual experiments</strong></p>
+
+<p>Instead, I rushed to create a more complex <a href="https://github.com/akshaytrikha/materials-scaling">set of scripts</a> that would automatically run scaling experiments over multiple OOMs. I came up with what I thought was a clever way of iterating through models:</p>
+
+<!-- ```Python
+class MetaTransformerModels:
+    def __init__(
+        self,
+        vocab_size,
+        max_seq_len,
+    ):
+        """Initializes TransformerModels with a list of configurations"""
+        self.configurations = [
+            {"d_model": 2, "depth": 1, "n_heads": 1, "d_ff_mult": 4}, # 2,280 params
+            ...
+            {"d_model": 256, "depth": 3, "n_heads": 2, "d_ff_mult": 4}, # 2,414,000 params
+        ]
+        self.vocab_size = vocab_size
+        self.max_seq_len = max_seq_len
+
+    def __getitem__(self, idx):
+        """Retrieves transformer model corresponding to the configuration at idx"""
+        config = self.configurations[idx]
+
+        return XTransformerModel(
+            num_tokens=self.vocab_size,
+            d_model=config["d_model"],
+            depth=config["depth"],
+            n_heads=config["n_heads"],
+            d_ff_mult=config["d_ff_mult"],
+        )
+
+    def __len__(self):
+        return len(self.configurations)
+
+    def __iter__(self):
+        for idx in range(len(self.configurations)):
+            yield self[idx]
+``` -->
+
+<figure style="display: flex; justify-content: center;">
+    <div style="text-align: center; width: 80%;">
+        <img src="http://localhost:4000/assets/scaling/MetaTransformerModels.png" alt="MetaTransformerModels" />
+    </div>
+    <br />
+</figure>
+
+<p>On paper this sounds great to iterate over model sizes and lazily instantiate them, but in practice each OOM brings nuance and unexpectedness in behavior through e.g. hyperparameter sensitivity like early stoping. Instead, I should’ve started with small manual overfitting experiments and gradually increasing the parameters and data <a href="http://karpathy.github.io/2019/04/25/recipe/">[8]</a>.</p>
+
+<p><br />
+<strong>Sin #3: Not starting with a small, in-memory, dataset</strong></p>
+
+<p>Over all the experiments I ran I found that dataloading was typically the bottleneck in training time. This is an example of a bad dataset clase I wrote. The devil is in the details because the <code class="language-plaintext highlighter-rouge">AseDBDataset.get_atoms(idx)</code> call looks like a simple getter but is actually doing disk I/O.</p>
+
+<div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; margin: 20px 0;">
+<style>
+  .code-comparison pre,
+  .code-comparison code {
+    font-size: 0.85em;
+  }
+</style>
+<div class="code-comparison">
+
+    <p><strong>Bad approach ❌</strong></p>
+
+    <p><img src="http://localhost:4000/assets/scaling/bad-approach.png" alt="Bad approach code" /></p>
+
+    <p>The result is that all of this work repeats every call:</p>
+    <ul>
+      <li>With random shuffling causing worst-case random disk access</li>
+      <li>Accross multiple worker processes (each with their own DB connections)</li>
+    </ul>
+
+    <p>This is painful.</p>
+
+  </div>
+<div class="code-comparison">
+
+    <p><strong>Better approach ✅</strong></p>
+
+    <p><img src="http://localhost:4000/assets/scaling/better-approach.png" alt="Better approach code" /></p>
+
+    <p>A very simple solution is to start experimenting with a very small dataset and iterate through it completely to cache it before training.</p>
+
+  </div>
+</div>
+
+<p>At a small dataset scale the first approach didn’t matter. But it wasted a lot of time as I scaled the dataset size.</p>
 
 <hr />
 
