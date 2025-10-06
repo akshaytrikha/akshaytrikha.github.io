@@ -19,7 +19,7 @@ Code is open sourced [here](https://github.com/akshaytrikha/materials-scaling).
 <br>
 A little over a year ago I got pretty interested in training neural networks that can learn physics from data. Around the time machine learning interatomic potential (NNIP) models were becoming popular. These models broadly take as input a material's atomic configuration and predict properties related to its potential energy. All the papers I was reading had great results, but I felt they were selling an incomplete story because they were missing scaling information. To me, understanding how a model scales is perhaps the most important factor and having just 1 datapoint of a final test loss was insufficient to understand how any architecture would stand the test of time. 
 
-I tried to investigate whether vanilla transformer encoders, given sufficient data, could learn to predict material properties as well as architectures explicitly equivariant architectures, like EquiformerV2 (EqV2) [[1]](https://arxiv.org/pdf/2306.12059). Inspired by the Bitter Lesson [[2]](https://www.cs.utexas.edu/~eunsol/courses/data/bitter_lesson.pdf), my hypothesis was that that transformers would scale more slowly than specialized architectures but that their scaling laws [[3]](https://arxiv.org/pdf/2001.08361)[[4]](https://arxiv.org/pdf/1712.00409)[[5]](https://arxiv.org/pdf/2210.16859) would hold out over more orders-of-magntiude (OOM).
+I tried to investigate whether vanilla transformer encoders, given sufficient data, could learn to predict material properties as well as architectures explicitly equivariant architectures, like EquiformerV2 (EqV2) [[1]](https://arxiv.org/pdf/2306.12059). Inspired by the Bitter Lesson [[2]](https://www.cs.utexas.edu/~eunsol/courses/data/bitter_lesson.pdf), my hypothesis was that that transformers would scale more slowly than specialized architectures but that their scaling laws [[3]](https://arxiv.org/pdf/2001.08361)[[4]](https://arxiv.org/pdf/1712.00409)[[5]](https://arxiv.org/pdf/2210.16859) would hold out over more orders-of-magnitude (OOM).
 
 I failed to stably train transformers most likely due to the featurization I chose. I still learned a great deal along the way, and found power laws for EqV2.
 
@@ -163,7 +163,7 @@ On paper this sounds great to iterate over model sizes and lazily instantiate th
 <br>
 **Sin #3: Not starting with a small, in-memory, dataset**
 
-Over all the experiments I ran I found that dataloading was typically the bottleneck in training time. This is an example of a bad dataset clase I wrote. The devil is in the details because the `AseDBDataset.get_atoms(idx)` call looks like a simple getter but is actually doing disk I/O.
+Over all the experiments I ran I found that dataloading was typically the bottleneck in training time. This is an example of a bad dataset class I wrote. The devil is in the details because the `AseDBDataset.get_atoms(idx)` call looks like a simple getter but is actually doing disk I/O.
 
 <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; margin: 20px 0;">
 <style>
@@ -180,7 +180,7 @@ Over all the experiments I ran I found that dataloading was typically the bottle
 
 The result is that all of this work repeats every call:
 - With random shuffling causing worst-case random disk access
-- Accross multiple worker processes (each with their own DB connections)
+- Across multiple worker processes (each with their own DB connections)
 
 This is painful.
 
