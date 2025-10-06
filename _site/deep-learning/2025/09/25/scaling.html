@@ -50,13 +50,13 @@
 
 <p><em>Or, Why My Master’s Thesis Failed</em></p>
 
-<p><strong>TL;DR:</strong> I tested whether a plain transformer encoder (no equivariance, no periodic boundary conditions) can learn interatomic forces as data &amp; params scale vs. EquiformerV2. EqV2 followed clean power laws and hit much lower loss. My transformer failed and plataued hard, leading me to believe my featurization was insufficient. I share the wins &amp; failures.</p>
+<p><strong>TL;DR:</strong> I tested whether a plain transformer encoder (no equivariance, no periodic boundary conditions) can learn interatomic forces as data &amp; params scale vs. EquiformerV2. EqV2 followed clean power laws and hit much lower loss. My transformer failed and plateaued hard, leading me to believe my featurization was insufficient. I share the wins &amp; failures.</p>
 
 <p>Code is open sourced <a href="https://github.com/akshaytrikha/materials-scaling">here</a>.</p>
 
 <hr />
 <p><br />
-A little over a year ago I got pretty interested in training neural networks that can learn physics from data. Around the time machine learning interatomic potential (NNIP) models were becoming popular. These models broadly take as input a material’s atomic configuration and predict properties related to its potential energy. All the papers I was reading had great results, but I felt they were selling an incomplete story because they were missing scaling information. To me, understanding how a model scales is perhaps the most important thing and just having 1 datapoint of a final test loss was insufficent to understand how any architecture would stand the test of time.</p>
+A little over a year ago I got pretty interested in training neural networks that can learn physics from data. Around the time machine learning interatomic potential (NNIP) models were becoming popular. These models broadly take as input a material’s atomic configuration and predict properties related to its potential energy. All the papers I was reading had great results, but I felt they were selling an incomplete story because they were missing scaling information. To me, understanding how a model scales is perhaps the most important factor and having just 1 datapoint of a final test loss was insufficient to understand how any architecture would stand the test of time.</p>
 
 <p>I tried to investigate whether vanilla transformer encoders, given sufficient data, could learn to predict material properties as well as architectures explicitly equivariant architectures, like EquiformerV2 (EqV2) <a href="https://arxiv.org/pdf/2306.12059">[1]</a>. Inspired by the Bitter Lesson <a href="https://www.cs.utexas.edu/~eunsol/courses/data/bitter_lesson.pdf">[2]</a>, my hypothesis was that that transformers would scale more slowly than specialized architectures but that their scaling laws <a href="https://arxiv.org/pdf/2001.08361">[3]</a><a href="https://arxiv.org/pdf/1712.00409">[4]</a><a href="https://arxiv.org/pdf/2210.16859">[5]</a> would hold out over more orders-of-magntiude (OOM).</p>
 
@@ -82,7 +82,7 @@ A simple argument between the two architectures is that they fall into the bias 
 <p><br />
 <strong>Task and Dataset</strong></p>
 
-<p>NNIPs are trained to take in a set atoms and their positions to predict the structure’s energy and typically the forces on the atoms as well as the structure’s stresses.</p>
+<p>MLIPs are trained to take in a set of atoms and their positions to predict the structure’s energy and typically the forces on the atoms as well as the structure’s stresses.</p>
 
 <p>A common criticism of NNIPs trained on Density Functional Theory (DFT) calculations is that those datasets are relaxed structures around 0K. This means that they’re not physically relevant in most cases to us because we don’t live around 0K.</p>
 
@@ -143,7 +143,7 @@ class MetaTransformerModels:
 <p><br />
 <strong>Sin #2: Not starting with a small, in-memory, dataset</strong></p>
 
-<p>Over all the experiments I ran I found that dataloading was typically the bottleneck in training time. This is an example of a bad dataset clase I wrote. The devil is in the details because the the <code class="language-plaintext highlighter-rouge">AseDBDataset.get_atoms(idx)</code> call looks like a simple getter but is actually doing disk I/O.</p>
+<p>Over all the experiments I ran I found that dataloading was typically the bottleneck in training time. This is an example of a bad dataset clase I wrote. The devil is in the details because the <code class="language-plaintext highlighter-rouge">AseDBDataset.get_atoms(idx)</code> call looks like a simple getter but is actually doing disk I/O.</p>
 
 <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; margin: 20px 0;">
 <style>
@@ -173,19 +173,19 @@ class MetaTransformerModels:
 
     <p><img src="http://localhost:4000/assets/scaling/better-approach.png" alt="Better approach code" /></p>
 
-    <p>A very simple solution is to start experimenting with a very small dataset and iterate through it completely before training to cache it.</p>
+    <p>A very simple solution is to start experimenting with a very small dataset and iterate through it completely to cache it before training.</p>
 
   </div>
 </div>
 
-<p>At a small dataset scale the first approach didn’t matter. But it wasted a lot of time as I scaled my dataset size.</p>
+<p>At a small dataset scale the first approach didn’t matter. But it wasted a lot of time as I scaled the dataset size.</p>
 
 <p><br />
 <strong>Sin #3: Transformer featurization</strong></p>
 
 <p>In my attempt at training transformers I wanted to use as few inductive biases as possible. i.e. no equivariant features, no invariant features, no periodic boundary conditions. This was an attempt to learn everything from the data + augmentation, regardless of sample efficiency.</p>
 
-<p>I used a standard embedding layer for atom types to give the model a dictionary lookup of what each atom is across different structures. This was important because the model needed to understand that each atom is the same in different in every structure but gets modified by its context, similar to how each word is the same in different sequences and is modified by its context. The 3D positions were concatenated to the embedding vector because I thought the model might have an easier time disentangling meaning vs. saving parameters by adding the positions to the embeddings.</p>
+<p>I used a standard embedding layer for atom types to give the model a dictionary lookup of what each atom is across different structures. This was important because the model needed to understand that each atom is the same in different structures but is modified by its context, similar to how each word is the same in different sequences and is modified by its context. The 3D positions were concatenated with the embedding vector because I thought the model might have an easier time disentangling meaning vs. saving parameters by adding the positions to the embeddings.</p>
 
 <!-- $$
 \begin{align}
@@ -217,7 +217,7 @@ e_{N1} &amp; \cdots &amp; e_{Nd} &amp; x_N &amp; y_N &amp; z_N
 \end{array}
 \end{array}\]
 
-<p>This was purposefully not a rotationally invariant featurization as I wanted to see if the model could learn this through augmentation. It also did not account for the fact crystal structures are periodic, which means that forces on atoms can come from adjacent cells. My findings are that this featurization led to the model learning global structure energy and stresses well, but not 3D per-atom forces. It’s not to say that forces weren’t learned at all, but they were certainly not comparable to the EquiformerV2.</p>
+<p>This was purposefully not a rotationally invariant featurization as I wanted to see if the model could learn this through augmentation. It also did not account for the fact crystal structures are periodic, which means that forces on atoms can come from adjacent cells. My findings are that this featurization led to the model learning global structure energy and stresses well, but not 3D per-atom forces. This isn’t to say that forces weren’t learned at all, but they were certainly not comparable to EquiformerV2.</p>
 
 <figure style="display: flex; justify-content: center;">
     <div style="text-align: center; width: 80%;">
@@ -227,7 +227,7 @@ e_{N1} &amp; \cdots &amp; e_{Nd} &amp; x_N &amp; y_N &amp; z_N
     <br />
 </figure>
 
-<p>I got stuck with this phenomena of an apparent plateau in force loss only for certain hyperparam configs. There were other runs that would break through but still plateau much higher than the EqV2. I suspect that training stability had a role with the former, and ultimately the lack of periodic boundary conditions impacting the latter.</p>
+<p>I got stuck with this phenomena of an apparent plateau in force loss only for certain hyperparam configs. There were other runs that would break through but still plateaued much higher than the EqV2. I suspect that training stability had a role with the former, and ultimately the lack of periodic boundary conditions impacting the latter.</p>
 
 <p>Tough lessons learned:</p>
 <ul>
