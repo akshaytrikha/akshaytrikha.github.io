@@ -2,6 +2,8 @@
 layout: post
 title:  "The Futility of Bias-Free Learning and Search"
 date:   2019-07-25 21:53:17 -0000
-categories: deep-learning
+categories: Research
 redirect_to: https://www.cs.hmc.edu/~montanez/projects/futility-of-bias-free-search.html
+thumbnail: /assets/thumbnails/futility.jpeg
+tldr: "A proof using Montañez's algorithmic search framework that without inductive biases a learner’s expected performance over a finite uniform search space matches uniform random sampling"
 ---

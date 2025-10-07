@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Trump or Computer Dump? | Akshay Trikha</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Trump or Computer Dump?" />
+<meta property="og:locale" content="en_US" />
+<link rel="canonical" href="http://localhost:4000/how%20to/2023/04/23/trump-or-computer-dump.html" />
+<meta property="og:url" content="http://localhost:4000/how%20to/2023/04/23/trump-or-computer-dump.html" />
+<meta property="og:site_name" content="Akshay Trikha" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-04-23T14:53:17-07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Trump or Computer Dump?" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2023-04-23T14:53:17-07:00","datePublished":"2023-04-23T14:53:17-07:00","headline":"Trump or Computer Dump?","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/how%20to/2023/04/23/trump-or-computer-dump.html"},"url":"http://localhost:4000/how%20to/2023/04/23/trump-or-computer-dump.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Akshay Trikha" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Akshay Trikha</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/projects/">Projects</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Trump or Computer Dump?</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2023-04-23T14:53:17-07:00" itemprop="datePublished">Apr 23, 2023
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <script type="module" src="https://gradio.s3-us-west-2.amazonaws.com/4.39.0/gradio.js"></script>
+
+<gradio-app src="https://akshaytrikha-gpt2-trump.hf.space"></gradio-app>
+
+<p>In early 2019 OpenAI published some <a href="https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf">research</a> showing that large language models, when trained on colossal amounts of text, begin to behave unpredictably intelligently on tasks they weren’t originally trained on. Humorously, part of the original dataset for the model was scraped from Reddit - which isn’t always known to be the home of constructive conversation and accurate information so it’s even more surprising how good their model was!</p>
+
+<p>In 2020, while taking an NLP, course I thought it would be fun to finetune GPT-2 on a corpus of then President Trump’s tweets seeing as he has such a distinct style and voice. I obtained his tweets from the super convenient <a href="https://www.thetrumparchive.com/">Trump Twitter Archive</a> which contained ~56,500 of his tweets from 2009 until he was banned from the platform on January 8th, 2021.</p>
+
+<p>The original project took me around 3 weeks if I remember correctly and this weekend as I was dog sitting I remembered that project and got excited about trying to recreate it with the latest tools available, namely HuggingFace. It was awesome to have a benchmark to compare against to measure and truly appreciate the efficiency and ergonomics of HuggingFace’s transformers library. I was able to replicate the finetuning through a short <a href="https://github.com/akshaytrikha/GPT-2-Trump/blob/master/huggingface_trump.ipynb">notebook</a> + host it using gradio on a HuggingFace space in just a couple of days.</p>
+
+<h3 id="finetuning-with-huggingface-transformers">Finetuning with HuggingFace Transformers</h3>
+
+<p>First I defined some hyperparams for training:</p>
+
+<pre><code class="language-Python"># define some params for model
+batch_size = 8
+epochs = 15
+learning_rate = 5e-4
+epsilon = 1e-8
+warmup_steps = 1e2
+sample_every = 100  # produce sample output every 100 steps
+max_length = 140  # max length used in generate() method of model
+</code></pre>
+
+<p>Assuming the twitter data is downloaded and preprocessed, we need to tokenize the tweets (which means assign a unique <code class="language-plaintext highlighter-rouge">int</code> to every word or character) and load them into a dataloader. The <code class="language-plaintext highlighter-rouge">AutoTokenizer</code> is really nice because it uses the right tokenizer for any specific model available on HuggingFace if you give it a model name e.g.<code class="language-plaintext highlighter-rouge">"gpt2-medium"</code>.</p>
+
+<pre><code class="language-Python">from transformers import (
+	AutoTokenizer
+    TextDataset,
+    DataCollatorForLanguageModeling
+)
+
+# create tokenized datasets
+tokenizer = AutoTokenizer.from_pretrained(
+    "gpt2-medium",
+    pad_token='&lt;|endoftext|&gt;'
+)
+
+# custom load_dataset function because there are no labels
+def load_dataset(train_path, dev_path, tokenizer):
+    block_size = 128
+    # block_size = tokenizer.model_max_length
+
+    train_dataset = TextDataset(
+          tokenizer=tokenizer,
+          file_path=train_path,
+          block_size=block_size)
+
+    dev_dataset = TextDataset(
+          tokenizer=tokenizer,
+          file_path=dev_path,
+          block_size=block_size)
+
+    data_collator = DataCollatorForLanguageModeling(
+        tokenizer=tokenizer, mlm=False,
+    )
+    return train_dataset, dev_dataset, data_collator
+
+train_dataset, dev_dataset, data_collator = load_dataset(
+	train_path, dev_path, tokenizer
+)
+</code></pre>
+
+<p>Now we can instantiate the model, optimizer, and learning rate scheduler. I’d never experimented with dynamically changing the learning rate during training so using <code class="language-plaintext highlighter-rouge">get_linear_schedule_with_warmup()</code> was exciting. The resulting learning rate vs. epochs graph looked like this:</p>
+
+<figure>
+    <br />
+	<div style="text-align: center">
+		<img src="http://localhost:4000/assets/trumpdump/learning-rate.png" alt="linear learning rate schedule" style="width: 90%" />
+	</div>
+    <br />
+</figure>
+
+<p>which shows a delay in reaching the <code class="language-plaintext highlighter-rouge">learning_rate</code> by <code class="language-plaintext highlighter-rouge">num_epoch_steps</code> and then a slow decrease until the nth epoch.</p>
+
+<pre><code class="language-Python">from transformers import (
+    AutoModelWithLMHead,
+    get_linear_schedule_with_warmup,
+)
+
+# AutoModelWithLMHead will pick GPT-2 weights from name
+model = AutoModelWithLMHead.from_pretrained(
+	model_name,
+	cache_dir=Path('cache').resolve()
+)
+
+# necessary because of additional bos, eos, pad tokens to embeddings
+model.resize_token_embeddings(len(tokenizer))
+
+# create optimizer and learning rate schedule
+optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate, eps=epsilon)
+
+training_steps = len(train_dataset) * epochs
+
+# adjust learning rate during training
+scheduler = get_linear_schedule_with_warmup(
+	optimizer,
+	num_warmup_steps = warmup_steps,
+	num_training_steps = training_steps
+)
+</code></pre>
+
+<p>Finally we can instantiate a <code class="language-plaintext highlighter-rouge">TrainingArguments</code> object which holds hyperparams and then run training from the <code class="language-plaintext highlighter-rouge">Trainer</code> object. This also prints out a pretty printed loss vs. step table.</p>
+
+<pre><code class="language-Python">from transformers import (
+    Trainer,
+    TrainingArguments,
+)
+
+training_args = TrainingArguments(
+    output_dir="./gpt-2-medium-trump",
+    num_train_epochs=epochs,
+    per_device_train_batch_size=batch_size,
+    per_device_eval_batch_size=batch_size,
+    eval_steps = 400, # n update steps between two evaluations
+    save_steps=800, # n steps per model save
+    warmup_steps=500, # n warmup steps for learning rate scheduler
+)
+
+trainer = Trainer(
+    model=model,
+    args=training_args,
+    data_collator=data_collator,
+    train_dataset=train_dataset,
+    eval_dataset=dev_dataset,
+)
+
+# train &amp; save model run after done
+trainer.train()
+trainer.save_model()
+</code></pre>
+
+<h3 id="inference-with-huggingface-transformers">Inference with HuggingFace Transformers</h3>
+
+<p>Inference was even easier than training as all you need to do is set up a <code class="language-plaintext highlighter-rouge">pipeline</code> for the model:</p>
+
+<pre><code class="language-Python">from transformers import pipeline
+
+trump = pipeline(
+	"text-generation",
+	model="./gpt-2-medium-trump",
+	tokenizer=tokenizer,
+	config={"max_length":max_length}  # n tokens
+)
+</code></pre>
+
+<p>Trump at your fingertips</p>
+
+<pre><code class="language-Python">In:  trump("Today I'll be")[0]["generated_text"]
+
+Out: "Today I'll be rallying w/ @FEMA, First Responders, Law Enforcement,
+and First Responders of Puerto Rico to help those most affected by the
+#IrmaFlood.https://t.co/gsFSghkmdM"
+</code></pre>
+
+<h4 id="resources">Resources:</h4>
+
+<ul>
+  <li><a href="https://huggingface.co/learn/nlp-course/chapter3/3?fw=pt">HuggingFace Trainer</a></li>
+  <li><a href="https://huggingface.co/gpt2">GPT-2 Model Card</a></li>
+  <li><a href="https://github.com/akshaytrikha/GPT-2-Trump/blob/master/huggingface_trump.ipynb">GPT-2 Trump notebook</a></li>
+</ul>
+
+  </div><a class="u-url" href="/how%20to/2023/04/23/trump-or-computer-dump.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+    <data class="u-url" href="/"></data>
+  
+    <div class="wrapper">
+  
+      <div class="footer-col-wrapper" style="margin-top: -20px;">
+        <div class="footer-col">
+        </div>
+        <div class="footer-col">
+          <p></p>
+        </div>
+      </div>
+  
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/akshaytrikha"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">akshaytrikha</span></a></li><li><a href="https://www.linkedin.com/in/akshay-trikha"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">akshay-trikha</span></a></li></ul>
+</div>
+  
+    </div>
+</footer>
+  </body>
+
+</html>

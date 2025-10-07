@@ -1,0 +1,132 @@
+/* Project List Styles */
+.project-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .project-item {
+    padding-bottom: 0.25rem;
+  }
+  
+  .project-header {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
+  
+  .project-thumbnail {
+    flex-shrink: 0;
+    width: 180px;
+    height: 120px;
+  }
+  
+  .project-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .project-info {
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .project-info .post-meta {
+    display: block;
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+  }
+  
+  .project-info h3 {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.25rem;
+    line-height: 1.3;
+  }
+  
+  .project-info h3 .post-link {
+    color: #2a7ae2;
+    text-decoration: none;
+  }
+  
+  .project-info h3 .post-link:hover {
+    text-decoration: underline;
+  }
+  
+  /* TLDR Styles */
+  .project-tldr {
+    margin-top: -0.25rem;
+  }
+  
+  .project-tldr summary {
+    cursor: pointer;
+    color: #666;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .project-tldr summary .summary-text {
+    flex-shrink: 0;
+  }
+
+  .project-tldr[open] summary {
+    color: #bbb;
+  }
+  
+  .tldr-content {
+    margin-top: 0.5rem;
+    padding-left: 0;
+    line-height: 1.6;
+    color: #333;
+  }
+
+  /* Category Tag Styles */
+  .category-tag-wrapper {
+    margin-top: -0.25rem;
+  }
+
+  .category-tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.65rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .category-research {
+    background-color: rgba(168, 197, 221, 0.5);
+    color: #3a5f7d;
+  }
+
+  .category-product {
+    background-color: rgba(184, 212, 184, 0.5);
+    color: #3d6b3d;
+  }
+
+  .category-how-to {
+    background-color: rgba(245, 208, 184, 0.5);
+    color: #8b5a3c;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .project-header {
+      flex-direction: column;
+    }
+  
+    .project-thumbnail {
+      width: 100%;
+      height: 200px;
+    }
+  }
+  
+  /* Ensure compatibility with existing minima theme */
+  .post-list.project-list {
+    margin-left: 0;
+  }

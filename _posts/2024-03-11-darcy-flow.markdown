@@ -2,7 +2,9 @@
 layout: post
 title: "Physics-Constrained Neural Networks for Solving Partial Differential Equations"
 date: 2024-03-11 13:11:17 -0000
-categories: deep-learning
+categories: [How To]
+thumbnail: /assets/thumbnails/darcy-flow.jpeg
+tldr: "Training neural networks to solve PDEs while enforcing physics constraints via a differentiable linear solver layer"
 ---
 
 <script type="text/javascript" async

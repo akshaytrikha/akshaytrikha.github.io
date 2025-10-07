@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Neural Style Transfer Webcam | Akshay Trikha</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Neural Style Transfer Webcam" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Overview" />
+<meta property="og:description" content="Overview" />
+<link rel="canonical" href="http://localhost:4000/product/2021/07/16/neural-style-transfer-webcam.html" />
+<meta property="og:url" content="http://localhost:4000/product/2021/07/16/neural-style-transfer-webcam.html" />
+<meta property="og:site_name" content="Akshay Trikha" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-07-16T05:50:00-07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Neural Style Transfer Webcam" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2021-07-16T05:50:00-07:00","datePublished":"2021-07-16T05:50:00-07:00","description":"Overview","headline":"Neural Style Transfer Webcam","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/product/2021/07/16/neural-style-transfer-webcam.html"},"url":"http://localhost:4000/product/2021/07/16/neural-style-transfer-webcam.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Akshay Trikha" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Akshay Trikha</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/projects/">Projects</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Neural Style Transfer Webcam</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2021-07-16T05:50:00-07:00" itemprop="datePublished">Jul 16, 2021
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <h3 id="overview">Overview</h3>
+
+<p>I wanted to learn how to build and deploy an ML system in the real world and thought this would be a fun place to start. You can find my project’s code <a href="https://github.com/akshaytrikha/style-transfer">here</a>.</p>
+
+<figure>
+    <br />
+    <div style="text-align: center;">
+        <img src="http://localhost:4000/assets/style-transfer/style-transfer.gif" alt="style transfer demo gif" style="width: 100%" />
+        <figcaption style="text-align: center">
+            Try the demo yourself <a href="https://akshaytrikha.github.io/style-transfer/" target="_blank" rel="noopener noreferrer">here</a>
+        </figcaption>
+    </div>
+    <br />
+</figure>
+
+<!-- <figure>
+    <br>
+
+        <img src="http://localhost:4000/assets/mask-finding/fast_mask_finding.png" alt="ML defect detection"/>
+        <figcaption>Fig 1. Mask Finding</figcaption>
+
+    <br>
+</figure> -->
+
+<p>Using your webcam as input, this project generates stylized images in 400ms intervals. It uses two pretrained Tensorflow.js neural networks, sourced from Reiichiro Nakano’s <a href="https://github.com/reiinakano/arbitrary-image-stylization-tfjs">arbitrary-image-stylization-tfjs</a> repo.</p>
+
+<ol>
+  <li>The first network is used to learn the style of a given image and generate a style representation.</li>
+  <li>The second network is then used for style transfer, or using the style representation to generate a stylized output image.</li>
+</ol>
+
+<p>The original models were actually regular tf models, but Reiichiro distilled them into smaller networks so they would run faster. For a more detailed breakdown of how the networks work, check out his blog <a href="https://magenta.tensorflow.org/blog/2018/12/20/style-transfer-js/">post</a>.</p>
+
+<h3 id="building-the-react-app">Building the React App</h3>
+
+<p>I used Nicholas Renotte’s <a href="https://github.com/nicknochnack/ReactComputerVisionTemplate">ReactComputerVisonTemplate</a> repo as a template for interfacing with a webcam and rendering output back on screen. The big idea is to use the <code class="language-plaintext highlighter-rouge">react-webcam</code> component to take screenshots, generate their style representations, and then display their stylized images. In pseudo-ish code the entire app is basically:</p>
+
+<pre><code class="language-JavaScript">import Webcam from "react-webcam";
+
+const predict = async () =&gt; {
+    // First wait for models to load
+    await loadModels();
+    // init style image and generate style representation
+    await initStyleImage();
+
+    // every 400ms
+    setInterval(() =&gt; {
+        captureScreenshot();
+        generateStylizedImage();
+    }, 400);
+}
+</code></pre>
+
+<h3 id="lessons-learned">Lessons learned</h3>
+
+<ol>
+  <li>
+    <p>A very fun fact about using TensorFlow.js is that your browser is locally running inference, and all your data is kept on your device.</p>
+  </li>
+  <li>
+    <p>You have to do a lot of things asynchronously e.g. fetching the models, loading the models, running inference. Timing all of this was how I decided to introduce the delay of 400ms.</p>
+  </li>
+  <li>
+    <p>tfjs is slightly different to using tf in python in small ways. You have to use methods like <code class="language-plaintext highlighter-rouge">tf.ready().then(() =&gt; {})</code> that returns a promise when tfjs is ready (if the WebGL backend is ready).</p>
+  </li>
+  <li>
+    <p>I used the html <code class="language-plaintext highlighter-rouge">canvas</code> element to display images and would use <code class="language-plaintext highlighter-rouge">document.getElementById("element-name").src = ...</code> directly to update an element. I standardized the display sizes in px to make it easier to deal with.</p>
+  </li>
+  <li>
+    <p>To make them persistent I stored the model weights in the repo itself so that they’re accessible with e.g. <code class="language-plaintext highlighter-rouge">transferModel = await tf.loadGraphModel(process.env.PUBLIC_URL + '/models/style-prediction/model.json')</code></p>
+  </li>
+</ol>
+
+<h4 id="resources">Resources:</h4>
+
+<ul>
+  <li><a href="https://github.com/reiinakano/arbitrary-image-stylization-tfjs">https://github.com/reiinakano/arbitrary-image-stylization-tfjs</a></li>
+  <li><a href="https://magenta.tensorflow.org/blog/2018/12/20/style-transfer-js/">https://magenta.tensorflow.org/blog/2018/12/20/style-transfer-js/</a></li>
+  <li><a href="https://styletransfer.art">https://styletransfer.art</a></li>
+</ul>
+
+  </div><a class="u-url" href="/product/2021/07/16/neural-style-transfer-webcam.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+    <data class="u-url" href="/"></data>
+  
+    <div class="wrapper">
+  
+      <div class="footer-col-wrapper" style="margin-top: -20px;">
+        <div class="footer-col">
+        </div>
+        <div class="footer-col">
+          <p></p>
+        </div>
+      </div>
+  
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/akshaytrikha"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">akshaytrikha</span></a></li><li><a href="https://www.linkedin.com/in/akshay-trikha"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">akshay-trikha</span></a></li></ul>
+</div>
+  
+    </div>
+</footer>
+  </body>
+
+</html>
