@@ -3,6 +3,8 @@ layout: post
 title: "Trump or Computer Dump?"
 date: 2023-04-23 21:53:17 -000
 categories: [How To]
+thumbnail: /assets/thumbnails/gpt2-trump.jpeg
+tldr: "GPT-2 Trump"
 ---
 
 <script
