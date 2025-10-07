@@ -72,10 +72,14 @@
   .project-tldr summary .summary-text {
     flex-shrink: 0;
   }
+
+  .project-tldr[open] summary {
+    color: #bbb;
+  }
   
   .tldr-content {
     margin-top: 0.5rem;
-    padding-left: 1rem;
+    padding-left: 0;
     line-height: 1.6;
     color: #333;
   }
