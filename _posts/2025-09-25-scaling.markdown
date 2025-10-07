@@ -2,7 +2,7 @@
 layout: post
 title: "(Bitter) Lessons from Scaling Machine Learning Interatomic Potentials"
 date: 2025-09-25 13:11:17 -0000
-categories: deep-learning
+categories: Research
 thumbnail: /assets/thumbnails/scaling.jpeg
 tldr: "scaling goes brrrrr"
 ---

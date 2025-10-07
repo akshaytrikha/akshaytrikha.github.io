@@ -2,7 +2,7 @@
 layout: post
 title: "Transfer Learning in Computer Vision"
 date: 2023-07-04 16:06:17 -0000
-categories: deep-learning
+categories: How to
 thumbnail: /assets/thumbnails/transfer-learning.jpeg
 tldr: "finetune anything"
 ---

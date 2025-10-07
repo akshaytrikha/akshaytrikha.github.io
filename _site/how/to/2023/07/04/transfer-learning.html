@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Transfer Learning in Computer Vision | Akshay Trikha</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Transfer Learning in Computer Vision" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Recall when beginning to train a neural network its weights might be initialized randomly. What if you could start training with a leg up because the network already has some useful information inside of it? Transfer learning is that leg up where you can repurpose models trained on similar tasks and use them for your specific task instead of training from scratch." />
+<meta property="og:description" content="Recall when beginning to train a neural network its weights might be initialized randomly. What if you could start training with a leg up because the network already has some useful information inside of it? Transfer learning is that leg up where you can repurpose models trained on similar tasks and use them for your specific task instead of training from scratch." />
+<link rel="canonical" href="http://localhost:4000/how/to/2023/07/04/transfer-learning.html" />
+<meta property="og:url" content="http://localhost:4000/how/to/2023/07/04/transfer-learning.html" />
+<meta property="og:site_name" content="Akshay Trikha" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2023-07-04T09:06:17-07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Transfer Learning in Computer Vision" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2023-07-04T09:06:17-07:00","datePublished":"2023-07-04T09:06:17-07:00","description":"Recall when beginning to train a neural network its weights might be initialized randomly. What if you could start training with a leg up because the network already has some useful information inside of it? Transfer learning is that leg up where you can repurpose models trained on similar tasks and use them for your specific task instead of training from scratch.","headline":"Transfer Learning in Computer Vision","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/how/to/2023/07/04/transfer-learning.html"},"url":"http://localhost:4000/how/to/2023/07/04/transfer-learning.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Akshay Trikha" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Akshay Trikha</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/projects/">Projects</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Transfer Learning in Computer Vision</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2023-07-04T09:06:17-07:00" itemprop="datePublished">Jul 4, 2023
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>Recall when beginning to train a neural network its weights might be initialized randomly. What if you could start training with a leg up because the network already has some useful information inside of it? Transfer learning <em>is</em> that leg up where you can repurpose models trained on similar tasks and use them for your specific task instead of training from scratch.</p>
+
+<p>Benefits include:</p>
+
+<ul>
+  <li>training faster</li>
+  <li>less training data</li>
+  <li>boosts generalization</li>
+  <li>might improve accuracy</li>
+</ul>
+
+<figure>
+    <br />
+    <img src="http://localhost:4000/assets/transfer-learning/transfer-learning.png" alt="transfer learning diagram" />
+    <figcaption style="text-align: center">diagram inspired by Stanford CS 329P 2021 slides</figcaption>
+    <br />
+</figure>
+
+<p>Above we see an example of using ImageNet pre-trained weights to classify objects from the Fashion MNIST dataset. A bit of an overkill example, but you get the point.</p>
+
+<p>There are three main ways you might go about transfer learning:</p>
+
+<ol>
+  <li>
+    <p>Use the pre-trained model as a pre-trained feature extractor by freezing its hidden layers (and replacing its head with your own). This works well when your task isn’t too different from the pre-trained model’s task.</p>
+  </li>
+  <li>
+    <p>Finetune the pre-trained model completely by not freezing any layers</p>
+  </li>
+  <li>
+    <p>Finetune but freeze some number layers. There are two main risks with this approach: (1) the higher-level early neurons are more specialized than we expected, and (2) splitting &amp; combining two arbitrary layers causes a mismatch in learned features that cannot be relearned by earlier layers.</p>
+  </li>
+</ol>
+
+<p>Thanks to the open-source community there are many places you can find pre-trained models, like PyTorch Hub, HuggingFace, and TensorFlow Hub to name a few.</p>
+
+<h3 id="segmentation-example">Segmentation Example</h3>
+
+<h4 id="1-loading-the-model">1. Loading the Model</h4>
+
+<p>I’ve used the DeepLabv3 model from <a href="https://pytorch.org/hub/pytorch_vision_deeplabv3_resnet101/">Pytorch Hub</a> and gotten some pretty great results. We first start by loading the pre-trained weights into the model:</p>
+
+<pre><code class="language-Python">import torchvision
+
+# there are three model sizes: MobileNet, ResNet50, and ResNet101
+weights = torchvision.models.segmentation.DeepLabV3_ResNet50_Weights.DEFAULT
+model = torchvision.models.segmentation.deeplabv3_resnet50(weights=weights).to(device)
+</code></pre>
+
+<p>Then we need to replace the classifier layer but to do that we need to know its input dimension. The easiest way I’ve found to do that is to use <code class="language-plaintext highlighter-rouge">torchinfo.summary()</code>:</p>
+
+<pre><code class="language-Python">from torchinfo import summary
+
+summary(
+    model=model,
+    input_size=(2, 3, 1024, 1024),
+    col_names=["input_size", "output_size", "num_params", "trainable"],
+    col_width=20,
+    row_settings=["var_names"]
+)
+</code></pre>
+
+<p>which prints out:</p>
+
+<pre><code class="language-#1">===========================================================================================================================
+Layer (type (var_name))                            Input Shape          Output Shape         Param #              Trainable
+===========================================================================================================================
+DeepLabV3 (DeepLabV3)                              [2, 3, 1024, 1024]   [2, 2, 1024, 1024]   --                   True
+├─IntermediateLayerGetter (backbone)               [2, 3, 1024, 1024]   [2, 2048, 128, 128]  --                   True
+│    └─Conv2d (conv1)                              [2, 3, 1024, 1024]   [2, 64, 512, 512]    9,408                True
+│    └─BatchNorm2d (bn1)                           [2, 64, 512, 512]    [2, 64, 512, 512]    128                  True
+│    └─ReLU (relu)                                 [2, 64, 512, 512]    [2, 64, 512, 512]    --                   --
+│    └─MaxPool2d (maxpool)                         [2, 64, 512, 512]    [2, 64, 256, 256]    --                   --
+│    └─Sequential (layer1)                         [2, 64, 256, 256]    [2, 256, 256, 256]   --                   True
+│    │    └─Bottleneck (0)                         [2, 64, 256, 256]    [2, 256, 256, 256]   75,008               True
+│    │    └─Bottleneck (1)                         [2, 256, 256, 256]   [2, 256, 256, 256]   70,400               True
+│    │    └─Bottleneck (2)                         [2, 256, 256, 256]   [2, 256, 256, 256]   70,400               True
+.                                                           .                                                       .
+.                                                           .                                                       .
+.                                                           .                                                       .
+├─DeepLabHead (classifier)                         [2, 2048, 128, 128]  [2, 2, 128, 128]     --                   True
+│    └─ASPP (0)                                    [2, 2048, 128, 128]  [2, 256, 128, 128]   --                   True
+│    │    └─ModuleList (convs)                     --                   --                   15,206,912           True
+│    │    └─Sequential (project)                   [2, 1280, 128, 128]  [2, 256, 128, 128]   328,192              True
+│    └─Conv2d (1)                                  [2, 256, 128, 128]   [2, 256, 128, 128]   589,824              True
+│    └─BatchNorm2d (2)                             [2, 256, 128, 128]   [2, 256, 128, 128]   512                  True
+│    └─ReLU (3)                                    [2, 256, 128, 128]   [2, 256, 128, 128]   --                   --
+│    └─Conv2d (4)                                  [2, 256, 128, 128]   [2, 2, 128, 128]     514                  True
+===========================================================================================================================
+Total params: 39,633,986
+Trainable params: 39,633,986
+Non-trainable params: 0
+Total mult-adds (T): 1.31
+===========================================================================================================================
+Input size (MB): 25.17
+Forward/backward pass size (MB): 17650.16
+Params size (MB): 158.54
+Estimated Total Size (MB): 17833.87
+===========================================================================================================================
+</code></pre>
+
+<p>From the <code class="language-plaintext highlighter-rouge">DeepLabHead (classifier)</code> line which has shape <code class="language-plaintext highlighter-rouge">[batch, in_channels, height, width]</code> we can see that we need <code class="language-plaintext highlighter-rouge">in_channels=2048</code> for our new classifier.</p>
+
+<pre><code class="language-Python"># modify classifier layer for desired number of classes
+# number for in_channels was found by examining the model architecture
+model.classifier = DeepLabHead(in_channels=2048, num_classes=NUM_CLASSES)
+</code></pre>
+
+<h4 id="2-tensor-shapes">2. Tensor Shapes</h4>
+
+<p>Then let’s try and understand the model’s output. From its documentation: <em>“The model returns an</em> <code class="language-plaintext highlighter-rouge">OrderedDict</code> <em>with two Tensors that are of the same height and width as the input Tensor …</em> <code class="language-plaintext highlighter-rouge">output['out']</code> <em>contains the semantic masks, and</em> <code class="language-plaintext highlighter-rouge">output['aux']</code> <em>contains the auxiliary loss values per-pixel.”</em></p>
+
+<pre><code class="language-Python"># output['out'] is what we really want
+# output is a tensor with shape [batch_size, num_classes, height, width]
+output = model(X_train.to(device))["out"]
+</code></pre>
+
+<p>In order to calculate the loss we have to massage the tensors a bit. I chose <code class="language-plaintext highlighter-rouge">nn.CrossEntropyLoss()</code> as the loss function and its documentation allows the input to have shape <code class="language-plaintext highlighter-rouge">[batch_size, num_classes, height, width]</code> but its target must have shape <code class="language-plaintext highlighter-rouge">[batch_size, height, width]</code> so with help from the <code class="language-plaintext highlighter-rouge">einops</code> package:</p>
+
+<pre><code class="language-Python">from einops import rearrange
+
+# rearrange target
+target = rearrange(target, "bat cla height width -&gt; (bat cla) height width")
+
+# calculate loss
+loss = loss_fn(output, target)
+</code></pre>
+
+<p>Now we notice that for each batch there is a dimension in the first index of the tensor for <code class="language-plaintext highlighter-rouge">logit(false)</code> and <code class="language-plaintext highlighter-rouge">logit(true)</code> which is redundant. We can just keep <code class="language-plaintext highlighter-rouge">logit(true)</code> for each batch, take that softmax, binarize the predictions, and finally calculate accuracy.</p>
+
+<pre><code class="language-Python"># modify output to be in format [logit(true)] for each sample
+output = output[:, 1, :, :]
+
+# take softmax
+output = nn.functional.softmax(output, dim=1)
+
+# binarize predictions &amp; calculate accuracy
+y_pred = (output &gt; 0.5).type(torch.int32)
+accuracy_fn = torchmetrics.Accuracy(task="binary", num_classes=NUM_CLASSES)
+accuracy = accuracy_fn(y_pred)
+</code></pre>
+
+<h4 id="3-wrapping-up">3. Wrapping Up</h4>
+
+<p>With the loss and accuracy for a batch we can go ahead and train our model. The only other trouble I had with with my custom dataset was that I didn’t realize <code class="language-plaintext highlighter-rouge">torchvision.transforms.ToTensor()</code> automatically divides a tensor by 256 so make sure your data is correctly scaled!</p>
+
+<p>For experiment tracking I used <a href="https://wandb.ai/site">wandb</a> which was super simple to set up and let me easily visualize how tweaking some hyperparameters like batch size affected this model’s training. You can find how I created the dataset class, training loops, and experiment tracking for segmentation transfer learning in my <a href="https://github.com/akshaytrikha/transfer-learning/blob/main/segmentation/scripts/">GitHub</a> repository.</p>
+
+<h3 id="classification-example">Classification Example</h3>
+
+<p>Transfer learning for a classification task is virtually the same as segmentation and slightly easier. We start again by loading the pre-trained weights into the model and replacing the classifier layer so that it has the right input and output dimensions for our target problem.</p>
+
+<pre><code class="language-Python">import torchvision
+
+# there are multiple other model sizes
+weights = torchvision.models.EfficientNet_B0_Weights.DEFAULT
+model = torchvision.models.efficientnet_b0(weights=weights).to(device)
+
+# if you wanted to freeze base layers
+for param in model.features.parameters():
+    param.requires_grad = False
+
+# modify classifier layer for number of classes
+# added dropout for more robustness
+model.classifier = nn.Sequential(
+    torch.nn.Dropout(p=0.2, inplace=True),
+    nn.Linear(in_features=CLASSIFIER_IN_FEATURES, out_features=NUM_CLASSES),
+).to(device)
+</code></pre>
+
+<p>The only tricky thing here is calculating <code class="language-plaintext highlighter-rouge">CLASSIFIER_IN_FEATURES</code>, which was found by printing out the model’s layers using <code class="language-plaintext highlighter-rouge">torchinfo.summary()</code>. The training step is more straightforward than the segmentation example:</p>
+
+<pre><code class="language-Python"># forward pass
+# outputs are in the format [logit(true)] for each sample
+# logit = log(unnormalized probability)
+outputs = model(X_train.to(device))
+
+# calculate loss &amp; accuracy
+loss = loss_fn(outputs, y_train)
+accuracy = accuracy_fn(outputs, y_train)
+</code></pre>
+
+<p>There you have it, now you can use transfer learning for both segmentation and classification tasks.</p>
+
+<h4 id="references">References:</h4>
+
+<ul>
+  <li><a href="https://cs231n.github.io/transfer-learning">https://cs231n.github.io/transfer-learning</a></li>
+  <li><a href="https://arxiv.org/pdf/1411.1792.pdf">How transferable are features in deep neural networks?</a></li>
+  <li><a href="https://www.learnpytorch.io/06_pytorch_transfer_learning/">https://www.learnpytorch.io/06_pytorch_transfer_learning/</a></li>
+</ul>
+
+  </div><a class="u-url" href="/how/to/2023/07/04/transfer-learning.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+    <data class="u-url" href="/"></data>
+  
+    <div class="wrapper">
+  
+      <div class="footer-col-wrapper" style="margin-top: -20px;">
+        <div class="footer-col">
+        </div>
+        <div class="footer-col">
+          <p></p>
+        </div>
+      </div>
+  
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/akshaytrikha"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">akshaytrikha</span></a></li><li><a href="https://www.linkedin.com/in/akshay-trikha"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">akshay-trikha</span></a></li></ul>
+</div>
+  
+    </div>
+</footer>
+  </body>
+
+</html>

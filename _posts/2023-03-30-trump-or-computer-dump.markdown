@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "Trump or Computer Dump?"
-date: 2023-04-23 21:53:17 -0000
-categories: deep-learning
+date: 2023-04-23 21:53:17 -000
+categories: How to
 ---
 
 <script

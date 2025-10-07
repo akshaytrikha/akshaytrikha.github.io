@@ -2,7 +2,7 @@
 layout: post
 title: "Physics-Constrained Neural Networks for Solving Partial Differential Equations"
 date: 2024-03-11 13:11:17 -0000
-categories: deep-learning
+categories: How to
 thumbnail: /assets/thumbnails/darcy-flow.jpeg
 tldr: "squeze"
 ---
