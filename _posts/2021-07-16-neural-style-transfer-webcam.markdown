@@ -3,6 +3,8 @@ layout: post
 title: "Neural Style Transfer Webcam"
 date: 2021-07-16 12:50:00 -0000
 categories: deep-learning
+thumbnail: /assets/thumbnails/style-transfer.jpeg
+tldr: "stylize anything"
 ---
 
 ### Overview
