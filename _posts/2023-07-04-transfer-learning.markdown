@@ -3,6 +3,8 @@ layout: post
 title: "Transfer Learning in Computer Vision"
 date: 2023-07-04 16:06:17 -0000
 categories: deep-learning
+thumbnail: /assets/thumbnails/transfer-learning.jpeg
+tldr: "finetune anything"
 ---
 
 Recall when beginning to train a neural network its weights might be initialized randomly. What if you could start training with a leg up because the network already has some useful information inside of it? Transfer learning _is_ that leg up where you can repurpose models trained on similar tasks and use them for your specific task instead of training from scratch.
