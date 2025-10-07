@@ -4,7 +4,7 @@ title: "(Bitter) Lessons from Scaling Machine Learning Interatomic Potentials"
 date: 2025-09-25 13:11:17 -0000
 categories: Research
 thumbnail: /assets/thumbnails/scaling.jpeg
-tldr: "I compared a plain transformer encoder to EquiformerV2 and studied their scaling laws"
+tldr: "Compared a plain transformer encoder to EquiformerV2 and studied their scaling laws"
 ---
 
 <script type="text/javascript" async

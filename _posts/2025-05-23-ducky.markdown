@@ -4,7 +4,7 @@ title: "AI Rubber Ducky Pair Programmer"
 date: 2025-05-23 16:06:17 +0000
 categories: Product
 thumbnail: /assets/thumbnails/ducky.jpeg
-tldr: "I created a voice-based AI pair programmer and was in Top 10% of applicants to YC S25 (not accepted)"
+tldr: "Created a voice-based AI pair programmer and was in the Top 10% of applicants to YC S25 (not accepted)"
 ---
 
 Please try out the extension on the VSCode extension marketplace and let me know what you think! Enter your email to get access:

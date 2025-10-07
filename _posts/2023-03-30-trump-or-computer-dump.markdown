@@ -4,7 +4,7 @@ title: "Trump or Computer Dump?"
 date: 2023-04-23 21:53:17 -000
 categories: [How To]
 thumbnail: /assets/thumbnails/gpt2-trump.jpeg
-tldr: "Finetuned GPT-2 774M on 56.5k Trump tweets in 12/20 to test persuasive capability - recreated with 🤗 in 04/23"
+tldr: "Finetuned GPT-2 774M on 56.5k Trump tweets in 12/20 to test model's persuasive capability - recreated with 🤗 in 04/23"
 
 
 # "Finetuned GPT-2 774M using ∼56,500 Trump tweets to test model’s capability for persuasion."

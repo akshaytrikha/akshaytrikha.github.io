@@ -4,7 +4,7 @@ title: "Neural Style Transfer Webcam"
 date: 2021-07-16 12:50:00 -0000
 categories: Product
 thumbnail: /assets/thumbnails/style-transfer.jpeg
-tldr: "Inferenced style representation and transfer models with TensorFlow.js to create a near real time arbritrary style filter"
+tldr: "Inferenced style representation and transfer models with TensorFlow.js to create a near real-time arbitrary style filter"
 ---
 
 ### Overview
