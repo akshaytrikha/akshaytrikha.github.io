@@ -3,6 +3,7 @@
 <html lang="{{ page.lang | default: site.lang | default: "en" }}">
 
   {%- include head.html -%}
+  <link rel="stylesheet" href="{{ '/projects.css' | relative_url }}">
 
   <body>
 
@@ -22,19 +23,33 @@
             {%- if page.list_title -%}
             <h2 class="post-list-heading">{{ page.list_title }}</h2>
             {%- endif -%}
-            <ul class="post-list">
+            <ul class="post-list project-list">
             {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
             {%- for post in posts -%}
-            <li>
-                <span class="post-meta">{{ post.date | date: date_format }}</span>
-                <h3>
-                <a class="post-link" href="{{ post.url | relative_url }}">
-                    {{ post.title | escape }}
-                </a>
-                </h3>
-                {%- if site.show_excerpts -%}
-                {{ post.excerpt }}
-                {%- endif -%}
+            <li class="project-item">
+                <div class="project-header">
+                    {%- if post.thumbnail -%}
+                    <div class="project-thumbnail">
+                        <img src="{{ post.thumbnail | relative_url }}" alt="{{ post.title | escape }}">
+                    </div>
+                    {%- endif -%}
+                    <div class="project-info">
+                        <span class="post-meta">{{ post.date | date: date_format }}</span>
+                        <h3>
+                        <a class="post-link" href="{{ post.url | relative_url }}">
+                            {{ post.title | escape }}
+                        </a>
+                        </h3>
+                        {%- if post.tldr -%}
+                        <details class="project-tldr">
+                            <summary>TLDR</summary>
+                            <div class="tldr-content">
+                                {{ post.tldr }}
+                            </div>
+                        </details>
+                        {%- endif -%}
+                    </div>
+                </div>
             </li>
             {%- endfor -%}
             </ul>
