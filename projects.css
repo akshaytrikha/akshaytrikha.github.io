@@ -64,6 +64,13 @@
     cursor: pointer;
     color: #666;
     font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .project-tldr summary .summary-text {
+    flex-shrink: 0;
   }
   
   .tldr-content {
@@ -71,6 +78,36 @@
     padding-left: 1rem;
     line-height: 1.6;
     color: #333;
+  }
+
+  /* Category Tag Styles */
+  .category-tag-wrapper {
+    margin-top: -0.25rem;
+  }
+
+  .category-tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .category-research {
+    background-color: rgba(168, 197, 221, 0.5);
+    color: #3a5f7d;
+  }
+
+  .category-product {
+    background-color: rgba(184, 212, 184, 0.5);
+    color: #3d6b3d;
+  }
+
+  .category-how-to {
+    background-color: rgba(245, 208, 184, 0.5);
+    color: #8b5a3c;
   }
   
   /* Responsive Design */

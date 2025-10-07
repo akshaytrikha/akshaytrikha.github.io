@@ -2,7 +2,7 @@
 layout: post
 title: "Trump or Computer Dump?"
 date: 2023-04-23 21:53:17 -000
-categories: How to
+categories: [How To]
 ---
 
 <script

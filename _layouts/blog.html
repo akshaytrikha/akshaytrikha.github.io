@@ -42,11 +42,20 @@
                         </h3>
                         {%- if post.tldr -%}
                         <details class="project-tldr">
-                            <summary>TLDR</summary>
+                            <summary>
+                                <span class="summary-text">TLDR</span>
+                                {%- if post.categories.size > 0 -%}
+                                <span class="category-tag category-{{ post.categories | first | downcase | replace: ' ', '-' }}">{{ post.categories | first }}</span>
+                                {%- endif -%}
+                            </summary>
                             <div class="tldr-content">
                                 {{ post.tldr }}
                             </div>
                         </details>
+                        {%- elsif post.categories.size > 0 -%}
+                        <div class="category-tag-wrapper">
+                            <span class="category-tag category-{{ post.categories | first | downcase | replace: ' ', '-' }}">{{ post.categories | first }}</span>
+                        </div>
                         {%- endif -%}
                     </div>
                 </div>
