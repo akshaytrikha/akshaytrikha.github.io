@@ -4,7 +4,7 @@ title: "Universal Mask Finding"
 date: 2023-09-24 20:29:00
 categories: Product
 thumbnail: /assets/thumbnails/mask-finding.jpeg
-tldr: "segment anything"
+tldr: "Trained & deployed a segmentation model that has stably provided millions of inferences over 4 years"
 ---
 
 <figure>
