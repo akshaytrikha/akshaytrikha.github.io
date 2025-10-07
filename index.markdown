@@ -35,7 +35,7 @@ icons:
 - 🛫 Learning how to fly!
 <figure>
     <div style="text-align: center;">
-        <img src="{{site.url}}/assets/ppl.jpeg" alt="Flying a Cessna 172" width="60%"/>
+        <img src="{{site.url}}/assets/ppl.jpeg" alt="Flying a Cessna 172" width="60%" style="border-radius: 12px;"/>
     </div>
 </figure>
 
