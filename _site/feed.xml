@@ -1,9 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-10-07T12:24:34-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">(Bitter) Lessons from Scaling Machine Learning Interatomic Potentials</title><link href="http://localhost:4000/research/2025/09/25/scaling.html" rel="alternate" type="text/html" title="(Bitter) Lessons from Scaling Machine Learning Interatomic Potentials" /><published>2025-09-25T06:11:17-07:00</published><updated>2025-09-25T06:11:17-07:00</updated><id>http://localhost:4000/research/2025/09/25/scaling</id><content type="html" xml:base="http://localhost:4000/research/2025/09/25/scaling.html"><![CDATA[<script type="text/javascript" async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-10-07T17:47:57-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">(Bitter) Lessons from Scaling Machine Learning Interatomic Potentials</title><link href="http://localhost:4000/research/2025/09/25/scaling.html" rel="alternate" type="text/html" title="(Bitter) Lessons from Scaling Machine Learning Interatomic Potentials" /><published>2025-09-25T06:11:17-07:00</published><updated>2025-09-25T06:11:17-07:00</updated><id>http://localhost:4000/research/2025/09/25/scaling</id><content type="html" xml:base="http://localhost:4000/research/2025/09/25/scaling.html"><![CDATA[<script type="text/javascript" async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
 </script>
 
-<p><em>Or, Why My Master’s Thesis Failed</em></p>
-
-<p><strong>TL;DR:</strong> I tested whether a plain transformer encoder (no equivariance, no periodic boundary conditions) can learn interatomic forces as data &amp; params scale vs. EquiformerV2. EqV2 followed clean power laws and hit much lower loss. My transformer failed and plateaued hard, leading me to believe my featurization was insufficient. I share the wins &amp; failures.</p>
+<p><strong>TL;DR:</strong> We tested whether a plain transformer encoder (no equivariance, no periodic boundary conditions) can learn interatomic forces as data &amp; params scale vs. EquiformerV2. EqV2 followed clean power laws and hit much lower loss. My transformers plateaued hard while learning forces, but observing their attention weights shows they learned graph structure as an emergent behavior. I share the wins &amp; failures.</p>
 
 <p>For EquiformerV2:</p>
 
@@ -17,15 +15,15 @@
 
 \[\text{Power laws not clean enough}\]
 
-<p>Code is open sourced <a href="https://github.com/akshaytrikha/materials-scaling">here</a>.</p>
+<p>Code is open sourced <a href="https://github.com/akshaytrikha/materials-scaling">here</a>. Work was done alongside <a href="https://www.linkedin.com/in/eric-weiner-7602b916a/">Eric Weiner</a>, <a href="https://www.linkedin.com/in/parkszachta/">Park Szachta</a>, <a href="https://www.linkedin.com/in/advaitgosai/">Advait Gosai</a>, and <a href="https://www.linkedin.com/in/kyle65463/">Kyle Chu</a>.</p>
 
 <hr />
 <p><br />
-A little over a year ago I got pretty interested in training neural networks that can learn physics from data. Around the time machine learning interatomic potential (NNIP) models were becoming popular. These models broadly take as input a material’s atomic configuration and predict properties related to its potential energy. All the papers I was reading had great results, but I felt they were selling an incomplete story because they were missing scaling information. To me, understanding how a model scales is perhaps the most important factor and having just 1 datapoint of a final test loss was insufficient to understand how any architecture would stand the test of time.</p>
+A little over a year ago I got pretty interested in training neural networks that can learn physics from data. Around the time machine learning interatomic potential (MLIP) models were becoming popular. These models broadly take as input a material’s atomic configuration and predict properties related to its potential energy. All the papers I was reading had great results, but I felt they were selling an incomplete story because they were missing scaling information. To me, understanding how a model scales is perhaps the most important factor and having just 1 datapoint of a final test loss was insufficient to understand how any architecture would stand the test of time.</p>
 
-<p>I tried to investigate whether vanilla transformer encoders, given sufficient data, could learn to predict material properties as well as architectures explicitly equivariant architectures, like EquiformerV2 (EqV2) <a href="https://arxiv.org/pdf/2306.12059">[1]</a>. Inspired by the Bitter Lesson <a href="https://www.cs.utexas.edu/~eunsol/courses/data/bitter_lesson.pdf">[2]</a>, my hypothesis was that that transformers would scale more slowly than specialized architectures but that their scaling laws <a href="https://arxiv.org/pdf/2001.08361">[3]</a><a href="https://arxiv.org/pdf/1712.00409">[4]</a><a href="https://arxiv.org/pdf/2210.16859">[5]</a> would hold out over more orders-of-magnitude (OOM).</p>
+<p>We tried to investigate whether vanilla transformer encoders, given sufficient data, could learn to predict material properties as well as architectures explicitly equivariant architectures, like EquiformerV2 (EqV2) <a href="https://arxiv.org/pdf/2306.12059">[1]</a>. Inspired by the Bitter Lesson <a href="https://www.cs.utexas.edu/~eunsol/courses/data/bitter_lesson.pdf">[2]</a>, my hypothesis was that that transformers would scale more slowly than specialized architectures but that their scaling laws <a href="https://arxiv.org/pdf/2001.08361">[3]</a><a href="https://arxiv.org/pdf/1712.00409">[4]</a><a href="https://arxiv.org/pdf/2210.16859">[5]</a> would hold out over more orders-of-magnitude (OOM).</p>
 
-<p>I failed to stably train transformers most likely due to the featurization I chose. I still learned a great deal along the way, and found power laws for EqV2.</p>
+<p>We failed to stably train transformers most likely due to the lack of pretraining and featurization I chose. I still learned a great deal along the way, and found power laws for EqV2.</p>
 
 <p><br />
 <strong>Why the math makes sense:</strong></p>
@@ -49,7 +47,7 @@ A simple argument between the two architectures is that they fall into the bias 
 
 <p>MLIPs are trained to take in a set of atoms and their positions to predict the structure’s energy and typically the forces on the atoms as well as the structure’s stresses.</p>
 
-<p>A common criticism of NNIPs trained on Density Functional Theory (DFT) calculations is that those datasets are relaxed structures around 0K. This means that they’re not physically relevant in most cases to us because we don’t live around 0K.</p>
+<p>A common criticism of MLIPs trained on Density Functional Theory (DFT) calculations is that those datasets are relaxed structures around 0K. This means that they’re not physically relevant in most cases to us because we don’t live around 0K.</p>
 
 <p>The Open Materials 2024 (OMat24) <a href="https://huggingface.co/datasets/facebook/OMAT24">[7]</a> dataset is a 110 million crystal structure dataset that addresses this problem by focusing on including non-equilibrium (high temperature, structurally perturbed) samples. It’s also one of the largest datasets of its kind.</p>
 
@@ -61,19 +59,6 @@ A simple argument between the two architectures is that they fall into the bias 
 <p>In my attempt at training transformers I wanted to use as few inductive biases as possible. i.e. no equivariant features, no invariant features, no periodic boundary conditions. This was an attempt to learn everything from the data + augmentation, regardless of sample efficiency.</p>
 
 <p>I used a standard embedding layer for atom types to give the model a dictionary lookup of what each atom is across different structures. This was important because the model needed to understand that each atom is the same in different structures but is modified by its context, similar to how each word is the same in different sequences and is modified by its context. The 3D positions were concatenated with the embedding vector because I thought the model might have an easier time disentangling meaning vs. saving parameters by adding the positions to the embeddings.</p>
-
-<!-- $$
-\begin{align}
-&\text{Input feature matrix: } \left[
-\begin{array}{ccc|ccc}
-e_{11} & \cdots & e_{1d} & x_1 & y_1 & z_1 \\
-\vdots & \ddots & \vdots & \vdots & \vdots & \vdots \\
-e_{N1} & \cdots & e_{Nd} & x_N & y_N & z_N
-\end{array}
-\right]
-\in \mathbb{R}^{N\times(d+3)}
-\end{align}
-$$ -->
 
 \[\begin{array}{c@{}c@{}c}
 \text{Input feature matrix: } &amp;
@@ -104,8 +89,21 @@ e_{N1} &amp; \cdots &amp; e_{Nd} &amp; x_N &amp; y_N &amp; z_N
 
 <p>I got stuck with this phenomena of an apparent plateau in force loss only for certain hyperparam configs. There were other runs that would break through but still plateaued much higher than the EqV2. I suspect that training stability had a role with the former, and ultimately the lack of periodic boundary conditions impacting the latter.</p>
 
+<p>However, I did notice the transformers were learning physically meaningful attention patterns without it being an explicit task.</p>
+
+<figure style="display: flex; justify-content: center;">
+    <div style="text-align: center; width: 80%;">
+        <img src="http://localhost:4000/assets/scaling/distance_vs_attention.png" alt="transformers learn graph structure" />
+        <!-- <figcaption></figcaption> -->
+    </div>
+    <br />
+</figure>
+
+<p>Inspecting the first layer and head of the transformer shows a learned inverse relationship between the attention weights and interatomic distances, which is physically correct. This overcomes the inflexibility of a GNN’s graph cutoff.</p>
+
 <p>Tough lessons learned:</p>
 <ul>
+  <li>Transformers probably would have performed better if pretrained to learn graph structure and then finetuned to predict material properties</li>
   <li>The models just want to learn and given enough parameters the loss will go down even if they aren’t learning the right thing.</li>
   <li>If scaling behavior doesn’t appear in smaller OOMs it’s unlikely it will magically appear later</li>
 </ul>
@@ -341,20 +339,6 @@ Takeaways:</p>
     </div>
     <br />
 </figure>
-
-<!-- A Dummy’s Guide to Empirically Deriving Scaling Laws
-
-(& What not to do)
-
-1. Source compute first (assuming you already have a large dataset)
-2. Do NOT start by YOLOing a huge run
-    - Each run is only 1 data point so a large one is still only 1 data point
-    - Stay small as long as possible
-3. Your first goal is to overfit a model. Do this by following http://karpathy.github.io/2019/04/25/recipe/
-4. Don’t forget to visualize & verify your outputs
-5. Training efficiency bells & whistles
-    1. FlashAttention, mixed precision gradient clipping,
--->
 
 <h4 id="references">References:</h4>
 
