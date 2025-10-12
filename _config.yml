@@ -32,7 +32,7 @@ plugins:
   - jekyll-feed
   - jekyll-redirect-from
 
-include:
+keep_files:
   - assets/contract-ui/build
 
 # Exclude from processing.
