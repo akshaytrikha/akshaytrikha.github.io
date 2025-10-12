@@ -1,34 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-10-11T19:18:29-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">Cursor for Contracts</title><link href="http://localhost:4000/research/2025/10/09/contract-ui.html" rel="alternate" type="text/html" title="Cursor for Contracts" /><published>2025-10-09T06:11:17-07:00</published><updated>2025-10-09T06:11:17-07:00</updated><id>http://localhost:4000/research/2025/10/09/contract-ui</id><content type="html" xml:base="http://localhost:4000/research/2025/10/09/contract-ui.html"><![CDATA[<p>I recently negotiated my first contract, and had no idea what I was doing. Having used Cursor so much for programming I wished there was something equivalent for editing contracts. Something that would let me easily concede or be more aggressive in certain clauses using legalese.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-10-11T19:21:59-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">Cursor for Contracts</title><link href="http://localhost:4000/research/2025/10/09/contract-ui.html" rel="alternate" type="text/html" title="Cursor for Contracts" /><published>2025-10-09T06:11:17-07:00</published><updated>2025-10-09T06:11:17-07:00</updated><id>http://localhost:4000/research/2025/10/09/contract-ui</id><content type="html" xml:base="http://localhost:4000/research/2025/10/09/contract-ui.html"><![CDATA[<p>I recently negotiated my first contract, and had no idea what I was doing. Having used Cursor so much for programming I wished there was something equivalent for editing contracts. Something that would let me easily concede or be more aggressive in certain clauses using legalese.</p>
 
 <p>I had an itch to scratch so I built a demo for this sort of UI I would like to see more of in document editing - inspired by the essay <a href="https://koomen.dev/essays/horseless-carriages/">AI Horseless Carriages</a>.</p>
 
 <p>Running locally it uses <a href="https://deepmind.google/models/gemma/gemma-3/">gemma3:12b</a> with <a href="https://github.com/ollama/ollama">Ollama</a> amazingly quick even on my M3 mac, but on this web demo it’s using gemini-2.0-flash-lite.</p>
-
-<!-- TODO: if not mobile render this: -->
-<!-- <style>
-#root {
-  min-height: auto !important;
-}
-#root .app-container {
-  min-height: auto !important;
-}
-</style> -->
-
-<!-- <link rel="stylesheet" href="http://localhost:4000/assets/contract-ui/build/static/css/main.0c014cc3.css">
-<div id="root"></div>
-<script>
-  // Set the contract path for Jekyll deployment before 
-  window.CONTRACT_BASE_PATH = 'http://localhost:4000/assets/contract-ui/build/contracts/';
-</script>
-<script src="http://localhost:4000/assets/contract-ui/build/static/js/main.8d8eb0f6.js"></script> -->
-
-<!-- // TODO: if mobile render this -->
-<!-- <figure style="display: flex; justify-content: center;">
-    <div style="text-align: center;">
-      <object type="image/svg+xml" data="http://localhost:4000/assets/contract-ui/contract-ui-demo.gif"></object>
-    </div>
-    <br>
-</figure> -->
 
 <style>
 @media (max-width: 768px) {

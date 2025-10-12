@@ -13,32 +13,6 @@ I had an itch to scratch so I built a demo for this sort of UI I would like to s
 
 Running locally it uses [gemma3:12b](https://deepmind.google/models/gemma/gemma-3/) with [Ollama](https://github.com/ollama/ollama) amazingly quick even on my M3 mac, but on this web demo it's using gemini-2.0-flash-lite.
 
-<!-- TODO: if not mobile render this: -->
-<!-- <style>
-#root {
-  min-height: auto !important;
-}
-#root .app-container {
-  min-height: auto !important;
-}
-</style> -->
-
-<!-- <link rel="stylesheet" href="{{site.url}}/assets/contract-ui/build/static/css/main.0c014cc3.css">
-<div id="root"></div>
-<script>
-  // Set the contract path for Jekyll deployment before 
-  window.CONTRACT_BASE_PATH = '{{site.url}}/assets/contract-ui/build/contracts/';
-</script>
-<script src="{{site.url}}/assets/contract-ui/build/static/js/main.8d8eb0f6.js"></script> -->
-
-<!-- // TODO: if mobile render this -->
-<!-- <figure style="display: flex; justify-content: center;">
-    <div style="text-align: center;">
-      <object type="image/svg+xml" data="{{site.url}}/assets/contract-ui/contract-ui-demo.gif"></object>
-    </div>
-    <br>
-</figure> -->
-
 <style>
 @media (max-width: 768px) {
   .desktop-only { display: none; }
@@ -87,8 +61,6 @@ This was surprisingly accessible with the help of language models, and most of a
     <br>
 </figure>
 </details>
-
-
 
 
 #### References:
