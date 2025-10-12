@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Cursor for Contracts | Akshay Trikha</title>
+<meta name="generator" content="Jekyll v4.3.2" />
+<meta property="og:title" content="Cursor for Contracts" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="I recently negotiated my first contract, and had no idea what I was doing. Having used Cursor so much for programming I wished there was something equivalent for editing contracts. Something that would let me easily concede or be more aggressive in certain clauses using legalese." />
+<meta property="og:description" content="I recently negotiated my first contract, and had no idea what I was doing. Having used Cursor so much for programming I wished there was something equivalent for editing contracts. Something that would let me easily concede or be more aggressive in certain clauses using legalese." />
+<link rel="canonical" href="http://localhost:4000/research/2025/10/09/contract-ui.html" />
+<meta property="og:url" content="http://localhost:4000/research/2025/10/09/contract-ui.html" />
+<meta property="og:site_name" content="Akshay Trikha" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-10-09T06:11:17-07:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Cursor for Contracts" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-10-09T06:11:17-07:00","datePublished":"2025-10-09T06:11:17-07:00","description":"I recently negotiated my first contract, and had no idea what I was doing. Having used Cursor so much for programming I wished there was something equivalent for editing contracts. Something that would let me easily concede or be more aggressive in certain clauses using legalese.","headline":"Cursor for Contracts","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/research/2025/10/09/contract-ui.html"},"url":"http://localhost:4000/research/2025/10/09/contract-ui.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="Akshay Trikha" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">Akshay Trikha</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/projects/">Projects</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Cursor for Contracts</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2025-10-09T06:11:17-07:00" itemprop="datePublished">Oct 9, 2025
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <p>I recently negotiated my first contract, and had no idea what I was doing. Having used Cursor so much for programming I wished there was something equivalent for editing contracts. Something that would let me easily concede or be more aggressive in certain clauses using legalese.</p>
+
+<p>I had an itch to scratch so I built a demo for this sort of UI I would like to see more of in document editing - inspired by the essay <a href="https://koomen.dev/essays/horseless-carriages/">AI Horseless Carriages</a>.</p>
+
+<p>Running locally it uses <a href="https://deepmind.google/models/gemma/gemma-3/">gemma3:12b</a> with <a href="https://github.com/ollama/ollama">Ollama</a> amazingly quick even on my M3 mac, but on this web demo it’s using gemini-2.0-flash-lite.</p>
+
+<!-- TODO: if not mobile render this: -->
+<!-- <style>
+#root {
+  min-height: auto !important;
+}
+#root .app-container {
+  min-height: auto !important;
+}
+</style> -->
+
+<!-- <link rel="stylesheet" href="http://localhost:4000/assets/contract-ui/build/static/css/main.0c014cc3.css">
+<div id="root"></div>
+<script>
+  // Set the contract path for Jekyll deployment before 
+  window.CONTRACT_BASE_PATH = 'http://localhost:4000/assets/contract-ui/build/contracts/';
+</script>
+<script src="http://localhost:4000/assets/contract-ui/build/static/js/main.8d8eb0f6.js"></script> -->
+
+<!-- // TODO: if mobile render this -->
+<!-- <figure style="display: flex; justify-content: center;">
+    <div style="text-align: center;">
+      <object type="image/svg+xml" data="http://localhost:4000/assets/contract-ui/contract-ui-demo.gif"></object>
+    </div>
+    <br>
+</figure> -->
+
+<style>
+@media (max-width: 768px) {
+  .desktop-only { display: none; }
+}
+@media (min-width: 769px) {
+  .mobile-only { display: none; }
+}
+#root {
+  min-height: auto !important;
+}
+#root .app-container {
+  min-height: auto !important;
+}
+</style>
+
+<div class="desktop-only">
+  <link rel="stylesheet" href="http://localhost:4000/assets/contract-ui/build/static/css/main.0c014cc3.css" />
+  <div id="root"></div>
+  <script>
+    window.CONTRACT_BASE_PATH = 'http://localhost:4000/assets/contract-ui/build/contracts/';
+  </script>
+  <script src="http://localhost:4000/assets/contract-ui/build/static/js/main.940ed3a5.js"></script>
+</div>
+
+<div class="mobile-only">
+  Come back on a desktop to see the interactive demo.
+  <figure style="display: flex; justify-content: center;">
+    <div style="text-align: center;">
+      <img src="http://localhost:4000/assets/contract-ui/contract-ui-demo.gif" alt="Contract UI Demo" />
+    </div>
+  </figure>
+</div>
+
+<details>
+  <summary style="cursor: pointer; font-weight: bold; margin-bottom: 20px;">How did I serve this demo?</summary>
+
+  <p>I wanted the app to run completely locally since contracts can be sensitive, but didn’t want visitors to this page to have to fetch 1GB worth of a language model. I settled on using Gemini via a <a href="https://vercel.com/docs/functions">Vercel Function</a> proxy server which has my API key on it. I also used an <a href="https://upstash.com/docs/redis/overall/getstarted">Upstash Redis KV Store</a> that limits inferences based on IP address to prevent abuse.</p>
+
+  <p>This was surprisingly accessible with the help of language models, and most of all <em>free</em> given what I expect the traffic to this site to be. Crazy!</p>
+
+  <figure style="display: flex; justify-content: center;">
+    <div style="text-align: center;">
+      <object type="image/svg+xml" data="http://localhost:4000/assets/contract-ui/contract-ui.svg" style="width: 450px; height: auto;"></object>
+    </div>
+    <br />
+</figure>
+</details>
+
+<h4 id="references">References:</h4>
+
+<ul>
+  <li>[1] <a href="https://koomen.dev/essays/horseless-carriages/">AI Horseless Carriages</a></li>
+  <li>[2] <a href="https://deepmind.google/models/gemma/gemma-3/">Gemma3</a></li>
+  <li>[3] <a href="https://github.com/ollama/ollama">Ollama</a></li>
+  <li>[4] <a href="https://vercel.com/docs/functions">Vercel Function</a></li>
+  <li>[5] <a href="https://upstash.com/docs/redis/overall/getstarted">Upstash Redis KV Store</a></li>
+</ul>
+
+  </div><a class="u-url" href="/research/2025/10/09/contract-ui.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+    <data class="u-url" href="/"></data>
+  
+    <div class="wrapper">
+  
+      <div class="footer-col-wrapper" style="margin-top: -20px;">
+        <div class="footer-col">
+        </div>
+        <div class="footer-col">
+          <p></p>
+        </div>
+      </div>
+  
+      <div class="social-links"><ul class="social-media-list"><li><a href="https://github.com/akshaytrikha"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">akshaytrikha</span></a></li><li><a href="https://www.linkedin.com/in/akshay-trikha"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#linkedin"></use></svg> <span class="username">akshay-trikha</span></a></li></ul>
+</div>
+  
+    </div>
+</footer>
+  </body>
+
+</html>

@@ -1,0 +1,532 @@
+JOINT DEVELOPMENT AGREEMENT BETWEEN INTERNATIONAL BUSINESS MACHINES CORPORATION AND MICROSOFT CORPORATION
+
+Agreement dated as of June 10, 1985, between INTERNATIONAL BUSINESS MACHINES CORPORATION, a New York Corporation having a place of business at Boca Raton, Florida and MICROSOFT, a Washington Corporation, having its place of business at Bellevue, Washington.
+
+IBM and MS agree as follows:
+
+1.0 DEFINITIONS
+
+As used in this Agreement, the Addenda and the Phase I Attachments and Phase II Documents, the following definitions shall apply to capitalized terms:
+
+1.1. "Code" shall mean Joint Code, MS Code or IBM Code, or any combination thereof, as generally defined below. "Source Code" shall mean Code in source language form and "Object Code" shall mean Code in machine language form.
+
+1.1.1 "IBM Code", for purposes of this Agreement, shall mean computer programs which consist of any one or more of the following:
+(a) pre-existing "adaptations" created by MS for IBM and Derivative Works thereof created by IBM pursuant to prior agreements between IBM and MS which are included by IBM in computer programs developed pursuant to the terms of this Agreement;
+(b) any other computer programs supplied by IBM to MS pursuant to the terms of this Agreement;
+(c) computer programs developed pursuant to this Agreement and specifically labeled IBM Code in a Phase II Document.
+
+1.1.2 "MS Code", for purposes of this Agreement, shall mean computer programs which consist of any one or more of the following:
+(a) those pre-existing computer programs and Derivative Works thereof, owned by MS as specified in prior agreements between IBM and MS, which are included by MS in computer programs developed pursuant to the terms of this Agreement;
+(b) any other computer programs supplied by MS to IBM pursuant to the terms of this Agreement;
+(c) computer programs developed pursuant to this Agreement specifically labeled MS Code in a Phase II Document.
+
+1.1.3 "Joint Code", for purposes of this Agreement, shall mean any computer programs specifically labeled as Joint Code in a Phase II Document and any other computer programs contained in the Final Code which are not specifically labeled as MS Code or IBM Code in a Phase II Document.
+
+1.2 "Derivative Work" shall mean a work which is based upon Code and/or Documentation, such as a revision, modification, translation, abridgement, condensation, expansion, compilation or any other form in which such Code and/or Documentation may be recast, transformed or adapted, and which, if prepared without authorization of the owner(s) of such Code and/or Documentation, would constitute a copyright infringement.
+
+1.3 "Documentation" shall mean documentation and supporting materials, provided by one party to the other pursuant to a Phase I Attachment or Phase II Document, excluding IBM Publications unless otherwise delivered as documentation, describing Code, or otherwise useful for demonstrating, designing, developing, testing, maintaining, marketing, and training with respect to the Code, and consisting of any one or more types of Documentation defined below:
+
+1.3.1 "IBM Documentation", for purposes of this Agreement, shall mean Documentation which consists of one or more of the following:
+(a) that pre-existing specific documentation owned by IBM pursuant to prior agreements with MS which is included by MS and/or IBM in Documentation developed pursuant to the terms of this Agreement;
+(b) any other Documentation supplied by IBM to MS pursuant to the terms of this Agreement;
+(c) Documentation developed hereunder which is specifically labeled IBM Documentation in a Phase II Document.
+
+1.3.2 "MS Documentation", for purposes of this Agreement, shall mean Documentation which consists of one or more of the following:
+(a) that pre-existing specific documentation owned by MS pursuant to prior agreements with IBM which is included by IBM and/or MS in Documentation developed pursuant to the terms of this Agreement;
+(b) any other Documentation supplied by MS to IBM pursuant to the terms of this Agreement;
+(c) Documentation developed hereunder which is specifically labeled MS Documentation in a Phase II Document.
+
+1.3.3 "Joint Documentation", for purposes of this Agreement, shall mean any Documentation specifically labeled as Joint Documentation in a Phase II Document and any other Documentation contained in the Final Documentation which is not specifically labeled as MS Documentation or IBM Documentation in a Phase II Document.
+
+1.4 "Error" shall have the following meanings:
+1.4.1 An Error in the Code shall mean:
+(a) A function or user interface which is omitted or does not operate as specified in a Phase II Document or as specified in Documentation provided to IBM by MS; or
+(b) An error condition or user initiated action which causes the Code to give unforeseen and detrimental results or to cease functioning.
+1.4.2 An Error in the Documentation shall mean an error or omission in content or failure to adhere to the specifications contained in a Phase II Document.
+1.4.3 Error Severity Levels are defined as follows: Errors shall be reasonably classified by IBM according to the following definitions for Severity Levels:
+(a) Severity Level I Error is an emergency condition which makes the performance or continued performance of any useful work impossible.
+(b) Severity Level II Error is a severely impacted condition which makes performance or continued performance of some or all functions difficult although some useful work can be accomplished.
+(c) Severity Level III Error is a limited problem condition which is less critical than a Severity Level I and II Error, but is an annoying defect which can be circumvented or avoided on a temporary basis by the intended user.
+(d) Severity Level IV Error is a minor Error which can be easily circumvented by the intended user.
+
+1.5 "Final Code and Documentation" shall mean that Code and Documentation developed as a result of a Phase II Document, in accordance with the specifications of a Phase II Document, with all problems corrected, all functions complete, fully tested and ready for manufacture, and which has been accepted by IBM.
+
+1.6 "IBM Publications," for purposes of this Agreement, shall mean documentation prepared outside the scope of this Agreement which consists of documents describing the use of, providing reference material for, or otherwise describing IBM products, which IBM sells or intends to sell to end users.
+
+1.7 "Preliminary Code and Documentation" shall mean that Code and Documentation provided to IBM by MS and/or by IBM to MS in accordance with the specifications of a Phase II Document that is operational and functionally complete but may not be fully tested or fully edited.
+
+1.8 "Product" shall mean a system software product based upon IBM PC DOS and/or MS DOS, and/or Linkers and Basic Interpreters, but otherwise excluding languages.
+
+1.9 "Invention" shall mean any idea, design, concept, technique, invention, discovery, or improvement, whether or not patentable, made by one or more employees of a party hereto or others whose services it requires, or jointly by one or more employees of a party hereto or others whose services it requires with one or more employees of the other party hereto or others whose services it requires, during the term of this Agreement and in the performance of activities set forth in the Phase I Attachment(s) and Phase II Document(s) issued hereunder, provided that either the conception or reduction to practice occurs during the term of this Agreement and in the performance of the activities set forth in the Phase I Attachment(s) and Phase II Document(s); provided, however, an Invention made jointly by one or more employees of a party hereto or others whose services it requires with one or more employees of the other party or others whose services it requires is referred to as a "Joint Invention".
+
+1.10 "Subsidiary" shall mean a corporation, company, or other entity more than fifty percent (50%) of whose outstanding shares or securities (representing the right, other than as affected by events of default, to vote for the election of directors or other managing authority) are, now or hereafter, owned or controlled, directly or indirectly, by a party hereto, but such corporation, company, or other entity shall be deemed to be a Subsidiary only so long as such ownership or control exists.
+
+1.11 "Test Plan" shall mean a set of testing procedures to be created jointly and/or separately for each Phase II Document to demonstrate that the Code and Documentation meets the criteria established by such Phase II Document, which may include tests to determine:
+(a) the identification of Errors;
+(b) that the Code can be operated by its intended audience using only the supplied Documentation and Code;
+(c) that the Code performs the functions specified in such Phase II Document;
+(d) that the Documentation describes the functions performed by the Code;
+(e) that the performance (throughput, execution, etc.) of the Code is satisfactory in the operating environment for which it is designed.
+
+2.0 PROJECT DESCRIPTION(S)
+
+2.1 Before commencing any Phase I activity, both IBM and MS shall have mutually identified a Product or set of Products for feasibility evaluation, whereupon, by agreement of IBM and MS, a Phase I Attachment, which shall incorporate by reference this Agreement, shall be executed by duly authorized representatives of the parties. Both parties shall participate and devote resources to the extent described in the appropriate Phase I Attachment to this Agreement, in order to define any proposed Phase II development project under consideration.
+
+2.1.1 Each Phase I Attachment to this Agreement shall contain the applicable combination of the following:
+(a) a statement of the objectives of the feasibility study, the report(s) and/or other material(s) to be generated during the feasibility study (hereinafter "Output"), and the criteria for determining completion of the Phase I Attachment;
+(b) a division of responsibilities between IBM and MS;
+(c) a set period of the duration of this feasibility study;
+(d) an identification of the size of the study team;
+(e) payment terms, if any;
+(f) limitation of liability for the Phase I Attachment; and
+(g) any other information which both IBM and MS mutually agree to be required.
+
+2.2 If both IBM and MS mutually agree to proceed with the development of the Product(s) studied in the Phase I Attachment, then a Phase II Document, which shall incorporate by reference this Agreement, shall be executed by duly authorized representatives of the parties. This Phase II Document shall provide for the development and licensing of Code and Documentation under the terms and conditions contained herein.
+
+2.2.1 The Phase II Document(s) to this Agreement shall contain the applicable combinations of the following:
+(a) a final version of the Product's technical specifications;
+(b) a schedule of Code and Documentation deliverables;
+(c) financial terms;
+(d) Product development location(s);
+(e) a division of responsibilities between IBM and MS;
+(f) maintenance terms, if any;
+(g) a list of equipment to be provided pursuant to the terms of the existing Equipment Loan Agreement between IBM and MS;
+(h) a statement specifying which Code and Documentation is MS Code and MS Documentation, which Code and Documentation is IBM Code and IBM Documentation, and which Code and Documentation is Joint Code and Joint Documentation. All other Code and Documentation not so specified shall be Joint Code and Joint Documentation;
+(i) a list of that information to be provided by each party and that information which may not be disclosed to a third party in accordance with Subsection 4.8.2;
+(j) acceptance terms;
+(k) payment terms for termination other than for material breach;
+(l) limitation of liability for the Phase II Document; and
+(m) any additional terms and conditions which both IBM and MS mutually agree to be required.
+
+3.0 OWNERSHIP RIGHTS AND LICENSES
+
+3.1 With respect to each Phase I Attachment and unless otherwise stated in such Attachment:
+
+3.1.1 IBM and MS shall jointly own, without accounting, all Output of each Phase I Attachment to this Agreement. Each party agrees to make any assignments, licenses or other transfers necessary to effect such joint ownership. With respect to Phase I Output, to the extent such joint ownership is prevented by operation of law each party hereby grants to the other a non-exclusive, royalty-free, worldwide and irrevocable license to use, execute, perform, reproduce, prepare or have prepared Derivative Works based upon display, and sell, lease or otherwise transfer of possession or ownership of copies of, the Phase I Output and/or any Derivative Works thereof. Such license includes the right of each party to grant licenses, of or within the scope of the right and license granted to it herein, to others including its Subsidiaries and its and their distributors; and each licensed Subsidiary shall have the right correspondingly to license others including other Subsidiaries, and its distributors.
+
+3.1.2 Neither IBM nor MS shall, with respect to a Phase I Attachment to this Agreement, become the joint owner of or, except to the extent and only for the period required to perform Phase I obligations, acquire a license to that Code and/or Documentation which the other party provides as a resource to fulfill the terms of said Phase I Attachment to this Agreement unless such Code and/or Documentation thereafter becomes part of a Phase I Output or such Code and/or Documentation was previously owned jointly or licensed to the other party.
+
+3.2 With respect to each Phase II Document and unless otherwise stated in such Document:
+
+3.2.1 With respect to Joint Code and Joint Documentation:
+(a) IBM and MS shall jointly own, but without any obligation of accounting, Joint Code and Joint Documentation. Each party agrees to make such assignments, licenses or other transfers as may be necessary to effect such joint ownership.
+(b) To the extent that such joint ownership cannot be effected by operation of law, each party hereby grants to the other a non-exclusive, royalty-free, worldwide and irrevocable license to use, execute, perform, reproduce, prepare or have prepared Derivative Works based upon display, and sell, lease or otherwise transfer of possession or ownership of copies of, the Joint Code and Joint Documentation and/or any Derivative Works thereof. Such license includes the right of each party to grant licenses, of or within the scope of the right and license granted to it herein, to third parties including its Subsidiaries and its and their distributors; and each licensed Subsidiary shall have the right correspondingly to license other third parties, including other Subsidiaries, and its distributors.
+(c) Each party ("the enforcing party") shall have the right to enforce its rights in the Joint Code and Joint Documentation, without any requirement of approval by the other party, after making a reasonable effort to notify the other party. Such other party:
+(i) upon such notification shall cooperate as regards reasonable requests for information necessary to prepare for the proposed enforcement activity (including, notwithstanding Subsection 16.13, information as to whether the party against whom enforcement is contemplated is licensed by the other party);
+(ii) shall have the right, but not the obligation, to join or otherwise participate therein at its own expense, but shall in any event be kept reasonably informed of such activity;
+(iii) if it does not join in any such enforcement litigation brought by the enforcing party, shall, if requested, assign its interest in the enforcement cause of action (but not its interest in the ownership of the rights claimed to be infringed) to the enforcing party and shall not share in any proceeds from such enforcement by the enforcing party; and
+(iv) shall not be joined as a party without its consent in any enforcement activity if it has assigned its interest in the cause of action to the enforcing party.
+The parties intend that, as between them, there shall be no limitation on the individual exercise of rights other than the above notification obligation in the case of enforcement.
+
+3.2.2 With respect to IBM Code and IBM Documentation:
+(a) Any newly created IBM Code and IBM Documentation shall be exclusively owned by IBM. To the extent such IBM Code and IBM Documentation may otherwise not be deemed to be exclusively owned by IBM, MS hereby assigns to IBM the ownership of copyright in IBM Code and IBM Documentation created by MS for IBM pursuant to a Phase II Document, and IBM shall have the right to obtain and hold in its own name copyrights, registrations and similar protection which may be available in such IBM Code and IBM Documentation. MS agrees to give IBM or its designee(s) all assistance reasonably required to perfect such rights, including but not limited to, the identification of such IBM Code and IBM Documentation and the execution of any instruments required to register copyrights.
+(b) MS grants to IBM, its Subsidiaries and its and their customers a royalty-free, worldwide, nonexclusive, irrevocable license under any patents which MS or its Subsidiaries have the right to grant the license set forth in this Subsection, during the term of this Agreement, to the extent necessary: (i) to permit IBM to make, have made, use, sell and otherwise transfer of possession or ownership of program code which is included in IBM Code, and/or Final Code and which is provided to IBM or developed by MS hereunder; and (ii) to permit the combination of such Code with equipment. Such patent license, however, shall not extend to any equipment itself.
+(c) IBM hereby grants to MS a non-exclusive, royalty-free, worldwide and irrevocable license to use, execute, perform, reproduce, prepare or have prepared Derivative Works based upon, display, and sell, lease or otherwise transfer of possession or ownership of copies of, the IBM Code and IBM Documentation contained in the Final Code and Documentation and/or Derivative Works thereof. Such license includes the right of MS to grant licenses, of or within the scope of the right and license granted to it herein, to third parties, including its Subsidiaries and its and their distributors; and each licensed Subsidiary shall have the right correspondingly to license other third parties, including other Subsidiaries, and its distributors.
+
+3.2.3 With respect to MS Code and MS Documentation:
+(a) Any newly created MS Code and MS Documentation shall be exclusively owned by MS. To the extent such MS Code and MS Documentation may otherwise not be deemed to be exclusively owned by MS, IBM hereby assigns to MS the ownership of copyright in MS Code and MS Documentation created by IBM for MS pursuant to a Phase II Document, and MS shall have the right to obtain and hold in its own name copyrights, registrations and similar protection which may be available in such MS Code and MS Documentation. IBM agrees to give MS or its designee(s) all assistance reasonably required to perfect such rights, including but not limited to, the identification of such MS Code and MS Documentation and the execution of any instruments required to register copyrights.
+(b) IBM grants to MS, its Subsidiaries and its and their customers a royalty-free, worldwide, nonexclusive, irrevocable license under any patents which IBM or its Subsidiaries have the right to grant the license set forth below in this Subsection, during the term of this Agreement, to the extent necessary: (i) to permit MS to make, have made, use, sell and otherwise transfer of possession or ownership of program code which is included in MS Code and/or Final Code and which is provided to MS or developed by IBM hereunder; and (ii) to permit the combination of such Code with equipment. Such patent license, however, shall not extend to any equipment.
+(c) MS hereby grants to IBM a non-exclusive, royalty-free worldwide and irrevocable license to use, execute, perform, reproduce, prepare or have prepared Derivative Works based upon, display, and sell, lease or otherwise transfer of possession or ownership of copies of, the MS Code and MS Documentation contained in the Final Code and Documentation and/or Derivative Works thereof. Such license includes the right of IBM to grant licenses, of or within the scope of the right and license granted to it herein, to third parties, including its Subsidiaries and its and their distributors; and each licensed Subsidiary shall have the right correspondingly to license other third parties including other Subsidiaries, and its distributors.
+
+3.2.4 With respect to that Code or Documentation provided by one party to the other as a resource to fulfill the terms of a Phase II Document which is not part of the product specification in the Phase II Document, the other party shall not become a joint owner of such Code or Documentation which is not integrated into the Final Code and Documentation. To the extent and only for the period required to perform such Phase II activities, each party hereby grants to the other a non-exclusive, royalty-free, worldwide and irrevocable license to use, execute, perform, reproduce, prepare or have prepared Derivative Works based upon, display and sell, lease or otherwise transfer of possession or ownership of copies of, such Code and Documentation which is not integrated into the Final Code and Documentation. This Subsection shall in no way effect ownership or licensing rights of the parties created pursuant to prior agreements, Phase I Attachments, or Phase II Documents.
+
+3.2.5 Any changes, modifications and/or additions made hereunder to IBM Code or IBM Documentation which are not integrated into Final Code and Documentation shall be owned by IBM. Any changes, modifications and/or additions made hereunder to MS Code or MS Documentation which are not integrated into Final Code and Documentation shall be owned by MS. Each party hereby grants to the other a non-exclusive, royalty-free, worldwide and irrevocable license to use, execute, perform, reproduce, prepare or have prepared Derivative Works based upon, display and sell, lease or otherwise transfer of possession or ownership of copies of, such changes, modifications and/or additions.
+
+4.0 DISCLOSURE OF INFORMATION
+
+4.1 To the extent that any oral or written information and/or Code and Documentation of one party is provided to the other party for the purposes of and during the term of this Agreement, this Section supersedes any conflicting terms regarding the use and disclosure of IBM Confidential Information contained in the Confidential Disclosure Agreement (CDA) dated August 21, 1983, and all prior CDA's between the parties.
+
+4.2 Each party shall be free to use and disclose for any purpose whatsoever any information provided for the purposes of this Agreement by the other party, except as otherwise provided in this Section.
+
+4.3 For a period of ten (10) years from the date of receipt from the other party of the Code and Documentation identified in Subsection 3.2.4, each party shall use the same care and discretion to avoid disclosure, publication or dissemination of such Code and Documentation as such party employs with similar information of its own which it does not desire to publish, disclose or disseminate.
+
+4.4 For a period of ten (10) years from the date of receipt of unannounced product information from the other party, neither party shall disclose to any third party such unannounced product of the other party except to the extent that such unannounced product is the product being developed under a Phase II Document. In the event such unannounced product is the product being developed pursuant to a Phase II Document, the disclosing party shall in no event identify the unannounced product as being in any way associated with the other party.
+
+4.5 For a period of ten (10) years from the date of receipt of Source Code from the other party, neither party shall disclose to any third party such Source Code of the other party unless such disclosure is made in accordance with terms and conditions regarding confidentiality substantially similar to those contained in Addendum A to this Agreement, entitled "SAMPLE CONFIDENTIAL DISCLOSURE AGREEMENT".
+
+4.6 During the period of this Agreement, each party shall use its best efforts not to disclose to any third party the terms and conditions of this Agreement and/or of any Phase I Attachments or Phase II Documents hereto, without the prior written consent of the other party, except to the extent required by governmental law, statute, ordinance, administrative order, rule or regulation, or as may be necessary to establish or assert its rights hereunder; provided, however, to the extent a party wishes to disclose the terms of this Agreement for reasons not requiring the other party's consent, such disclosing party shall apply, where applicable, for confidentiality, protective orders and the like.
+
+4.7 Subject to the terms of Subsections 4.6 and 16.14, MS shall not disclose the existence of this Agreement to any third party.
+
+4.8 Notwithstanding anything to the contrary in this Section or in this Agreement:
+
+4.8.1 During any period while a Phase I Attachment is in progress and during a ninety (90) day period following its completion, neither party shall disclose to any third party the Output of such Phase I Attachment without the prior written consent of the other party;
+
+4.8.2 To the extent that any written information of one party is specifically identified in a Phase II Document as not being subject to disclosure by the other party, the disclosing party shall stamp such information "NOT SUBJECT TO DISCLOSURE" and the terms of such Phase II Document shall control over the terms of this Section;
+
+4.8.3 Disclosure of information, Code or Documentation shall not be precluded if such disclosure is in response to a valid order of a court or other governmental body of the United States or any political subdivision thereof; provided, however, that the party making the disclosure pursuant to the order shall first have given notice to the other party and made a reasonable effort to obtain a protective order requiring that the information and/or Code and Documentation so disclosed be used only for the purposes for which the order was issued;
+
+4.8.4 The obligations regarding non-disclosure will not apply to any information that:
+4.8.4.1 is already in the possession of the receiving party or any of its Subsidiaries without obligation of confidence;
+4.8.4.2 is independently developed by the receiving party or any of its Subsidiaries;
+4.8.4.3 is or becomes publicly available without breach of this Agreement;
+4.8.4.4 is rightfully received by the receiving party from a third party without accompanying non-disclosure obligations;
+4.8.4.5 is released for disclosure by the disclosing party with its written consent; or
+4.8.4.6 is inherently disclosed in the use, lease, sale or other distribution of, or publicly available supporting documentation for, any present or future product or service by or for the receiving party or any of its Subsidiaries;
+
+4.8.5 Both parties agree that the other party shall have complied with any non-disclosure obligations in this Agreement if such party has used the same care and discretion it uses with respect to its own information which it desires not to disclose;
+
+4.8.6 Both IBM and MS shall be free to use any ideas, concepts, techniques or know-how contained in information, Code and/or Documentation provided by the other party for the purposes of this Agreement, Phase I Attachments, and Phase II Documents for the design, development, manufacture, maintenance, and/or marketing of any product(s) developed, subject to the statutory copyrights and patents of the other party; and
+
+4.8.7 The receipt of any information, Code and/or Documentation under this Agreement shall not create any obligation in any way limiting or restricting the assignment and/or reassignment of employees of the receiving party.
+
+5.0 INVENTION RIGHTS
+
+5.1 Each Invention other than a Joint Invention, shall be the property of the party whose employees make the Invention (hereinafter "Owning Party"), subject to a license which the Owning Party hereby grants to the other party under each such Invention and any patent protection obtained therefor. The Owning Party shall promptly make a complete written disclosure to the other party of each Invention actually submitted for patent consideration specifically pointing out the features or concepts which it believes to be new or different.
+
+5.2 The Owning Party shall notify the other party promptly as to each country in which it elects to seek protection by obtaining patent rights, at its expense, and shall promptly provide the other party with a copy of each application so filed. Upon written request, the Owning Party will advise the other party of the status of any such application. If the Owning Party elects not to seek such protection on said Invention in any country or to seek such protection only in certain countries or that it intends to abandon the application, it shall notify the other party, and the other party shall have the right to seek such protection, at its expense, on said Inventions in any such country. If the Owning Party elects not to seek any such patent protection, the other party shall also have the right to publish such Invention after consultation with, and review by, the Owning Party. Title to all applications filed on said Invention and all patents issuing thereon shall vest in the Owning Party subject to a license under said patents hereby granted to the other party.
+
+5.3 Joint Inventions shall be jointly owned, title to all patents issued thereon shall be jointly owned, all expenses incurred in obtaining and maintaining such patents, except as provided hereinafter, shall be equally shared and each party shall have the unrestricted right to license third parties thereunder without accounting. In the event that one party elects not to seek or maintain patent protection for any Joint Invention in any particular country or not to share equally in the expenses thereof with the other party, the other party shall have the right to seek or maintain such protection at its expense in such country and shall have full control over the prosecution and maintenance thereof even though title to any patent issuing therefrom shall be jointly owned.
+
+5.4 Each party shall give the other party all reasonable assistance in obtaining patent protection and in preparing and prosecuting any patent application filed by the other party, and shall cause to be executed assignments and all other instruments and documents as the other party may consider necessary or appropriate to carry out the intent of this Section 5.
+
+5.5 All licenses granted to IBM and to MS under this Section 5 shall be worldwide, irrevocable, nonexclusive, nontransferable, and fully paid-up; shall include the right to make, have made, use, have used, lease, sell or otherwise transfer any apparatus, and to practice and have practiced any method. All such licenses shall include the right of the grantee to grant revocable or irrevocable sublicenses to its Subsidiaries, such sublicenses to include the right of the sublicensed Subsidiaries to correspondingly sublicense other Subsidiaries.
+
+5.6 Nothing contained in this Agreement shall be deemed to grant either party, directly or by implication, estoppel, or otherwise, any license under patents or patent applications, arising out of any other inventions of either party, except as specifically provided hereunder.
+
+6.0 IBM PROVIDED EQUIPMENT
+
+6.1 IBM shall provide or has provided to MS at IBM's expense, hardware, software, documentation and related technical support materials specified in the Equipment Loan Agreement between IBM and MS dated May 12, 1983 and may provide additional hardware and software as is subsequently agreed to be required by MS for performance of its obligations under this Agreement and subsequently added to the Equipment Loan Agreement. IBM provided hardware, software, documentation and related technical support materials shall be for MS's use solely for the purposes of fulfilling the terms of a Phase I Attachment or Phase II Document (except for incidental, administrative or other activities with IBM's consent) and will be delivered by IBM to the locations specified in the Equipment Loan Agreement and in accordance with the time schedules included in the corresponding Attachment(s) and/or Document(s).
+
+6.2 Title to the hardware and software documentation and related technical support materials so furnished by IBM shall remain with IBM. The terms and conditions governing the use of the hardware, software, documentation and related technical support materials loaned to MS are set forth in the Equipment Loan Agreement.
+
+7.0 MS PROVIDED EQUIPMENT
+
+7.1 MS shall provide to IBM at MS's expense, hardware, software, documentation and related technical support materials specified in an Equipment Loan Agreement between MS and IBM under the same terms as those contained in the Equipment Loan Agreement between IBM and MS dated May 12, 1983, unless otherwise agreed to by the parties, and may provide additional hardware and software as is subsequently agreed to be required by IBM for performance of its obligations under this Agreement and subsequently added to the Equipment Loan Agreement. MS provided hardware, software, documentation and related technical support materials shall be for IBM's use solely for the purposes of fulfilling the terms of a Phase I Attachment or Phase II Document (except for incidental, administrative or other activities with MS's consent) and will be delivered by MS to the locations specified in the Equipment Loan Agreement and in accordance with the time schedules included in the corresponding Attachment(s) and/or Document(s).
+
+7.2 Title to the hardware and software documentation and related technical support materials so furnished by MS shall remain with MS. The terms and conditions governing the use of the hardware, software, documentation and related technical support materials loaned to IBM are set forth in the Equipment Loan Agreement.
+
+8.0 ACCEPTANCE
+
+8.1 Acceptance terms for Phase II Code and Documentation shall be established by mutual agreement between IBM and MS, and shall be contained in each Phase II Document.
+
+9.0 MAINTENANCE TERMS
+
+9.1 Maintenance terms, if any, shall be specified in the applicable Phase II Document(s).
+
+10.0 PAYMENT AND ROYALTIES
+
+10.1 Payment obligations, if any, by IBM to MS or MS to IBM shall be as specified in the applicable Phase I Attachment(s) and Phase II Document(s).
+
+10.2 Royalty obligations, if any, by IBM to MS or MS to IBM shall be as specified in the applicable Phase II Document(s). To the extent they are not so specified, royalty obligations shall be deemed to be included in the payments made and/or services performed by the parties pursuant to the Phase II Document(s).
+
+10.3 Each party agrees, unless otherwise stated in a Phase II Document, to pay royalty obligations to any third party which result from such party's provision to the other party of, or development of, Code and Documentation pursuant to the terms of this Agreement.
+
+10.4 Notwithstanding anything to the contrary in any prior agreement between IBM and MS, the only obligation for any payments or royalties by either party for Final Code and Documentation for Products developed pursuant to a Phase II Document and Derivative Works thereof, shall be those set forth in this Section 10 and the applicable Phase II Document.
+
+11.0 COPYRIGHT
+
+11.1 Any publication of the Code, Documentation and/or Derivative Works thereof by either party shall contain an appropriate copyright notice in the name of MS, IBM or other author in a manner to be determined by the publisher of such Code, Documentation and/or Derivative Works thereof. In each such case, the copyright notice shall be adequate to protect the ownership rights of both IBM and MS. However, in no event will MS include an IBM copyright notice in Code, Documentation and/or Derivative Works thereof which are marketed by MS or authorized by MS to be marketed to third parties.
+
+11.2 If the Code and/or Documentation contained in the Final Code and Documentation have not been registered previously in the United States Copyright Office, MS hereby authorizes IBM or its designee to act as the agent of MS to so register such Code and/or Documentation or any portion thereof, as deemed appropriate by IBM in the name of MS. However, to the extent IBM so registers MS Source Code, IBM agrees to limit its disclosure and publication of MS Source Code to the minimum amount required by the United States Copyright Office to register MS Source Code. MS shall also perform all acts necessary to enable IBM to maintain and/or register such copyright, including, but not limited to, the execution of any necessary instruments and documents therefor.
+
+12.0 TRADEMARK(S), TRADE NAME(S), AND PRODUCT NAME(S)
+
+12.1 MS hereby grants IBM the right, without obligation, to use trademark(s), trade name(s) and/or other product name(s) in conjunction with the advertising and marketing of any product based on the MS Code and/or MS Documentation and on all Derivative Works of such product; provided, however, IBM shall modify any use of MS's trademark, in accordance with MS's reasonable objections.
+
+12.2 MS acknowledges that IBM has the right, but not the obligation, to conduct trademark(s), trade name(s) or product name(s) searches for the purpose of determining any problems that may be encountered by IBM's use of MS's trademark(s), trade name(s) or product name(s). MS shall use its best efforts to resolve to IBM's satisfaction all problems identified by IBM resulting from such search.
+
+12.3 IBM hereby grants to MS the right, without obligation, to use the product name(s) (unless such product name(s) are trade names, trademarks or service marks of IBM) used by IBM to identify the Code and/or Documentation marketed by IBM, and Derivative Works thereof, in conjunction with the advertising and marketing by MS of any MS Product based on the IBM Code and/or IBM Documentation, and/or Derivative Works thereof; provided, however, MS shall modify any use of IBM's product name(s) in accordance with IBM's reasonable objections. Except as specifically provided above, MS shall have no right without the prior written approval of IBM to use IBM's trademark(s), or trade name(s), or to refer to IBM or any of its Subsidiaries in connection with MS's deliverables under this Agreement. Except to the extent otherwise specified in a Phase I Attachment or Phase II Document, nothing in this Agreement shall otherwise limit the right of MS to represent that MS's products operate on IBM equipment and/or are compatible with IBM's products provided that such is the case and further provided that the reference to IBM is not misleading.
+
+13.0 WARRANTY
+
+13.1 MS represents and warrants to IBM that MS has full and exclusive right, title and interest, and/or has sufficient right, title and interest, including the right to grant all assignments, licenses and other rights granted herein, in and to the MS Code and MS Documentation, and/or Derivative Works thereof contained in the Final Code and Documentation, in and to the portions of the Joint Code and Joint Documentation and/or Derivative Works thereof prepared by MS hereunder, and in and to the portions of the IBM Code and IBM Documentation and/or Derivative Works thereof prepared by MS for IBM hereunder; and that the Code and Documentation (excluding Code and Documentation not prepared by MS) do not infringe any patent, copyright, trademark, trade name, or trade secret, of any third party. Such representations and warranties shall apply to each of the foregoing items at the time each such item is provided by MS to IBM, or developed by MS, in the performance of a Phase II Document.
+
+13.2 MS further represents and warrants that no claim, whether or not embodied in an action past or present, of infringement of any patent, copyright, trademark, trade name, or trade secret, has been made or is pending against MS, or to MS's knowledge against other licensees of MS, relative to the portions of the MS Code, MS Documentation, IBM Code, IBM Documentation, Joint Code and Joint Documentation, and Derivative Works thereof, which are prepared by MS and which are contained in the Final Code and Documentation. Each party shall notify the other within such period of time which is reasonable under the circumstances, in writing, in the event it becomes aware of such a claim. Such representations and warranties shall apply to each of the foregoing items at the time each such item is provided by MS to IBM, or developed by MS, in the performance of a Phase II Document.
+
+13.3 IBM represents and warrants to MS that IBM has full and exclusive right, title and interest, and/or has sufficient right, title and interest, including the right to grant all assignments, licenses and other rights granted herein, in and to the IBM Code and IBM Documentation, and/or Derivative Works thereof contained in the Final Code and Documentation, in and to the portions of the Joint Code and Joint Documentation and/or Derivative Works thereof prepared by IBM hereunder, and in and to the MS Code and MS Documentation and/or Derivative Works thereof prepared by IBM for MS hereunder; and that the Code and Documentation (excluding Code and Documention not prepared by IBM) do not infringe any patent, copyright, trademark, trade name, or trade secret, of any third party. Such representations and warranties shall apply to each of the foregoing items at the time each such item is provided by IBM to MS, or developed by IBM, in the performance of a Phase II Document.
+
+13.4 IBM further represents and warrants that no claim, whether or not embodied in an action past or present, of infringement of any patent, copyright, trademark, trade name, or trade secret, has been made or is pending against IBM, or to IBM's knowledge against other licensees of IBM, relative to the portions of the IBM Code, IBM Documentation, MS Code, MS Documentation, Joint Code and Joint Documentation, and Derivative Works thereof, which are prepared by IBM which are contained in the Final Code and Documentation. Each party shall notify the other within such period of time which is reasonable under the circumstances, in writing, in the event it becomes aware of such a claim. Such representations and warranties shall apply to each of the foregoing items at the time each such item is provided by IBM to MS, or developed by IBM, in the performance of a Phase II Document.
+
+13.5 MS warrants that, with respect to Products developed pursuant to Phase II Document(s), MS is aware of no rights that MS's trademark(s), trade names and/or product name(s) infringe, and MS further warrants that no infringement charges have been made or are now pending in connection with MS's use of MS's trademark(s), trade names and/or product name(s).
+
+14.0 INDEMNIFICATION
+
+14.1 MS agrees to defend, at its expense, any suit, claim or the like against IBM, its Subsidiaries or Developers, and end users of IBM products to the extent such suit, claim or the like is based upon an assertion that MS does not have sufficient right, title and interest in the Code and Documentation to enter into, and/or convey rights and licenses required by, this Agreement, and/or that the MS Code and MS Documentation, contained in the Final Code and Documentation, or the portions of the IBM Code, IBM Documentation, Joint Code, Joint Documentation, and/or Derivative Works thereof which are prepared by MS hereunder, infringe a patent, copyright, trademark, trade name, or trade secret of a third party and MS will pay the amount of any settlement or the costs, damages, and reasonable attorney's fees finally awarded in any such suit, claim or the like provided, that:
+(a) MS is notified promptly in writing of any notice of claim or of threatened or actual suit;
+(b) MS has sole control of the defense of such suit, claim or the like and related settlement negotiations;
+(c) IBM cooperates in the defense and settlement of such suit, claim or the like at the expense of MS; and
+(d) Any such settlement shall contain no admission of IBM's liability without the prior written approval of IBM.
+
+14.1.1 Following notice from IBM of a claim or of a threatened or actual suit, to the extent based on the above, MS may at its expense, without obligation to do so, procure for IBM the right to continue to market, use and have others market or use of the Final Code and Documentation, or MS may at its expense, replace or modify the same to make it non-infringing. If MS elects to replace or modify such Code and/or Documentation, and/or Derivative Works thereof, such replacement shall substantially meet the specifications contained in the applicable Phase II Document.
+
+14.1.2 MS shall have no liability for any suit, claim or the like against IBM, its Subsidiaries or Developers, or end users of an IBM product, based upon a marketing or use by IBM or its Subsidiaries of a Derivative Work of the MS Code and MS Documentation included in the Final Code and Documentation, or of the IBM Code, IBM Documentation, Joint Code, Joint Documentation, and/or Derivative Works thereof, prepared by or on behalf of IBM or its Subsidiaries by a party other than MS, if such suit, claim or the like would have been avoided by the sole use of the MS Code and MS Documentation included in the Final Code and Documentation, or the sole use of the portions of the IBM Code, IBM Documentation, Joint Code, Joint Documentation and/or Derivative Works thereof, which are prepared by MS hereunder, from which the Derivative Works were derived. For all suits, claims or the like against MS or its Subsidiaries, to the extent arising under this Subsection 14.1.2, IBM will indemnify MS for all of its costs, damages, and reasonable attorneys' fees finally awarded, provided however, that:
+(a) MS promptly notifies IBM in writing of the suit, claim or the like;
+(b) IBM has sole control of the defense of such suit, claim or the like and related settlement negotiations;
+(c) MS cooperates with IBM in the defense and settlement of such suit, claim or the like at IBM's expense; and
+(d) Any such settlement shall contain no admission of MS's liability without the written prior approval of MS.
+Any such costs, damages, expenses and attorneys' fees shall not be payable until and unless there has been a final judgment adverse to MS and holding that only the Derivative Work prepared by or on behalf of IBM or its Subsidiaries, by a party other than MS, is infringing.
+
+14.2 IBM agrees to defend, at its expense, any suit, claim or the like against MS, its Subsidiaries or Developers, and end users of MS products to the extent such suit, claim or the like is based upon an assertion that IBM does not have sufficient right, title and interest in the Code and Documentation to enter into, and/or convey rights and licenses required by, this Agreement, and/or that the IBM Code and IBM Documentation contained in the Final Code and Documentation, or the portions of the MS Code, MS Documentation, Joint Code, Joint Documentation, and/or Derivative Works thereof, which are prepared by IBM hereunder, infringe a patent, copyright, trademark, trade name, or trade secret of a third party and IBM will pay the amount of any settlement or the costs, damages, and reasonable attorney's fees finally awarded in any such suit, claim or the like provided, that:
+(a) IBM is notified promptly in writing of any notice of claim or of threatened or actual suit;
+(b) IBM has sole control of the defense of such suit, claim or the like and related settlement negotiations;
+(c) MS cooperates in the defense and settlement of such suit, claim or the like at the expense of IBM; and
+(d) Any such settlement shall contain no admission of MS's liability without the prior written approval of MS.
+
+14.2.1 Following notice from MS of a claim or of a threatened or actual suit, to the extent based on the above, IBM may at its expense, without obligation to do so, procure for MS the right to continue to market, use and have others market or use the Final Code and Documentation, or IBM may at its expense, replace or modify the same to make it non-infringing. If IBM elects to replace or modify such Code and/or Documentation, and/or Derivative Works thereof, such replacement shall substantially meet the specifications contained in the applicable Attachments.
+
+14.2.2 IBM shall have no liability for any suit, claim or the like against MS, its Subsidiaries or Developers, or end users of an MS product, based upon a marketing or use by MS or its Subsidiaries of a Derivative Work of the IBM Code and IBM Documentation included in the Final Code and Documentation, or of the MS Code, MS Documentation, Joint Code, Joint Documentation, and/or Derivative Works thereof, prepared by or on behalf of MS or its Subsidiaries by a party other than IBM, if such suit, claim or the like would have been avoided by the sole use of the IBM Code and IBM Documentation included in the Final Code and Documentation, or the sole use of the portions of the MS Code, MS Documentation, Joint Code, Joint Documentation and/or Derivative Works thereof, which are prepared by IBM hereunder, from which the Derivative Works were derived. For all suits, claims or the like against IBM or its Subsidiaries, to the extent arising under this Subsection 14.2.2, MS will indemnify IBM for all of its costs, damages, and reasonable attorneys' fees finally awarded, provided however, that:
+(a) IBM promptly notifies MS in writing of the suit, claim or the like;
+(b) MS has sole control of the defense of such suit, claim or the like and related settlement negotiations;
+(c) IBM cooperates with MS in the defense and settlement of such suit, claim or the like at MS's expense; and
+(d) Any such settlement shall contain no admission of IBM's liability without the written prior approval of IBM.
+Any such costs, damages, expenses and attorneys' fees shall not be payable until and unless there has been a final judgment adverse to IBM and holding that only the Derivative Work prepared by or on behalf of MS or its Subsidiaries, by a party other than IBM, is infringing.
+
+14.3 MS shall, at its own expense, settle or defend and pay any damages, costs, reasonable attorney fees or fines resulting from any suits, claims or the like against IBM, IBM Subsidiaries or Developers, and end users of an IBM product by any third party to the extent such suits, claims or the like are based on the infringement or alleged infringement of the trademark rights, tradename(s), or product name(s) of such third party or for unfair competition resulting from the use of MS's trademark(s), trade name(s) or product name(s); provided, however, that:
+(a) MS is notified promptly in writing of any notice of claim or of threatened or actual suit;
+(b) MS has sole control of the defense of such claim, suit or the like and related settlement negotiations;
+(c) IBM cooperates in the defense and settlement of such claim, suit or the like at the expense of MS and
+(d) Any such settlement shall contain no admission of IBM's liability without the prior written approval of IBM.
+In meeting its obligations hereunder, MS may, but shall not be obligated to, procure for IBM, IBM Subsidiaries, Developers, and end users the right to continue to use MS's trademark(s), trade name(s) or product name(s).
+
+14.4 Neither party shall have any obligation to defend or indemnify the other, its Subsidiaries, and its or their customers or Developers for any claims of patent or copyright infringement made against the other which arise from the use, sale, lease, license or other disposition of the Code and Documentation outside the geographical boundaries of the United States, Canada, Japan, New Zealand, Norway, Austria, Finland, Sweden, Israel, South Africa and the countries which belong to the European Economic Community (EEC).
+
+14.5 NEITHER PARTY SHALL BE LIABLE FOR LOST PROFITS OR INCIDENTAL, CONSEQUENTIAL OR SIMILAR DAMAGES OF THE OTHER PARTY, ITS SUBSIDIARIES OR ANY THIRD PARTY IN CONNECTION WITH ANY CLAIM RELATED TO THE CODE AND DOCUMENTATION, OR ANY ATTACHMENT TO THIS AGREEMENT EVEN IF THE PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES. NOTWITHSTANDING THE FOREGOING EACH PARTY SHALL BE LIABLE TO THE OTHER FOR LOST PROFITS AND/OR INCIDENTAL, CONSEQUENTIAL OR SIMILAR DAMAGES TO THE EXTENT THAT SUCH DAMAGES ARE INCLUDED IN A JUDGMENT OR SETTLEMENT REQUIRING INDEMNIFICATION FROM SUCH PARTY PURSUANT TO THIS SECTION. FURTHER, NOTWITHSTANDING ANYTHING TO THE CONTRARY IN THIS AGREEMENT, NEITHER PARTY SHALL BE LIABLE TO THE OTHER, IN ANY WAY WHATSOEVER, FOR AN AMOUNT GREATER THAN THE LIMITATION OF LIABILITY AMOUNT STATED IN EACH PHASE I ATTACHMENT AND PHASE II DOCUMENT FOR ANY SUITS, CLAIMS, DAMAGES, LOSSES OR THE LIKE ARISING OUT OF, OR IN CONNECTION WITH, EACH SUCH PHASE I ATTACHMENT OR PHASE II DOCUMENT. HOWEVER, THE LIMITATION OF LIABILITY AMOUNT STATED IN EACH SUCH PHASE I ATTACHMENT OR PHASE II DOCUMENT SHALL NOT APPLY TO ANY OBLIGATIONS OF EITHER PARTY TO MAKE PAYMENTS TO THE OTHER PARTY, AS SET FORTH IN THE SECTION ENTITLED "PAYMENT AND ROYALTIES."
+
+15.0 TERM AND TERMINATION
+
+15.1 This Agreement shall be effective on the date this Agreement is duly executed by the parties and shall remain in force for five (5) years or until expiration of the last to expire copyright for the Code and Documentation prepared pursuant to a Phase II Document, whichever is later. However, both parties agree that no Phase I Attachment or Phase II Document executed after five (5) years have passed from due execution of this Agreement shall have any force and effect unless and until the parties have amended, in writing, this Section.
+
+15.2 Each Phase I Attachment and Phase II Document shall be effective on the date executed by the parties and shall remain in force until expiration of this Agreement or until terminated in accordance with the terms of this Subsection 15.2, whichever is earlier.
+
+15.2.1 Except as provided in Subsection 15.2.2 below, MS and IBM shall have the right to terminate any Phase I Attachment or Phase II Document only in the event of a material breach by the other party of its obligations under such Attachment and/or Document. Such termination shall be made by written notice and shall become effective forty-five (45) days after giving such notice, unless the defaulting party shall have corrected the breach prior thereto.
+
+15.2.2 In addition, IBM may terminate a Phase II Document, at any point prior to acceptance of Final Code and Documentation, in whole or part, without cause upon ten (10) days written notice to MS. In such case, IBM's entire liability to MS shall be to pay MS for work completed through termination and the amount stated in such Phase II Document for IBM's termination other than for material breach by MS. This paragraph is inapplicable if IBM terminates for MS's material breach of its obligations under any Phase II Document or in conjunction with IBM's rejection of Code and Documentation.
+
+15.2.3 In the event of any termination or expiration of an Attachment and/or Document in whole or in part:
+(a) The terms and conditions of this Agreement shall survive;
+(b) The terms and conditions of any other Attachments and/or Documents shall survive and such portions of the Attachment and/or Document which are not terminated, if any;
+(c) In the event of termination for material breach, with respect to the Attachment and/or Document, or portion of the Attachment and/or Document terminated, ownership rights and/or licenses to intellectual property with respect to any Phase I Output, or Phase II Code and/or Documentation incorporated in Final Code and Documentation, as set forth in the "Ownership Rights and Licenses" Section of this Agreement shall survive and continue to bind the parties and their legal representatives, successors and assigns; and any other obligations that, by their nature, extend beyond termination of such Attachments and/or Documents, or portions of Attachments and/or Documents, shall survive according to their terms;
+(d) With respect to any Attachment or Document terminated for reasons other than material breach, the provisions of Subsections 3.1, 3.2.1, and 3.2.4 shall survive in their entirety. In addition, the provisions of Subsections 3.2.2 and 3.2.3 shall survive only with respect to copies of Code and Documentation transferred to third parties for the purposes of evaluation and/or testing and for the purposes of internal use by the party licensed under such provisions. Further, the provisions regarding ownership, but not the licensing provisions, of Subsection 3.2.5 shall survive and, any other obligations, but not other licenses, that, by their nature, extend beyond such termination shall survive according to their terms.
+(e) With respect to the Attachment and/or Document or portion of the Attachment and/or Document terminated, both parties shall deliver to the other, and the other shall take possession of, an archival copy of all Code and Documentation and, with respect to Phase I, the output then in progress and both parties shall make any payments due the other, if any, pursuant to such Attachment and/or Document or portion of Attachment and/or Document so terminated, for the work satisfactorily performed up to the date of termination and, if applicable, the payment for termination other than for material breach, as set forth in Subsection 15.2.2; and
+(f) In the event of termination for material breach, with respect to the Attachment and/or Document or portion of Attachment and/or Document terminated, the pro-rata share of any advance payments made by either party to the other to which the other is not entitled, as negotiated by the parties is good faith, shall be returned to the advancing party, taking into account the work completed, if any; and
+(g) The terms of the Section entitled "Disclosure of Information" shall survive the termination of a Phase II Document until ten (10) years have expired from the effective date of such Phase II document.
+
+16.0 GENERAL
+
+16.1 In the event that MS desires to use the services of any third parties who are not employees of MS in its performance under this Agreement, MS shall provide IBM with written notice of the third parties identities and the tasks to be performed. If IBM does not object to the use of such third parties for the described tasks within twenty (20) days after receipt of such notice, MS may employ such third party for the described tasks, provided MS first obtains from such third party a written agreement sufficient to enable MS to comply with all of its obligations under this Agreement and provided further that the written notice required hereunder is sent by MS to the address identified in, and in accordance with the terms of, Section 16.18 of this Agreement and identifies that it is sent pursuant to this Section 16.1.
+
+16.2 Each party shall have full freedom and flexibility in its marketing effort of the sublicensing, sale or other transfer of the Code and Documentation produced pursuant to Phase II Document(s) (including, without limitation, whether to market or to discontinue marketing, its method of marketing, terms and conditions and pricing), and/or Derivative Works thereof. Neither party makes any guarantee or commitment hereby as to the success of such marketing effort, and both parties agree that the other party has no obligation whatsoever with respect to this Agreement other than as specifically provided in this Agreement. Notwithstanding the foregoing, MS agrees not to place the IBM copyright notice on any products marketed by MS. MS will, however, place its copyright notice on any such products in a manner sufficient to protect IBM's underlying copyright.
+
+16.3 Except as provided with respect to copyright registration in the Section of this Agreement entitled "Copyright", nothing herein contained shall be deemed to authorize or empower either party or its Subsidiaries to act as an agent for the other party or to conduct business in the name of the other party.
+
+16.4 Personnel supplied by MS to perform services for the purposes of this Agreement will be deemed employees of MS and will not for any purpose be considered employees or agents of IBM. MS assumes full responsibility for the actions of such personnel while performing services hereunder, and shall be solely responsible for their supervision, daily direction and control, payment of salary (including withholding of income and FICA taxes), worker's compensation, disability benefits, and the like.
+
+16.5 Personnel supplied by IBM to perform services for the purposes of this Agreement will be deemed employees of IBM and will not for any purposes be considered employees or agents of MS. IBM assumes full responsibility for the actions of such of its personnel while performing services hereunder, and shall be solely responsible for their supervision, daily direction and control, payment of salary (including withholding of income and FICA taxes), worker's compensation, disability benefit, and the like.
+
+16.6 The titles of the Sections of this Agreement are for convenience only and do not in any way limit or amplify the provisions of this Agreement.
+
+16.7 This Agreement shall in no way preclude either party from independently developing or acquiring materials and programs which are competitive, irrespective of their similarity, with the Code and Documentation or from making similar arrangements with others.
+
+16.8 Both parties represent and warrant that they have no outstanding agreements, assignments or encumbrances inconsistent with the provisions of this Agreement.
+
+16.9 Neither party shall give or offer gifts or gratuities of any type to the employees of the other or to members of their families that are intended to improperly influence or may create the appearance of improperly influencing the relationship between IBM and MS.
+
+16.10 MS shall maintain comprehensive general liability insurance for claims for damages because of bodily injury (inclusive of death) and property damage caused by, or arising out of, acts or omissions of its employees. The minimum limits of such insurance shall be one hundred thousand dollars ($100,000.00) for each accident because of bodily injury; and fifty thousand dollars ($50,000.00) because of property damage for each accident. Certificate of such insurance shall be furnished to IBM at the commencement of this Agreement and at the renewal date of such insurance policy for as long as and during the period that any obligations under the Phase I Attachments or Phase II Documents remain in effect. In no event shall the insurance be cancelled during such period without prior written notice to IBM by MS. This provision shall in no way act as a limitation of any MS liability with respect to the subject matter of the insurance, or otherwise.
+
+16.11 This Agreement, along with all of its Phase I Attachments and Phase II Documents, may not be changed or amended in any manner without the duly authorized written consent of both parties.
+
+16.12 There are incorporated into this Agreement the provisions of Executive Order #11246 (as amended) of the President of the United States on Equal Employment Opportunity and the rules and regulations issued pursuant thereto. Each party represent that it will comply with this order and pertinent rules and regulations, unless exempted.
+
+16.13 Except as otherwise specifically required for the purposes of Subsection 3.2.1(e), nothing in this Agreement shall require either party or its Subsidiaries to identify its or their customers to the other. IBM may, at its option, identify the Code and Documentation, and/or Derivative Works thereof, as having been developed by MS and may use the name of MS in its advertising of the Code and Documentation and IBM products which incorporates the Code and Documentation; provided that IBM shall take reasonable steps to modify any such advertising if MS objects to the manner in which its name is used. However, MS shall have no right to identify the Code and Documentation, and/or Derivative Works thereof, as having been developed by IBM except with respect to such items which IBM is marketing.
+
+16.14 At the time of or after the effective date of this Agreement, IBM agrees to review and consider requests by MS to issue MS press releases mentioning MS's involvement with this Agreement. The contents of such proposed release(s) shall be consistent with the provisions of the Section entitled "Disclosure of Information" and IBM's practices concerning endorsements. IBM's approval will not be unreasonably withheld.
+
+16.15 Neither party shall sell, delegate, transfer or assign any right or obligation hereunder, except as expressly provided herein, without the prior written consent of the other party, which consent may be granted or withheld at the sole discretion of such other party. Any attempted act in derogation of the foregoing shall be null and void.
+
+16.16 Both parties agree to comply, and do all the things necessary for each to comply with all applicable, Federal, State, and local laws, regulations and ordinances, including but not limited to the Regulations of the United States Department of Commerce relating to the Export of Technical Data, insofar as they relate to this Agreement. Both parties agree to obtain any required government documents and approvals prior to exporting any technical data disclosed or developed under this Agreement and any product to which such data relate.
+
+16.17 Except as otherwise specifically provided herein, any notice required or permitted to be made by or given to either party hereto pursuant to this Agreement shall be sufficiently made or given on the date of mailing if sent to the receiving party by certified mail, postage prepaid, addressed to it at its address set forth below, or to such other address as it shall designate by written notice given to the other party:
+
+In the case of IBM:
+Boca Raton Area Counsel
+International Business Machines Corporation
+P. O. Box 1328
+Boca Raton, Florida 33432
+
+In the case of MS:
+IBM Account Manager
+Microsoft, Inc.
+10700 Northup Way
+Bellevue, Washington 98004
+
+16.18 MS agrees that for the purpose of compliance with the requirements of the Occupational Safety and Health Act of 1970, the services performed for IBM shall be deemed entirely within MS's responsibility. MS will notify IBM promptly, in writing, if a charge of non-compliance with the Act has been filed against MS in connection with services being performed on IBM-owned or leased premises.
+
+16.19 If the performance of this Agreement or of any obligation hereunder is prevented, restricted or interfered with by reason of fire or other casualty or accident; strikes or labor disputes, inability to procure raw materials, equipment, power or supplies; war or other violence; any law, order, proclamation, regulation, ordinance, demand or requirement of any governmental agency or intergovernmental body; or any other act or condition whatsoever beyond the reasonable control of the parties hereto the party so affected, upon giving notice to the other party, shall be excused from such performance to the extent of such prevention, restriction or interference; provided that the party so affected shall use reasonable efforts under the circumstances to avoid or remove such causes of non-performance and shall continue performance hereunder promptly whenever such causes are removed.
+
+16.20 No waiver of any breach of any provision of this Agreement shall constitute a waiver of any prior, concurrent or subsequent breach of the same or any other provisions hereof, and no waiver shall be effective unless made in writing and signed by an authorized representative of the waiving party. In the event that any provision shall be severed, the entire Agreement shall not fail on account thereof, and the balance of this Agreement shall continue in full force and effect.
+
+16.21 IBM endeavors to provide a safe environment free from violence and threats of violence for all of its employees, customers and licensees to its premises. MS has taken or will take appropriate preventive steps to ensure that anyone directly or indirectly employed by MS who enters IBM premises does not have a background of violent behavior in the workplace and that such person is not employed by MS or MS's subcontractors to perform work on IBM premises.
+
+16.22 Nothing in this Agreement shall be construed to create a partnership, joint venture, or other joint business entity between the parties hereto.
+
+16.23 The terms and conditions of this Agreement shall supersede and replace any contrary terms contained in any prior agreement between MS and IBM regarding the disclosure of MS Code to the extent that any MS Code subject to such prior agreements is made applicable to this Agreement by a Phase II Document.
+
+16.24 The foregoing provisions, Phase I Attachments, and Phase II Documents constitute the entire agreement concerning the subject matter hereof between the parties and shall supersede all prior agreements, oral or written, and all other communications between them relating to the subject matter hereof; provided, however, except to the extent expressly modified by the terms of this Agreement, the Confidential Disclosure Agreement dated August 21, 1983 and the Equipment Loan Agreement dated May 12, 1983 between the parties shall remain in full force and effect.
+
+16.25 This Agreement shall be construed in accordance with the laws of the State of New York.
+
+IN WITNESS WHEREOF, the parties have caused this Agreement to be duly executed as of the day and year first above written.
+
+MICROSOFT
+By: William H. Gates
+Title: Chairman
+Date: June 10, 1985
+
+INTERNATIONAL BUSINESS MACHINES CORPORATION
+By: P. M. Harrington
+Title: Manager, ES Software Contracts and Licensing Procurement
+Date: June 10, 1985
+
+---
+ADDENDUM A
+SAMPLE CONFIDENTIAL DISCLOSURE AGREEMENT: DEVELOPER
+AGREEMENT FOR PROVIDING SOURCE CODE TO DEVELOPERS
+
+CONFIDENTIAL DISCLOSURE AGREEMENT #
+SUBJECT:
+Dear
+
+(IBM or MS) (hereinafter called XYZ) may wish to obtain quotations from and to issue to (hereinafter called Developer) XYZ Purchase Orders and to execute with Developer, associated agreements for various materials, services or software programs from time to time. In connection therewith, it may be necessary for XYZ to disclose to Developer confidential information of XYZ.
+
+As a basis for such dealings, Developer is required to enter into this Agreement having the following terms and conditions:
+
+1. XYZ may disclose XYZ Confidential Information to Developer either orally or in writing (including graphic material). When disclosed in writing, or other tangible form, the information will be labeled "XYZ Confidential". When disclosed orally, such information will be identified as "XYZ Confidential" at the time of disclosure with subsequent confirmation in writing referencing the date and type of information disclosed to Developer as a result of such oral disclosures.
+XYZ's disclosure of Confidential Information may include disclosure(s) of Third Party source code (hereinafter called Third Party Source Code). Third Party and/or XYZ Source Code shall be labeled as such in addition to being labeled as and deemed to be XYZ Confidential Information as set forth above.
+
+2. Developer shall hold in trust and confidence all XYZ Confidential Information including Third Party Source Code and shall not disclose such information to any third party. Furthermore, Developer shall not use such XYZ Confidential Information for any purpose other than to prepare a response to any XYZ Request For Quotation or to perform work for XYZ as may subsequently be ordered. Developer shall not disclose or use such information for any purpose other than those stated above until such time as the information becomes publicly known through no fault of Developer's.
+
+3. Except for the specific purposes contemplated by this Agreement, it is to be understood that by disclosing XYZ Confidential Information to Developer, XYZ and any Third Party do not grant any express or implied license or other right to Developer under patents, copyrights or other proprietary rights of XYZ or the Third Party.
+
+4. XYZ Confidential Information shall also include all information identified as confidential and disclosed by XYZ to Developer which pertains to XYZ's past, present, or future research, development or business activities.
+
+5. Developer shall not disclose XYZ Confidential Information to subcontractors nor subcontract any part of the work covered by Purchase Orders issued by XYZ without first obtaining written consent from XYZ.
+
+6. Developer's obligations regarding XYZ Confidential Information shall not apply to information which was already known to Developer prior to disclosure of it to Developer by XYZ, which is or becomes publicly available through no fault of Developer's, which is rightfully received by Developer from third parties without accompanying secrecy obligations, which is independently developed by Developer or which is approved in writing by XYZ for Developer to release.
+
+7. Developer shall disclose XYZ's Confidential Information only to Developer's employees having a need-to-know and shall segregate such information at all times from the materials of third parties so as to prevent any commingling.
+
+8. Developer shall maintain a written agreement with each of Developer's employees sufficient to enable Developer to comply with the terms of this Agreement.
+
+9. Developer shall secure XYZ documents, items of work in process, work products, and any other items that embody XYZ Confidential Information in locked files or areas providing restricted access to prevent its unauthorized disclosure.
+
+10. Developer shall maintain adequate procedures to prevent loss of any materials containing XYZ confidential Information. In the event of any loss, Developer shall notify XYZ immediately.
+
+11. Developer agrees to maintain one hundred percent (100%) accountability of material and equipment consigned to Developer by XYZ and will promptly notify XYZ of loss or damage of any items consigned.
+
+12. Developer shall return to XYZ all Confidential Information upon request.
+
+13. XYZ does not wish to receive confidential information of Developer or any third party and XYZ will be free to reproduce, distribute to third parties, and otherwise use any information furnished to XYZ by Developer. Any information provided to XYZ shall not be deemed confidential.
+
+14. This Agreement shall begin on and terminate on provided, however, that either party shall have the right to terminate this Agreement upon ten (10) days' prior written notice.
+
+15. The provisions of this Agreement shall survive and continue after expiration or termination of the Agreement with respect to any XYZ Confidential Information disclosed to or obtained by Developer prior to the date of such expiration or termination or disclosed to or obtained by Developer subsequent thereto under any Purchase Orders in effect on such date of expiration or termination.
+
+16. XYZ shall have the right to visit periodically, using reasonable business practices, Developer's premises and conduct a review of the compliance with the terms of this Agreement.
+
+17. Upon execution of this Agreement, Developer shall promptly notify XYZ in writing of Developer's authorized representative who will coordinate the receipt and maintenance of all XYZ Confidential Information sent to Developer. Developer shall promptly notify XYZ in writing of any change of such authorized representative.
+
+If the above terms and conditions are acceptable to Developer, an authorized representative is requested to indicate acceptance thereof by signing and returning two (2) copies of this Agreement, retaining one (1) copy for file.
+
+Very truly yours,
+XYZ
+By:
+Title:
+Date:
+
+Accepted and Agreed to:
+By:
+Title:
+Date:
+
+---
+[Amendment Number Two]
+
+WHEREAS, International Business Machines Corporation, a New York Corporation (hereinafter referred to as "IBM") and Microsoft Corporation, having its place of business in Redmond, Washington (hereinafter referred to as "MS") have entered into a "Joint Development Agreement," dated June 10, 1985, Agreement number A-MS-424, as amended (hereinafter referred to as "JDA"), in order to develop computer code and documentation; and
+
+WHEREAS, IBM and MS have entered into Phase II Document Number one (1), dated August 6, 1985, (as amended November 12, 1986); and
+
+WHEREAS, IBM and MS wish to amend said JDA and Phase II Document:
+
+NOW THEREFORE, IBM and MS agree to amend said Phase II Document Number one (1) dated October 2, 1987, as amended in this Amendment Number two (2) as follows:
+
+Section 5.1.1.2 (a) (iii) shall be deleted and replaced with the following:
+"(iii) upgrades to existing licensees which contain changes or enhancements in function, performance or connectivity; provided that upgrades offered to existing licensees of an IBM CP/DOS Product Offering which contain non-IBM Unique code described in subsequent Phase II Document CP/DOS Product Specifications, e.g., CP/DOS 1.2 or CP/DOS 1.3, shall bear a royalty at fifty per cent (50%) of the rate designated in this Section; further; further provided that such upgrades must be provided on a replacement basis with return or destruction of the replaced copies certified by the licensee."
+
+Section 5.1.1.2 (c) shall be amended by the insertion of the additional clause following the words "third party." in line 19:
+"...third party; and further provided that if IBM elects such lower price, then the payments which MS makes to IBM under Section 5.1.2.1 and 5.1.2.2 shall be reduced by a percentage equivalent to the reduction in Section 5.1.1.2 payments obtained by IBM."
+
+Section 5.1.2.1 (a) (iii) shall be deleted and replaced with the following:
+"(iii) upgrade copies to existing licensees which contain changes or enhancements in function, performance or connectivity; provided that upgrades offered to existing licensees of an MS CP/DOS Product Offering which contain non-MS Unique code contained in subsequent Phase II Documents CP/DOS Product Specifications. e.g., CP/DOS 1.2 or CP/DOS 1.3, shall bear a royalty at fifty per cent (50%) of the rate otherwise designated in this Section; further provided that such upgrades must be provided on a replacement basis with return or destruction of the replaced copies certified by the licensee."
+
+Section 5.1.3.1 shall be amended as follows:
+The fourth line of Section 5.1.3.1 shall now read: "during the period described in Section"
+The sixth line of Section 5.1.3.1 shall now read: "other no payments under those Sections."
+The rest of Section 5.1.3.1 coming after the foregoing sixth line shall be deleted in its entirety.
+
+Section 5.5 shall be deleted in its entirety.
+
+Section 11.1.2 shall be amended as follows:
+The last line of Section 11.1.2 shall read as follows: "and 5.7 herein."
+
+Section 11.2.1 shall be amended as follows:
+The thirteenth line of Section 11.2.1 shall read as follows: "make payment to IBM hereunder."
+The rest of Section 11.2.1 coming after the foregoing thirteenth line shall be deleted in its entirety.
+
+Section 12.1 shall be amended as follows:
+The tenth line of Section 12.1 shall be as follows: "provided in Section 5.1.1.2, 5.1.2.1 and 5.1.2.2 of this Agreement."
+
+Subsection 13.1.1.6 shall be deleted and shall be replaced by the following:
+13.1.1.6 Program Selector; (2.20 of 3.2 [Outline B) and 7.1.21 of 7.1 [Outline B])
+
+Subsection 13.1.2.3 shall be amended to read as follows:
+13.1.2.3 MKCOUNTRY (12.3)
+
+Appendix III shall be deleted in its entirety.
+
+All other terms of the foregoing Agreement shall remain in effect and continue to bind the parties.
+
+AGREED TO:
+INTERNATIONAL BUSINESS MACHINES CORPORATION
+By: Walt Tanis
+Title: Manager Software Contracts
+Date: 11/16/87
+
+MICROSOFT CORPORATION
+By: [Signature]
+Title: Vice President
+Date: 11/26/87
+
+---
+[Amendment Number Three]
+
+WHEREAS, International Business Machines Corporation, a New York Corporation (hereinafter referred to as "IBM") and Microsoft Corporation, having its place of business in Redmond, Washington (hereinafter referred to as "MS") have entered into a "Joint Development Agreement" dated June 10, 1985. Agreement number A-MS-424, as amended (hereinafter referred to as "JDA"), in order to develop computer code and documentation; and
+
+WHEREAS, IBM and MS have entered into Phase II Document Number One (1), dated August 6, 1985, as amended November 12, 1986; and
+
+WHEREAS, IBM and MS agree to amend said JDA and Phase II Document:
+
+NOW, THEREFORE, IBM and MS agree to amend said Phase II Document Number One (1), dated August 6, 1985, as amended in this Amendment Number Three (3) as follows:
+
+Section 8.0 shall be deleted in its entirety and replaced with the following:
+
+8.1 MS and IBM each represents and warrants that the portion of CP/DOS Version 1.1 which that party has developed will be free from Error and will meet the specification as described in the Section entitled "FINAL FUNCTIONAL SPECIFICATION FOR CP/DOS VERSION 1.1." as amended by DCR's, herein.
+
+8.2 Both parties agree that they shall have the capabilities in place to honor their maintenance responsibilities as specified in Appendix III entitled "CP/DOS Maintenance Process" on October 14, 1987. These responsibilities shall begin on October 14, 1987 and run for a period of three (3) years and six (6) months after the date of the earlier of the general availability of IBM Product Offering Version 1.1, or MS Product Offering Version 1.1. Maintenance shall be provided by the parties at no additional charge.
+
+8.3 All code created to provide corrections to Errors shall become part of the Joint Code created pursuant to this Phase II Document; provided, however, that any Code created to provide corrections to Errors in IBM Unique Code or MS Unique Code shall become IBM Unique Code or MS Unique Code respectively.
+
+8.4 IBM recognizes that MS will be licensing the MS Product Offering 1.1 to third parties. MS is free to disclose PTM's, as defined in Appendix III, to third parties; provided, however, that such disclosures to third parties will contain no reference to IBM therein. In addition, unless mutually agreed to by representatives of IBM and MS in writing, each party warrants that any PTM's submitted to the other party shall contain no Confidential Information of any third party. For purposes of this paragraph, Confidential Information shall mean all information identified by a third party as confidential and disclosed to either party which pertains to a third party's past, present or future research, development or business activities.
+
+All other terms of the foregoing Agreement shall remain in effect and continue to bind the parties.
+
+AGREED TO:
+INTERNATIONAL BUSINESS MACHINES CORPORATION
+By: [Signature]
+Title: ESD Site Procurement Manager
+Date: 10-14-87
+
+MICROSOFT CORPORATION
+By: [Signature]
+Title: Vice President
+Date: 11/9/87
