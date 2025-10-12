@@ -1,4 +1,66 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-10-08T10:34:21-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">(Bitter) Lessons from Scaling Machine Learning Interatomic Potentials</title><link href="http://localhost:4000/research/2025/09/25/scaling.html" rel="alternate" type="text/html" title="(Bitter) Lessons from Scaling Machine Learning Interatomic Potentials" /><published>2025-09-25T06:11:17-07:00</published><updated>2025-09-25T06:11:17-07:00</updated><id>http://localhost:4000/research/2025/09/25/scaling</id><content type="html" xml:base="http://localhost:4000/research/2025/09/25/scaling.html"><![CDATA[<script type="text/javascript" async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-10-11T19:51:24-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">Cursor for Contracts</title><link href="http://localhost:4000/research/2025/10/09/contract-ui.html" rel="alternate" type="text/html" title="Cursor for Contracts" /><published>2025-10-09T06:11:17-07:00</published><updated>2025-10-09T06:11:17-07:00</updated><id>http://localhost:4000/research/2025/10/09/contract-ui</id><content type="html" xml:base="http://localhost:4000/research/2025/10/09/contract-ui.html"><![CDATA[<p>I recently negotiated my first contract, and had no idea what I was doing. Having used Cursor so much for programming I wished there was something equivalent for editing contracts. Something that would let me easily concede or be more aggressive in certain clauses using legalese.</p>
+
+<p>I had an itch to scratch so I built a demo for this sort of UI I would like to see more of in document editing - inspired by the essay <a href="https://koomen.dev/essays/horseless-carriages/">AI Horseless Carriages</a>.</p>
+
+<p>Running locally it uses <a href="https://deepmind.google/models/gemma/gemma-3/">gemma3:12b</a> with <a href="https://github.com/ollama/ollama">Ollama</a> amazingly quick even on my M3 mac, but on this web demo it’s using gemini-2.0-flash-lite.</p>
+
+<style>
+@media (max-width: 768px) {
+  .desktop-only { display: none; }
+}
+@media (min-width: 769px) {
+  .mobile-only { display: none; }
+}
+#root {
+  min-height: auto !important;
+}
+#root .app-container {
+  min-height: auto !important;
+}
+</style>
+
+<div class="desktop-only">
+  <link rel="stylesheet" href="http://localhost:4000/assets/contract-ui/build/static/css/main.0c014cc3.css" />
+  <div id="root"></div>
+  <script>
+    window.CONTRACT_BASE_PATH = 'http://localhost:4000/assets/contract-ui/build/contracts/';
+  </script>
+  <script src="http://localhost:4000/assets/contract-ui/build/static/js/main.940ed3a5.js"></script>
+</div>
+
+<div class="mobile-only">
+  Come back on a desktop to see the interactive demo.
+  <figure style="display: flex; justify-content: center;">
+    <div style="text-align: center;">
+      <img src="http://localhost:4000/assets/contract-ui/contract-ui-demo.gif" alt="Contract UI Demo" />
+    </div>
+  </figure>
+</div>
+
+<details>
+  <summary style="cursor: pointer; font-weight: bold; margin-bottom: 20px;">How did I serve this demo?</summary>
+
+  <p>I wanted the app to run completely locally since contracts can be sensitive, but didn’t want visitors to this page to have to fetch 1GB worth of a language model. I settled on using Gemini via a <a href="https://vercel.com/docs/functions">Vercel Function</a> proxy server which has my API key on it. I also used an <a href="https://upstash.com/docs/redis/overall/getstarted">Upstash Redis KV Store</a> that limits inferences based on IP address to prevent abuse.</p>
+
+  <p>This was surprisingly accessible with the help of language models, and most of all <em>free</em> given what I expect the traffic to this site to be. Crazy!</p>
+
+  <figure style="display: flex; justify-content: center;">
+    <div style="text-align: center;">
+      <object type="image/svg+xml" data="http://localhost:4000/assets/contract-ui/contract-ui.svg" style="width: 450px; height: auto;"></object>
+    </div>
+    <br />
+</figure>
+</details>
+
+<h4 id="references">References:</h4>
+
+<ul>
+  <li>[1] <a href="https://koomen.dev/essays/horseless-carriages/">AI Horseless Carriages</a></li>
+  <li>[2] <a href="https://deepmind.google/models/gemma/gemma-3/">Gemma3</a></li>
+  <li>[3] <a href="https://github.com/ollama/ollama">Ollama</a></li>
+  <li>[4] <a href="https://vercel.com/docs/functions">Vercel Function</a></li>
+  <li>[5] <a href="https://upstash.com/docs/redis/overall/getstarted">Upstash Redis KV Store</a></li>
+</ul>]]></content><author><name></name></author><category term="Research" /><summary type="html"><![CDATA[I recently negotiated my first contract, and had no idea what I was doing. Having used Cursor so much for programming I wished there was something equivalent for editing contracts. Something that would let me easily concede or be more aggressive in certain clauses using legalese.]]></summary></entry><entry><title type="html">(Bitter) Lessons from Scaling Machine Learning Interatomic Potentials</title><link href="http://localhost:4000/research/2025/09/25/scaling.html" rel="alternate" type="text/html" title="(Bitter) Lessons from Scaling Machine Learning Interatomic Potentials" /><published>2025-09-25T06:11:17-07:00</published><updated>2025-09-25T06:11:17-07:00</updated><id>http://localhost:4000/research/2025/09/25/scaling</id><content type="html" xml:base="http://localhost:4000/research/2025/09/25/scaling.html"><![CDATA[<script type="text/javascript" async="" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
 </script>
 
 <p><strong>TL;DR:</strong> We tested whether a plain transformer encoder (no equivariance, no periodic boundary conditions) can learn interatomic forces as data &amp; params scale vs. EquiformerV2. EqV2 followed clean power laws and hit much lower loss. My transformers plateaued hard while learning forces, but observing their attention weights shows they learned graph structure as an emergent behavior. I share the wins &amp; failures.</p>
@@ -1594,4 +1656,4 @@ const predict = async () =&gt; {
   <li><a href="https://github.com/reiinakano/arbitrary-image-stylization-tfjs">https://github.com/reiinakano/arbitrary-image-stylization-tfjs</a></li>
   <li><a href="https://magenta.tensorflow.org/blog/2018/12/20/style-transfer-js/">https://magenta.tensorflow.org/blog/2018/12/20/style-transfer-js/</a></li>
   <li><a href="https://styletransfer.art">https://styletransfer.art</a></li>
-</ul>]]></content><author><name></name></author><category term="Product" /><summary type="html"><![CDATA[Overview]]></summary></entry><entry><title type="html">Barium Titanate Permittivity &amp;amp; Image Processing</title><link href="http://localhost:4000/research/2021/07/14/bto-image-processing.html" rel="alternate" type="text/html" title="Barium Titanate Permittivity &amp;amp; Image Processing" /><published>2021-07-14T14:53:17-07:00</published><updated>2021-07-14T14:53:17-07:00</updated><id>http://localhost:4000/research/2021/07/14/bto-image-processing</id><content type="html" xml:base="http://localhost:4000/research/2021/07/14/bto-image-processing.html"><![CDATA[]]></content><author><name></name></author><category term="Research" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">The Bias-Expressivity Trade-off</title><link href="http://localhost:4000/research/2019/11/09/bias-expressivity-tradeoff.html" rel="alternate" type="text/html" title="The Bias-Expressivity Trade-off" /><published>2019-11-09T13:53:17-08:00</published><updated>2019-11-09T13:53:17-08:00</updated><id>http://localhost:4000/research/2019/11/09/bias-expressivity-tradeoff</id><content type="html" xml:base="http://localhost:4000/research/2019/11/09/bias-expressivity-tradeoff.html"><![CDATA[]]></content><author><name></name></author><category term="Research" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">The Futility of Bias-Free Learning and Search</title><link href="http://localhost:4000/research/2019/07/25/futility-of-bias-free-learning-and-search.html" rel="alternate" type="text/html" title="The Futility of Bias-Free Learning and Search" /><published>2019-07-25T14:53:17-07:00</published><updated>2019-07-25T14:53:17-07:00</updated><id>http://localhost:4000/research/2019/07/25/futility-of-bias-free-learning-and-search</id><content type="html" xml:base="http://localhost:4000/research/2019/07/25/futility-of-bias-free-learning-and-search.html"><![CDATA[]]></content><author><name></name></author><category term="Research" /><summary type="html"><![CDATA[]]></summary></entry></feed>
+</ul>]]></content><author><name></name></author><category term="Product" /><summary type="html"><![CDATA[Overview]]></summary></entry><entry><title type="html">Barium Titanate Permittivity &amp;amp; Image Processing</title><link href="http://localhost:4000/research/2021/07/14/bto-image-processing.html" rel="alternate" type="text/html" title="Barium Titanate Permittivity &amp;amp; Image Processing" /><published>2021-07-14T14:53:17-07:00</published><updated>2021-07-14T14:53:17-07:00</updated><id>http://localhost:4000/research/2021/07/14/bto-image-processing</id><content type="html" xml:base="http://localhost:4000/research/2021/07/14/bto-image-processing.html"><![CDATA[]]></content><author><name></name></author><category term="Research" /><summary type="html"><![CDATA[]]></summary></entry><entry><title type="html">The Bias-Expressivity Trade-off</title><link href="http://localhost:4000/research/2019/11/09/bias-expressivity-tradeoff.html" rel="alternate" type="text/html" title="The Bias-Expressivity Trade-off" /><published>2019-11-09T13:53:17-08:00</published><updated>2019-11-09T13:53:17-08:00</updated><id>http://localhost:4000/research/2019/11/09/bias-expressivity-tradeoff</id><content type="html" xml:base="http://localhost:4000/research/2019/11/09/bias-expressivity-tradeoff.html"><![CDATA[]]></content><author><name></name></author><category term="Research" /><summary type="html"><![CDATA[]]></summary></entry></feed>
