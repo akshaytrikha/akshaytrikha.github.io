@@ -107,6 +107,7 @@ In my attempt at training transformers I wanted to use as few inductive biases a
 
 I used a standard embedding layer for atom types to give the model a dictionary lookup of what each atom is across different structures. This was important because the model needed to understand that each atom is the same in different structures but is modified by its context, similar to how each word is the same in different sequences and is modified by its context. The 3D positions were concatenated with the embedding vector because I thought the model might have an easier time disentangling meaning vs. saving parameters by adding the positions to the embeddings. 
 
+<div class="desktop-only" markdown="1">
 $$
 \begin{array}{c@{}c@{}c}
 \text{Input feature matrix: } &
@@ -125,6 +126,26 @@ e_{N1} & \cdots & e_{Nd} & x_N & y_N & z_N
 \end{array}
 \end{array}
 $$
+</div>
+
+<div class="mobile-only" markdown="1">
+$$
+\begin{array}{l}
+\text{Input feature matrix:} \\[2ex]
+\left[
+\begin{array}{ccc|ccc}
+e_{11} & \cdots & e_{1d} & x_1 & y_1 & z_1 \\
+\vdots & \ddots & \vdots & \vdots & \vdots & \vdots \\
+e_{N1} & \cdots & e_{Nd} & x_N & y_N & z_N
+\end{array}
+\right]
+\\[-2ex]
+\mkern20mu\underbrace{\hphantom{e_{11}\ \cdots\ e_{1d}}}_{\text{atomic embeddings}}
+\mkern24mu
+\underbrace{\hphantom{x_1\ y_1\ z_1}}_{\text{positional encoding}}
+\end{array}
+$$
+</div>
 
 
 
