@@ -15,7 +15,27 @@ redirect_from: /deep-learning/2025/09/25/scaling.html
 **TL;DR:** We tested whether a plain transformer encoder (no equivariance, no periodic boundary conditions) can learn interatomic forces as data & params scale vs. EquiformerV2. EqV2 followed clean power laws and hit much lower loss. My transformers plateaued hard while learning forces, but observing their attention weights shows they learned graph structure as an emergent behavior. I share the wins & failures.
 
 For EquiformerV2:
+<style>
+@media (max-width: 768px) {
+  .desktop-only { display: none; }
+}
+@media (min-width: 769px) {
+  .mobile-only { display: none; }
+}
+#root {
+  min-height: auto !important;
+}
+#root .app-container {
+  min-height: auto !important;
+}
+.mobile-only .MathJax_Display {
+  text-align: left !important;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+</style>
 
+<div class="desktop-only" markdown="1">
 $$
 \begin{aligned}
 &\quad\text{Parameter scaling law:} &&L \approx 7.76\times 10^{2}\, P^{-0.383} \\
@@ -25,8 +45,20 @@ $$
 $$
 
 For Transformer:
-
 $$\text{Power laws not clean enough}$$
+</div>
+
+<div class="mobile-only" markdown="1">
+$$
+\begin{aligned}
+&\text{Parameter scaling law:} \; L \approx 7.76\times 10^{2}\, P^{-0.383} \\
+&\text{Compute scaling law:} \; L \approx 4.99\times 10^{5}\, C^{-0.339} \\
+&\text{Data scaling law:} \; L \approx 6.47\times 10^{1}\, D^{-0.242}
+\end{aligned}
+$$
+
+For Transformer: power laws not clean enough.
+</div>
 
 Code is open sourced [here](https://github.com/akshaytrikha/materials-scaling). Work was done alongside [Eric Weiner](https://www.linkedin.com/in/eric-weiner-7602b916a/), [Park Szachta](https://www.linkedin.com/in/parkszachta/), [Advait Gosai](https://www.linkedin.com/in/advaitgosai/), and [Kyle Chu](https://www.linkedin.com/in/kyle65463/).
 

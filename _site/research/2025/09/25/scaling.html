@@ -51,16 +51,46 @@
 <p><strong>TL;DR:</strong> We tested whether a plain transformer encoder (no equivariance, no periodic boundary conditions) can learn interatomic forces as data &amp; params scale vs. EquiformerV2. EqV2 followed clean power laws and hit much lower loss. My transformers plateaued hard while learning forces, but observing their attention weights shows they learned graph structure as an emergent behavior. I share the wins &amp; failures.</p>
 
 <p>For EquiformerV2:</p>
+<style>
+@media (max-width: 768px) {
+  .desktop-only { display: none; }
+}
+@media (min-width: 769px) {
+  .mobile-only { display: none; }
+}
+#root {
+  min-height: auto !important;
+}
+#root .app-container {
+  min-height: auto !important;
+}
+.mobile-only .MathJax_Display {
+  text-align: left !important;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+</style>
 
+<div class="desktop-only">
 \[\begin{aligned}
 &amp;\quad\text{Parameter scaling law:} &amp;&amp;L \approx 7.76\times 10^{2}\, P^{-0.383} \\
 &amp;\quad\text{Compute scaling law:} &amp;&amp;L \approx 4.99\times 10^{5}\, C^{-0.339} \\
 &amp;\quad\text{Data scaling law:} &amp;&amp;L \approx 6.47\times 10^{1}\, D^{-0.242}
 \end{aligned}\]
 
-<p>For Transformer:</p>
+  <p>For Transformer:
+\(\text{Power laws not clean enough}\)</p>
+</div>
 
-\[\text{Power laws not clean enough}\]
+<div class="mobile-only">
+\[\begin{aligned}
+&amp;\text{Parameter scaling law:} \; L \approx 7.76\times 10^{2}\, P^{-0.383} \\
+&amp;\text{Compute scaling law:} \; L \approx 4.99\times 10^{5}\, C^{-0.339} \\
+&amp;\text{Data scaling law:} \; L \approx 6.47\times 10^{1}\, D^{-0.242}
+\end{aligned}\]
+
+  <p>For Transformer: power laws not clean enough.</p>
+</div>
 
 <p>Code is open sourced <a href="https://github.com/akshaytrikha/materials-scaling">here</a>. Work was done alongside <a href="https://www.linkedin.com/in/eric-weiner-7602b916a/">Eric Weiner</a>, <a href="https://www.linkedin.com/in/parkszachta/">Park Szachta</a>, <a href="https://www.linkedin.com/in/advaitgosai/">Advait Gosai</a>, and <a href="https://www.linkedin.com/in/kyle65463/">Kyle Chu</a>.</p>
 
