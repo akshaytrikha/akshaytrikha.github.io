@@ -15,19 +15,40 @@ redirect_from: /deep-learning/2025/09/25/scaling.html
 **TL;DR:** We tested whether a plain transformer encoder (no equivariance, no periodic boundary conditions) can learn interatomic forces as data & params scale vs. EquiformerV2. EqV2 followed clean power laws and hit much lower loss. My transformers plateaued hard while learning forces, but observing their attention weights shows they learned graph structure as an emergent behavior. I share the wins & failures.
 
 For EquiformerV2:
+<style>
+@media (max-width: 768px) {
+  .desktop-only { display: none; }
+}
+@media (min-width: 769px) {
+  .mobile-only { display: none; }
+}
+#root {
+  min-height: auto !important;
+}
+#root .app-container {
+  min-height: auto !important;
+}
+.mobile-only .MathJax_Display {
+  text-align: left !important;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+</style>
 
+<div>
 $$
 \begin{aligned}
-&\quad\text{Parameter scaling law:} &&L \approx 7.76\times 10^{2}\, P^{-0.383} \\
-&\quad\text{Compute scaling law:} &&L \approx 4.99\times 10^{5}\, C^{-0.339} \\
-&\quad\text{Data scaling law:} &&L \approx 6.47\times 10^{1}\, D^{-0.242}
+&\text{Parameter scaling law:}\; L \approx 7.76\times 10^{2}\, P^{-0.383} \\
+&\text{Compute scaling law:}\; L \approx 4.99\times 10^{5}\, C^{-0.339} \\
+&\text{Data scaling law:}\; L \approx 6.47\times 10^{1}\, D^{-0.242}
 \end{aligned}
 $$
+</div>
 
-For Transformer:
+<div class="desktop-only">For Transformer: $$\text{Power laws not clean enough}$$</div>
+<div class="mobile-only">For Transformer: power laws not clean enough.</div>
 
-$$\text{Power laws not clean enough}$$
-
+<br>
 Code is open sourced [here](https://github.com/akshaytrikha/materials-scaling). Work was done alongside [Eric Weiner](https://www.linkedin.com/in/eric-weiner-7602b916a/), [Park Szachta](https://www.linkedin.com/in/parkszachta/), [Advait Gosai](https://www.linkedin.com/in/advaitgosai/), and [Kyle Chu](https://www.linkedin.com/in/kyle65463/).
 
 ----------------------
@@ -43,15 +64,25 @@ We failed to stably train transformers most likely due to the lack of pretrainin
 
 A Transformer is a graph neural network (GNN) on a complete graph with learned edge weights [[6]](https://arxiv.org/pdf/1704.01212). A graph in a GNN is created through a rule, either a known relation between nodes i.e. this paper cites another or a cutoff i.e. this atom is too far from the other so we assume they won't interact.
 
-<iframe id="attentionFrame" src="{{site.url}}/assets/scaling/attention-graph.html"
-        width="100%" style="border:0; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,.1); background:#fff"></iframe>
-<script>
-  const f = document.getElementById('attentionFrame');
-  f.addEventListener('load', () => {
-    const doc = f.contentDocument || f.contentWindow.document;
-    f.style.height = doc.documentElement.scrollHeight + 'px';
-  });
-</script>
+<div class="desktop-only">
+  <iframe id="attentionFrame" src="{{site.url}}/assets/scaling/attention-graph.html"
+          width="100%" style="border:0; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,.1); background:#fff"></iframe>
+  <script>
+    const f = document.getElementById('attentionFrame');
+    f.addEventListener('load', () => {
+      const doc = f.contentDocument || f.contentWindow.document;
+      f.style.height = doc.documentElement.scrollHeight + 'px';
+    });
+  </script>
+</div>
+
+<div class="mobile-only">
+  <figure style="display: flex; justify-content: center;">
+    <div style="text-align: center; width: 100%;">
+        <img src="{{site.url}}/assets/scaling/attention-graph.jpeg" alt="attention graph"/>
+    </div>
+  </figure>
+</div>
 
 
 <br>
@@ -75,6 +106,7 @@ In my attempt at training transformers I wanted to use as few inductive biases a
 
 I used a standard embedding layer for atom types to give the model a dictionary lookup of what each atom is across different structures. This was important because the model needed to understand that each atom is the same in different structures but is modified by its context, similar to how each word is the same in different sequences and is modified by its context. The 3D positions were concatenated with the embedding vector because I thought the model might have an easier time disentangling meaning vs. saving parameters by adding the positions to the embeddings. 
 
+<div class="desktop-only" markdown="1">
 $$
 \begin{array}{c@{}c@{}c}
 \text{Input feature matrix: } &
@@ -93,6 +125,26 @@ e_{N1} & \cdots & e_{Nd} & x_N & y_N & z_N
 \end{array}
 \end{array}
 $$
+</div>
+
+<div class="mobile-only" markdown="1">
+$$
+\begin{array}{l}
+\text{Input feature matrix:} \\[2ex]
+\left[
+\begin{array}{ccc|ccc}
+e_{11} & \cdots & e_{1d} & x_1 & y_1 & z_1 \\
+\vdots & \ddots & \vdots & \vdots & \vdots & \vdots \\
+e_{N1} & \cdots & e_{Nd} & x_N & y_N & z_N
+\end{array}
+\right]
+\\[-2ex]
+\mkern20mu\underbrace{\hphantom{e_{11}\ \cdots\ e_{1d}}}_{\text{atomic embeddings}}
+\mkern24mu
+\underbrace{\hphantom{x_1\ y_1\ z_1}}_{\text{positional encoding}}
+\end{array}
+$$
+</div>
 
 
 
@@ -103,7 +155,6 @@ This was purposefully not a rotationally invariant featurization as I wanted to 
         <img src="{{site.url}}/assets/scaling/train-force-loss.png" alt="transformer train force loss sweep"/>
         <figcaption>Sweeping 1M parameter transformers on 100k structures</figcaption>
     </div>
-    <br>
 </figure>
 
 I got stuck with this phenomena of an apparent plateau in force loss only for certain hyperparam configs. There were other runs that would break through but still plateaued much higher than the EqV2. I suspect that training stability had a role with the former, and ultimately the lack of periodic boundary conditions impacting the latter.
@@ -113,7 +164,6 @@ However, I did notice the transformers were learning physically meaningful atten
 <figure style="display: flex; justify-content: center;">
     <div style="text-align: center; width: 80%;">
         <img src="{{site.url}}/assets/scaling/distance_vs_attention.png" alt="transformers learn graph structure"/>
-        <!-- <figcaption></figcaption> -->
     </div>
     <br>
 </figure>
@@ -171,7 +221,6 @@ class MetaTransformerModels:
     <div style="text-align: center; width: 80%;">
         <img src="{{site.url}}/assets/scaling/MetaTransformerModels.png" alt="MetaTransformerModels"/>
     </div>
-    <br>
 </figure>
 
 On paper this sounds great to iterate over model sizes and lazily instantiate them, but in practice each OOM brings nuance and unexpectedness in behavior through e.g. hyperparameter sensitivity like early stoping. Instead, I should've started with small manual overfitting experiments and gradually increasing the parameters and data [[8]](http://karpathy.github.io/2019/04/25/recipe/). 
@@ -284,7 +333,6 @@ Takeaways:
     <div style="text-align: center; width: 80%;">
         <img src="{{site.url}}/assets/scaling/inference.gif" alt="inference visualization"/>
     </div>
-    <br>
 </figure>
 
 This ended up being a very useful debugging tool to understand how the models were behaving. For example as a sanity check it was nice to see the transformer wasn't only predicting 0 forces nor the mean of the dataset, and also that models were learning smaller magnitude forces as well as larger ones.
@@ -292,16 +340,8 @@ This ended up being a very useful debugging tool to understand how the models we
 <br>
 **Win #3: Making a scaling law experiment run tool**
 
-<div class="scaling-plots-container">
-  <div id="eqv2-scaling-plot1" class="plot-main"></div>
-  <div class="plot-dual-container">
-    <div id="eqv2-scaling-plot2" class="plot-secondary"></div>
-    <div id="eqv2-scaling-plot3" class="plot-secondary"></div>
-  </div>
-</div>
-
 <style>
-.scaling-plots-container{
+.interactive-plots-container{
   /* full width breakout */
   width: 100vw;
   max-width: 100vw;
@@ -322,9 +362,27 @@ This ended up being a very useful debugging tool to understand how the models we
 .plot-main, .plot-secondary{ width:100%; height:400px; margin:0; }
 
 /* responsive wrap-downs */
-@media (max-width: 1200px){ .scaling-plots-container{ grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 768px){  .scaling-plots-container{ grid-template-columns: 1fr; } }
+@media (max-width: 1200px){ .interactive-plots-container{ grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 768px){  .interactive-plots-container{ grid-template-columns: 1fr; } }
 </style>
+
+<div class="desktop-only" markdown="1"> 
+<div class="interactive-plots-container">
+  <div id="eqv2-scaling-plot1" class="plot-main"></div>
+  <div class="plot-dual-container">
+    <div id="eqv2-scaling-plot2" class="plot-secondary"></div>
+    <div id="eqv2-scaling-plot3" class="plot-secondary"></div>
+  </div>
+</div>
+</div>
+
+<div class="mobile-only">
+  <figure style="display: flex; justify-content: center;">
+    <div style="text-align: center; width: 100%;">
+        <img src="{{site.url}}/assets/scaling/interactive-plots.gif" alt="interactive scaling plots"/>
+    </div>
+  </figure>
+</div>
 
 
 <!-- Plotly -->

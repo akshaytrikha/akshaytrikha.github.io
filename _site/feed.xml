@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-10-11T19:51:24-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">Cursor for Contracts</title><link href="http://localhost:4000/research/2025/10/09/contract-ui.html" rel="alternate" type="text/html" title="Cursor for Contracts" /><published>2025-10-09T06:11:17-07:00</published><updated>2025-10-09T06:11:17-07:00</updated><id>http://localhost:4000/research/2025/10/09/contract-ui</id><content type="html" xml:base="http://localhost:4000/research/2025/10/09/contract-ui.html"><![CDATA[<p>I recently negotiated my first contract, and had no idea what I was doing. Having used Cursor so much for programming I wished there was something equivalent for editing contracts. Something that would let me easily concede or be more aggressive in certain clauses using legalese.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-10-13T17:55:55-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">Cursor for Contracts</title><link href="http://localhost:4000/research/2025/10/09/contract-ui.html" rel="alternate" type="text/html" title="Cursor for Contracts" /><published>2025-10-09T06:11:17-07:00</published><updated>2025-10-09T06:11:17-07:00</updated><id>http://localhost:4000/research/2025/10/09/contract-ui</id><content type="html" xml:base="http://localhost:4000/research/2025/10/09/contract-ui.html"><![CDATA[<p>I recently negotiated my first contract, and had no idea what I was doing. Having used Cursor so much for programming I wished there was something equivalent for editing contracts. Something that would let me easily concede or be more aggressive in certain clauses using legalese.</p>
 
 <p>I had an itch to scratch so I built a demo for this sort of UI I would like to see more of in document editing - inspired by the essay <a href="https://koomen.dev/essays/horseless-carriages/">AI Horseless Carriages</a>.</p>
 
@@ -66,18 +66,41 @@
 <p><strong>TL;DR:</strong> We tested whether a plain transformer encoder (no equivariance, no periodic boundary conditions) can learn interatomic forces as data &amp; params scale vs. EquiformerV2. EqV2 followed clean power laws and hit much lower loss. My transformers plateaued hard while learning forces, but observing their attention weights shows they learned graph structure as an emergent behavior. I share the wins &amp; failures.</p>
 
 <p>For EquiformerV2:</p>
+<style>
+@media (max-width: 768px) {
+  .desktop-only { display: none; }
+}
+@media (min-width: 769px) {
+  .mobile-only { display: none; }
+}
+#root {
+  min-height: auto !important;
+}
+#root .app-container {
+  min-height: auto !important;
+}
+.mobile-only .MathJax_Display {
+  text-align: left !important;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+</style>
 
-\[\begin{aligned}
-&amp;\quad\text{Parameter scaling law:} &amp;&amp;L \approx 7.76\times 10^{2}\, P^{-0.383} \\
-&amp;\quad\text{Compute scaling law:} &amp;&amp;L \approx 4.99\times 10^{5}\, C^{-0.339} \\
-&amp;\quad\text{Data scaling law:} &amp;&amp;L \approx 6.47\times 10^{1}\, D^{-0.242}
-\end{aligned}\]
+<div>
+$$
+\begin{aligned}
+&amp;\text{Parameter scaling law:}\; L \approx 7.76\times 10^{2}\, P^{-0.383} \\
+&amp;\text{Compute scaling law:}\; L \approx 4.99\times 10^{5}\, C^{-0.339} \\
+&amp;\text{Data scaling law:}\; L \approx 6.47\times 10^{1}\, D^{-0.242}
+\end{aligned}
+$$
+</div>
 
-<p>For Transformer:</p>
+<div class="desktop-only">For Transformer: $$\text{Power laws not clean enough}$$</div>
+<div class="mobile-only">For Transformer: power laws not clean enough.</div>
 
-\[\text{Power laws not clean enough}\]
-
-<p>Code is open sourced <a href="https://github.com/akshaytrikha/materials-scaling">here</a>. Work was done alongside <a href="https://www.linkedin.com/in/eric-weiner-7602b916a/">Eric Weiner</a>, <a href="https://www.linkedin.com/in/parkszachta/">Park Szachta</a>, <a href="https://www.linkedin.com/in/advaitgosai/">Advait Gosai</a>, and <a href="https://www.linkedin.com/in/kyle65463/">Kyle Chu</a>.</p>
+<p><br />
+Code is open sourced <a href="https://github.com/akshaytrikha/materials-scaling">here</a>. Work was done alongside <a href="https://www.linkedin.com/in/eric-weiner-7602b916a/">Eric Weiner</a>, <a href="https://www.linkedin.com/in/parkszachta/">Park Szachta</a>, <a href="https://www.linkedin.com/in/advaitgosai/">Advait Gosai</a>, and <a href="https://www.linkedin.com/in/kyle65463/">Kyle Chu</a>.</p>
 
 <hr />
 <p><br />
@@ -92,14 +115,24 @@ A little over a year ago I got pretty interested in training neural networks tha
 
 <p>A Transformer is a graph neural network (GNN) on a complete graph with learned edge weights <a href="https://arxiv.org/pdf/1704.01212">[6]</a>. A graph in a GNN is created through a rule, either a known relation between nodes i.e. this paper cites another or a cutoff i.e. this atom is too far from the other so we assume they won’t interact.</p>
 
-<iframe id="attentionFrame" src="http://localhost:4000/assets/scaling/attention-graph.html" width="100%" style="border:0; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,.1); background:#fff"></iframe>
-<script>
-  const f = document.getElementById('attentionFrame');
-  f.addEventListener('load', () => {
-    const doc = f.contentDocument || f.contentWindow.document;
-    f.style.height = doc.documentElement.scrollHeight + 'px';
-  });
-</script>
+<div class="desktop-only">
+  <iframe id="attentionFrame" src="http://localhost:4000/assets/scaling/attention-graph.html" width="100%" style="border:0; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,.1); background:#fff"></iframe>
+  <script>
+    const f = document.getElementById('attentionFrame');
+    f.addEventListener('load', () => {
+      const doc = f.contentDocument || f.contentWindow.document;
+      f.style.height = doc.documentElement.scrollHeight + 'px';
+    });
+  </script>
+</div>
+
+<div class="mobile-only">
+  <figure style="display: flex; justify-content: center;">
+    <div style="text-align: center; width: 100%;">
+        <img src="http://localhost:4000/assets/scaling/attention-graph.jpeg" alt="attention graph" />
+    </div>
+  </figure>
+</div>
 
 <p><br />
 A simple argument between the two architectures is that they fall into the bias - expressivity tradeoff. My take is that since self-attention on a fully connected graph is mathematically equivalent to message passing <a href="https://arxiv.org/pdf/1704.01212">[6]</a> it should be able to learn weights between atoms without having to describe them.</p>
@@ -122,7 +155,8 @@ A simple argument between the two architectures is that they fall into the bias 
 
 <p>I used a standard embedding layer for atom types to give the model a dictionary lookup of what each atom is across different structures. This was important because the model needed to understand that each atom is the same in different structures but is modified by its context, similar to how each word is the same in different sequences and is modified by its context. The 3D positions were concatenated with the embedding vector because I thought the model might have an easier time disentangling meaning vs. saving parameters by adding the positions to the embeddings.</p>
 
-\[\begin{array}{c@{}c@{}c}
+<div class="desktop-only">
+  <p>\(\begin{array}{c@{}c@{}c}
 \text{Input feature matrix: } &amp;
 \left[
 \begin{array}{ccc|ccc}
@@ -137,7 +171,25 @@ e_{N1} &amp; \cdots &amp; e_{Nd} &amp; x_N &amp; y_N &amp; z_N
 \underbrace{\hphantom{e_{11}\ \cdots\ e_{1d}}}_{\text{atomic embeddings}} &amp;
 \underbrace{\hphantom{x_1\ y_1\ z_1}}_{\text{positional encoding}}
 \end{array}
-\end{array}\]
+\end{array}\)</p>
+</div>
+
+<div class="mobile-only">
+  <p>\(\begin{array}{l}
+\text{Input feature matrix:} \\[2ex]
+\left[
+\begin{array}{ccc|ccc}
+e_{11} &amp; \cdots &amp; e_{1d} &amp; x_1 &amp; y_1 &amp; z_1 \\
+\vdots &amp; \ddots &amp; \vdots &amp; \vdots &amp; \vdots &amp; \vdots \\
+e_{N1} &amp; \cdots &amp; e_{Nd} &amp; x_N &amp; y_N &amp; z_N
+\end{array}
+\right]
+\\[-2ex]
+\mkern20mu\underbrace{\hphantom{e_{11}\ \cdots\ e_{1d}}}_{\text{atomic embeddings}}
+\mkern24mu
+\underbrace{\hphantom{x_1\ y_1\ z_1}}_{\text{positional encoding}}
+\end{array}\)</p>
+</div>
 
 <p>This was purposefully not a rotationally invariant featurization as I wanted to see if the model could learn this through augmentation. It also did not account for the fact crystal structures are periodic, which means that forces on atoms can come from adjacent cells. My findings are that this featurization led to the model learning global structure energy and stresses well, but not 3D per-atom forces. This isn’t to say that forces weren’t learned at all, but they were certainly not comparable to EquiformerV2.</p>
 
@@ -146,7 +198,6 @@ e_{N1} &amp; \cdots &amp; e_{Nd} &amp; x_N &amp; y_N &amp; z_N
         <img src="http://localhost:4000/assets/scaling/train-force-loss.png" alt="transformer train force loss sweep" />
         <figcaption>Sweeping 1M parameter transformers on 100k structures</figcaption>
     </div>
-    <br />
 </figure>
 
 <p>I got stuck with this phenomena of an apparent plateau in force loss only for certain hyperparam configs. There were other runs that would break through but still plateaued much higher than the EqV2. I suspect that training stability had a role with the former, and ultimately the lack of periodic boundary conditions impacting the latter.</p>
@@ -156,7 +207,6 @@ e_{N1} &amp; \cdots &amp; e_{Nd} &amp; x_N &amp; y_N &amp; z_N
 <figure style="display: flex; justify-content: center;">
     <div style="text-align: center; width: 80%;">
         <img src="http://localhost:4000/assets/scaling/distance_vs_attention.png" alt="transformers learn graph structure" />
-        <!-- <figcaption></figcaption> -->
     </div>
     <br />
 </figure>
@@ -215,7 +265,6 @@ class MetaTransformerModels:
     <div style="text-align: center; width: 80%;">
         <img src="http://localhost:4000/assets/scaling/MetaTransformerModels.png" alt="MetaTransformerModels" />
     </div>
-    <br />
 </figure>
 
 <p>On paper this sounds great to iterate over model sizes and lazily instantiate them, but in practice each OOM brings nuance and unexpectedness in behavior through e.g. hyperparameter sensitivity like early stoping. Instead, I should’ve started with small manual overfitting experiments and gradually increasing the parameters and data <a href="http://karpathy.github.io/2019/04/25/recipe/">[8]</a>.</p>
@@ -331,7 +380,6 @@ Takeaways:</p>
     <div style="text-align: center; width: 80%;">
         <img src="http://localhost:4000/assets/scaling/inference.gif" alt="inference visualization" />
     </div>
-    <br />
 </figure>
 
 <p>This ended up being a very useful debugging tool to understand how the models were behaving. For example as a sanity check it was nice to see the transformer wasn’t only predicting 0 forces nor the mean of the dataset, and also that models were learning smaller magnitude forces as well as larger ones.</p>
@@ -339,16 +387,8 @@ Takeaways:</p>
 <p><br />
 <strong>Win #3: Making a scaling law experiment run tool</strong></p>
 
-<div class="scaling-plots-container">
-  <div id="eqv2-scaling-plot1" class="plot-main"></div>
-  <div class="plot-dual-container">
-    <div id="eqv2-scaling-plot2" class="plot-secondary"></div>
-    <div id="eqv2-scaling-plot3" class="plot-secondary"></div>
-  </div>
-</div>
-
 <style>
-.scaling-plots-container{
+.interactive-plots-container{
   /* full width breakout */
   width: 100vw;
   max-width: 100vw;
@@ -369,9 +409,27 @@ Takeaways:</p>
 .plot-main, .plot-secondary{ width:100%; height:400px; margin:0; }
 
 /* responsive wrap-downs */
-@media (max-width: 1200px){ .scaling-plots-container{ grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 768px){  .scaling-plots-container{ grid-template-columns: 1fr; } }
+@media (max-width: 1200px){ .interactive-plots-container{ grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 768px){  .interactive-plots-container{ grid-template-columns: 1fr; } }
 </style>
+
+<div class="desktop-only">
+  <div class="interactive-plots-container">
+  <div id="eqv2-scaling-plot1" class="plot-main"></div>
+  <div class="plot-dual-container">
+    <div id="eqv2-scaling-plot2" class="plot-secondary"></div>
+    <div id="eqv2-scaling-plot3" class="plot-secondary"></div>
+  </div>
+</div>
+</div>
+
+<div class="mobile-only">
+  <figure style="display: flex; justify-content: center;">
+    <div style="text-align: center; width: 100%;">
+        <img src="http://localhost:4000/assets/scaling/interactive-plots.gif" alt="interactive scaling plots" />
+    </div>
+  </figure>
+</div>
 
 <!-- Plotly -->
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
