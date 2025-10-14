@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-10-13T16:06:49-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">Cursor for Contracts</title><link href="http://localhost:4000/research/2025/10/09/contract-ui.html" rel="alternate" type="text/html" title="Cursor for Contracts" /><published>2025-10-09T06:11:17-07:00</published><updated>2025-10-09T06:11:17-07:00</updated><id>http://localhost:4000/research/2025/10/09/contract-ui</id><content type="html" xml:base="http://localhost:4000/research/2025/10/09/contract-ui.html"><![CDATA[<p>I recently negotiated my first contract, and had no idea what I was doing. Having used Cursor so much for programming I wished there was something equivalent for editing contracts. Something that would let me easily concede or be more aggressive in certain clauses using legalese.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2025-10-13T17:12:12-07:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">Akshay Trikha</title><subtitle></subtitle><entry><title type="html">Cursor for Contracts</title><link href="http://localhost:4000/research/2025/10/09/contract-ui.html" rel="alternate" type="text/html" title="Cursor for Contracts" /><published>2025-10-09T06:11:17-07:00</published><updated>2025-10-09T06:11:17-07:00</updated><id>http://localhost:4000/research/2025/10/09/contract-ui</id><content type="html" xml:base="http://localhost:4000/research/2025/10/09/contract-ui.html"><![CDATA[<p>I recently negotiated my first contract, and had no idea what I was doing. Having used Cursor so much for programming I wished there was something equivalent for editing contracts. Something that would let me easily concede or be more aggressive in certain clauses using legalese.</p>
 
 <p>I had an itch to scratch so I built a demo for this sort of UI I would like to see more of in document editing - inspired by the essay <a href="https://koomen.dev/essays/horseless-carriages/">AI Horseless Carriages</a>.</p>
 
@@ -380,7 +380,6 @@ Takeaways:</p>
     <div style="text-align: center; width: 80%;">
         <img src="http://localhost:4000/assets/scaling/inference.gif" alt="inference visualization" />
     </div>
-    <br />
 </figure>
 
 <p>This ended up being a very useful debugging tool to understand how the models were behaving. For example as a sanity check it was nice to see the transformer wasn’t only predicting 0 forces nor the mean of the dataset, and also that models were learning smaller magnitude forces as well as larger ones.</p>
@@ -388,16 +387,8 @@ Takeaways:</p>
 <p><br />
 <strong>Win #3: Making a scaling law experiment run tool</strong></p>
 
-<div class="scaling-plots-container">
-  <div id="eqv2-scaling-plot1" class="plot-main"></div>
-  <div class="plot-dual-container">
-    <div id="eqv2-scaling-plot2" class="plot-secondary"></div>
-    <div id="eqv2-scaling-plot3" class="plot-secondary"></div>
-  </div>
-</div>
-
 <style>
-.scaling-plots-container{
+.interactive-plots-container{
   /* full width breakout */
   width: 100vw;
   max-width: 100vw;
@@ -418,9 +409,27 @@ Takeaways:</p>
 .plot-main, .plot-secondary{ width:100%; height:400px; margin:0; }
 
 /* responsive wrap-downs */
-@media (max-width: 1200px){ .scaling-plots-container{ grid-template-columns: repeat(2, 1fr); } }
-@media (max-width: 768px){  .scaling-plots-container{ grid-template-columns: 1fr; } }
+@media (max-width: 1200px){ .interactive-plots-container{ grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 768px){  .interactive-plots-container{ grid-template-columns: 1fr; } }
 </style>
+
+<div class="desktop-only">
+  <div class="interactive-plots-container">
+  <div id="eqv2-scaling-plot1" class="plot-main"></div>
+  <div class="plot-dual-container">
+    <div id="eqv2-scaling-plot2" class="plot-secondary"></div>
+    <div id="eqv2-scaling-plot3" class="plot-secondary"></div>
+  </div>
+</div>
+</div>
+
+<div class="mobile-only">
+  <figure style="display: flex; justify-content: center;">
+    <div style="text-align: center; width: 100%;">
+        <img src="http://localhost:4000/assets/scaling/interactive-plots.gif" alt="interactive scaling plots" />
+    </div>
+  </figure>
+</div>
 
 <!-- Plotly -->
 <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
