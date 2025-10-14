@@ -75,15 +75,25 @@ We failed to stably train transformers most likely due to the lack of pretrainin
 
 A Transformer is a graph neural network (GNN) on a complete graph with learned edge weights [[6]](https://arxiv.org/pdf/1704.01212). A graph in a GNN is created through a rule, either a known relation between nodes i.e. this paper cites another or a cutoff i.e. this atom is too far from the other so we assume they won't interact.
 
-<iframe id="attentionFrame" src="{{site.url}}/assets/scaling/attention-graph.html"
-        width="100%" style="border:0; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,.1); background:#fff"></iframe>
-<script>
-  const f = document.getElementById('attentionFrame');
-  f.addEventListener('load', () => {
-    const doc = f.contentDocument || f.contentWindow.document;
-    f.style.height = doc.documentElement.scrollHeight + 'px';
-  });
-</script>
+<div class="desktop-only">
+  <iframe id="attentionFrame" src="{{site.url}}/assets/scaling/attention-graph.html"
+          width="100%" style="border:0; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,.1); background:#fff"></iframe>
+  <script>
+    const f = document.getElementById('attentionFrame');
+    f.addEventListener('load', () => {
+      const doc = f.contentDocument || f.contentWindow.document;
+      f.style.height = doc.documentElement.scrollHeight + 'px';
+    });
+  </script>
+</div>
+
+<div class="mobile-only">
+  <figure style="display: flex; justify-content: center;">
+    <div style="text-align: center; width: 100%;">
+        <img src="{{site.url}}/assets/scaling/attention-graph.jpeg" alt="attention graph"/>
+    </div>
+  </figure>
+</div>
 
 
 <br>

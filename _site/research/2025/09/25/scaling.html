@@ -107,14 +107,24 @@ A little over a year ago I got pretty interested in training neural networks tha
 
 <p>A Transformer is a graph neural network (GNN) on a complete graph with learned edge weights <a href="https://arxiv.org/pdf/1704.01212">[6]</a>. A graph in a GNN is created through a rule, either a known relation between nodes i.e. this paper cites another or a cutoff i.e. this atom is too far from the other so we assume they won’t interact.</p>
 
-<iframe id="attentionFrame" src="http://localhost:4000/assets/scaling/attention-graph.html" width="100%" style="border:0; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,.1); background:#fff"></iframe>
-<script>
-  const f = document.getElementById('attentionFrame');
-  f.addEventListener('load', () => {
-    const doc = f.contentDocument || f.contentWindow.document;
-    f.style.height = doc.documentElement.scrollHeight + 'px';
-  });
-</script>
+<div class="desktop-only">
+  <iframe id="attentionFrame" src="http://localhost:4000/assets/scaling/attention-graph.html" width="100%" style="border:0; border-radius:8px; box-shadow:0 2px 8px rgba(0,0,0,.1); background:#fff"></iframe>
+  <script>
+    const f = document.getElementById('attentionFrame');
+    f.addEventListener('load', () => {
+      const doc = f.contentDocument || f.contentWindow.document;
+      f.style.height = doc.documentElement.scrollHeight + 'px';
+    });
+  </script>
+</div>
+
+<div class="mobile-only">
+  <figure style="display: flex; justify-content: center;">
+    <div style="text-align: center; width: 100%;">
+        <img src="http://localhost:4000/assets/scaling/attention-graph.jpeg" alt="attention graph" />
+    </div>
+  </figure>
+</div>
 
 <p><br />
 A simple argument between the two architectures is that they fall into the bias - expressivity tradeoff. My take is that since self-attention on a fully connected graph is mathematically equivalent to message passing <a href="https://arxiv.org/pdf/1704.01212">[6]</a> it should be able to learn weights between atoms without having to describe them.</p>
