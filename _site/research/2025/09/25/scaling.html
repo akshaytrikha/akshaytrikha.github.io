@@ -71,28 +71,21 @@
 }
 </style>
 
-<div class="desktop-only">
-\[\begin{aligned}
-&amp;\quad\text{Parameter scaling law:} &amp;&amp;L \approx 7.76\times 10^{2}\, P^{-0.383} \\
-&amp;\quad\text{Compute scaling law:} &amp;&amp;L \approx 4.99\times 10^{5}\, C^{-0.339} \\
-&amp;\quad\text{Data scaling law:} &amp;&amp;L \approx 6.47\times 10^{1}\, D^{-0.242}
-\end{aligned}\]
-
-  <p>For Transformer:
-\(\text{Power laws not clean enough}\)</p>
+<div>
+$$
+\begin{aligned}
+&amp;\text{Parameter scaling law:}\; L \approx 7.76\times 10^{2}\, P^{-0.383} \\
+&amp;\text{Compute scaling law:}\; L \approx 4.99\times 10^{5}\, C^{-0.339} \\
+&amp;\text{Data scaling law:}\; L \approx 6.47\times 10^{1}\, D^{-0.242}
+\end{aligned}
+$$
 </div>
 
-<div class="mobile-only">
-\[\begin{aligned}
-&amp;\text{Parameter scaling law:} \; L \approx 7.76\times 10^{2}\, P^{-0.383} \\
-&amp;\text{Compute scaling law:} \; L \approx 4.99\times 10^{5}\, C^{-0.339} \\
-&amp;\text{Data scaling law:} \; L \approx 6.47\times 10^{1}\, D^{-0.242}
-\end{aligned}\]
+<div class="desktop-only">For Transformer: $$\text{Power laws not clean enough}$$</div>
+<div class="mobile-only">For Transformer: power laws not clean enough.</div>
 
-  <p>For Transformer: power laws not clean enough.</p>
-</div>
-
-<p>Code is open sourced <a href="https://github.com/akshaytrikha/materials-scaling">here</a>. Work was done alongside <a href="https://www.linkedin.com/in/eric-weiner-7602b916a/">Eric Weiner</a>, <a href="https://www.linkedin.com/in/parkszachta/">Park Szachta</a>, <a href="https://www.linkedin.com/in/advaitgosai/">Advait Gosai</a>, and <a href="https://www.linkedin.com/in/kyle65463/">Kyle Chu</a>.</p>
+<p><br />
+Code is open sourced <a href="https://github.com/akshaytrikha/materials-scaling">here</a>. Work was done alongside <a href="https://www.linkedin.com/in/eric-weiner-7602b916a/">Eric Weiner</a>, <a href="https://www.linkedin.com/in/parkszachta/">Park Szachta</a>, <a href="https://www.linkedin.com/in/advaitgosai/">Advait Gosai</a>, and <a href="https://www.linkedin.com/in/kyle65463/">Kyle Chu</a>.</p>
 
 <hr />
 <p><br />
@@ -190,7 +183,6 @@ e_{N1} &amp; \cdots &amp; e_{Nd} &amp; x_N &amp; y_N &amp; z_N
         <img src="http://localhost:4000/assets/scaling/train-force-loss.png" alt="transformer train force loss sweep" />
         <figcaption>Sweeping 1M parameter transformers on 100k structures</figcaption>
     </div>
-    <br />
 </figure>
 
 <p>I got stuck with this phenomena of an apparent plateau in force loss only for certain hyperparam configs. There were other runs that would break through but still plateaued much higher than the EqV2. I suspect that training stability had a role with the former, and ultimately the lack of periodic boundary conditions impacting the latter.</p>
@@ -200,7 +192,6 @@ e_{N1} &amp; \cdots &amp; e_{Nd} &amp; x_N &amp; y_N &amp; z_N
 <figure style="display: flex; justify-content: center;">
     <div style="text-align: center; width: 80%;">
         <img src="http://localhost:4000/assets/scaling/distance_vs_attention.png" alt="transformers learn graph structure" />
-        <!-- <figcaption></figcaption> -->
     </div>
     <br />
 </figure>
@@ -259,7 +250,6 @@ class MetaTransformerModels:
     <div style="text-align: center; width: 80%;">
         <img src="http://localhost:4000/assets/scaling/MetaTransformerModels.png" alt="MetaTransformerModels" />
     </div>
-    <br />
 </figure>
 
 <p>On paper this sounds great to iterate over model sizes and lazily instantiate them, but in practice each OOM brings nuance and unexpectedness in behavior through e.g. hyperparameter sensitivity like early stoping. Instead, I should’ve started with small manual overfitting experiments and gradually increasing the parameters and data <a href="http://karpathy.github.io/2019/04/25/recipe/">[8]</a>.</p>

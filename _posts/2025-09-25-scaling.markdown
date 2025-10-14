@@ -35,31 +35,20 @@ For EquiformerV2:
 }
 </style>
 
-<div class="desktop-only" markdown="1">
+<div>
 $$
 \begin{aligned}
-&\quad\text{Parameter scaling law:} &&L \approx 7.76\times 10^{2}\, P^{-0.383} \\
-&\quad\text{Compute scaling law:} &&L \approx 4.99\times 10^{5}\, C^{-0.339} \\
-&\quad\text{Data scaling law:} &&L \approx 6.47\times 10^{1}\, D^{-0.242}
+&\text{Parameter scaling law:}\; L \approx 7.76\times 10^{2}\, P^{-0.383} \\
+&\text{Compute scaling law:}\; L \approx 4.99\times 10^{5}\, C^{-0.339} \\
+&\text{Data scaling law:}\; L \approx 6.47\times 10^{1}\, D^{-0.242}
 \end{aligned}
 $$
-
-For Transformer:
-$$\text{Power laws not clean enough}$$
 </div>
 
-<div class="mobile-only" markdown="1">
-$$
-\begin{aligned}
-&\text{Parameter scaling law:} \; L \approx 7.76\times 10^{2}\, P^{-0.383} \\
-&\text{Compute scaling law:} \; L \approx 4.99\times 10^{5}\, C^{-0.339} \\
-&\text{Data scaling law:} \; L \approx 6.47\times 10^{1}\, D^{-0.242}
-\end{aligned}
-$$
+<div class="desktop-only">For Transformer: $$\text{Power laws not clean enough}$$</div>
+<div class="mobile-only">For Transformer: power laws not clean enough.</div>
 
-For Transformer: power laws not clean enough.
-</div>
-
+<br>
 Code is open sourced [here](https://github.com/akshaytrikha/materials-scaling). Work was done alongside [Eric Weiner](https://www.linkedin.com/in/eric-weiner-7602b916a/), [Park Szachta](https://www.linkedin.com/in/parkszachta/), [Advait Gosai](https://www.linkedin.com/in/advaitgosai/), and [Kyle Chu](https://www.linkedin.com/in/kyle65463/).
 
 ----------------------
@@ -166,7 +155,6 @@ This was purposefully not a rotationally invariant featurization as I wanted to 
         <img src="{{site.url}}/assets/scaling/train-force-loss.png" alt="transformer train force loss sweep"/>
         <figcaption>Sweeping 1M parameter transformers on 100k structures</figcaption>
     </div>
-    <br>
 </figure>
 
 I got stuck with this phenomena of an apparent plateau in force loss only for certain hyperparam configs. There were other runs that would break through but still plateaued much higher than the EqV2. I suspect that training stability had a role with the former, and ultimately the lack of periodic boundary conditions impacting the latter.
@@ -176,7 +164,6 @@ However, I did notice the transformers were learning physically meaningful atten
 <figure style="display: flex; justify-content: center;">
     <div style="text-align: center; width: 80%;">
         <img src="{{site.url}}/assets/scaling/distance_vs_attention.png" alt="transformers learn graph structure"/>
-        <!-- <figcaption></figcaption> -->
     </div>
     <br>
 </figure>
@@ -234,7 +221,6 @@ class MetaTransformerModels:
     <div style="text-align: center; width: 80%;">
         <img src="{{site.url}}/assets/scaling/MetaTransformerModels.png" alt="MetaTransformerModels"/>
     </div>
-    <br>
 </figure>
 
 On paper this sounds great to iterate over model sizes and lazily instantiate them, but in practice each OOM brings nuance and unexpectedness in behavior through e.g. hyperparameter sensitivity like early stoping. Instead, I should've started with small manual overfitting experiments and gradually increasing the parameters and data [[8]](http://karpathy.github.io/2019/04/25/recipe/). 
