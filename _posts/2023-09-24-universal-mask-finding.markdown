@@ -19,7 +19,7 @@ tldr: "Trained & deployed a segmentation model that has stably provided millions
 <br>
 **Preface**
 
-I write using analogy of working for Willy Wonka's chocolate factory to demonstrate that this method could be used in any manufacturing context that uses computer vision for defect detection. It's also just fun to think about mass producing chocolate.
+I write using an analogy of working for Willy Wonka's chocolate factory to demonstrate that this method could be used in any manufacturing context that uses computer vision for defect detection. It's also just fun to think about mass producing chocolate.
 
 <br>
 **Background**
