@@ -28,10 +28,13 @@ icons:
     </div>
 </div>
 
-**Currently**:
+**Currently**: Building more efficient data center cooling at [Madrone](https://madrone.cool)
+
+
+**Recently**:
 
 - 👨🏾‍💻 Building and buying LLM-tools at [QuantumScape](https://www.quantumscape.com/){:target="\_blank" :rel="noopener noreferrer"}
-- 🔋 (Recently) studied scaling laws for machine learning interatomic potential models at [Berkeley](https://mse.berkeley.edu/){:target="\_blank" :rel="noopener noreferrer"}
+- 🔋 Studied scaling laws for machine learning interatomic potential models at [Berkeley](https://mse.berkeley.edu/){:target="\_blank" :rel="noopener noreferrer"}
 - 🛫 Learning how to fly!
 <figure>
     <div style="text-align: center;">
