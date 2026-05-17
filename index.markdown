@@ -28,7 +28,7 @@ icons:
     </div>
 </div>
 
-**Currently**: Building more efficient data center cooling at [Madrone](https://madrone.cool)
+**Currently**: Building more efficient data center cooling at [Madrone](https://madrone.cool){:target="\_blank" :rel="noopener noreferrer"}
 
 
 **Recently**:
